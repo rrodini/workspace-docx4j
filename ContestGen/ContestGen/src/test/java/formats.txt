@@ -1,0 +1,24 @@
+#SpecimenTextMarkers
+muniNameRepeatCount=2
+muniNameRegex="(?m)^OFFICIAL MUNICIPAL ELECTION BALLOT$\n(?<id>\\d+)[\\s]*(?<name>.*)\n"
+
+#MuniTextMarkers
+muniTextPageCount=2
+muniTextPage1Regex="(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*?)^Continued from front side of ballot$(.*)"
+muniTextPage2Regex="(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)(?<page>((.*)\n)*?)^(Write-in\n|Write-in )Superior Court Retention$(.*)"
+
+#ContestNameMarkers
+contestFormat1Regex="^(?<name>(.*\n){1,2})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$"
+contestFormat2Regex="^(?<name>(.*\n){1,2})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$"
+
+
+#BallotNamer (see SpecimenTextMarkers)
+ballot.title=OFFICIAL MUNICIPAL ELECTION BALLOT
+ballot.heading.format=(?m)(.*?)*^%ballot title%$\n(?<id>\\d+)[\\s]*(?<name>.*)\n^
+
+#BallotGen (see ContestNameMarkers)
+contest.format.1=^%contest name%\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$
+contest.format.2=^%contest name%\n(?<term>.*)\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$
+
+# Special for primary contests
+contest.format.3=^%contest name%\n(?<instructions>.*)\n(?<candidates>((.*\n){1})*)^Write-in$
