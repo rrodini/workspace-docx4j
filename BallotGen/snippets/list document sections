@@ -1,0 +1,24 @@
+		// BODY CONTENTS
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		List<SectionWrapper> sections = docx.getDocumentModel().getSections();
+		for (int i=0; i < sections.size(); i++) {
+			SectionWrapper secWrap = sections.get(i);
+			SectPr sectPr = secWrap.getSectPr();
+			System.out.printf("%d object class: %s%n", i, secWrap.getClass().getName());
+			
+		}
+
+
+// ASSUME 2 section doc below
+		
+		List<Object> bodyContents = mdp.getContent();
+		// BELOW ADDS TO section 1 but loses 3-col layout.
+		bodyContents.get(0).add(p1);
+		// BELOW overwrites Section 2 text
+		bodyContents.set(1, p2);
+		
+		//mdp.getContent().add(p1);
+		
+		// BELOW writes to Section 2
+		
+		

@@ -1,0 +1,20 @@
+### General
+**/.DS_Store
+
+### Eclipse ###
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+### Maven ###
+target/
+
+### ContestGen ###
+contests/

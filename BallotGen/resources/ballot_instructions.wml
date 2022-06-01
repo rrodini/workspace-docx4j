@@ -1,0 +1,487 @@
+<w:document xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+    <w:body>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="006E1FBC">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:jc w:val="center"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00BE7A60">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="20"/>
+                </w:rPr>
+                <w:t>INSTRUCTIONS TO VOTER</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B12C3D">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:jc w:val="center"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="16"/>
+                    <w:szCs w:val="16"/>
+                </w:rPr>
+            </w:pPr>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00800E50">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve">1. </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>TO VOTE YOU MUST</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B7142E">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>COMPLETELY BLACKEN THE OVAL (</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Segoe UI Symbol" w:cs="Segoe UI Symbol" w:hAnsi="Segoe UI Symbol"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>⬬</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>) TO THE LEFT OF YOUR CHOICE.</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="16"/>
+                    <w:szCs w:val="16"/>
+                </w:rPr>
+                <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>An oval (</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Segoe UI Symbol" w:cs="Segoe UI Symbol" w:hAnsi="Segoe UI Symbol"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>⬬</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>)</w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>blackened to the left of the name of any</w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve"> candidate indicates a vote for that candidate</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>.</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00692182">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Segoe UI Symbol" w:cs="Arial" w:hAnsi="Segoe UI Symbol"/>
+                    <w:sz w:val="10"/>
+                    <w:szCs w:val="10"/>
+                </w:rPr>
+            </w:pPr>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>2</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>. To cast a write-in vote for a person whose name is not on the ballot, you</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00E437CC">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="MS Shell Dlg 2" w:cs="MS Shell Dlg 2" w:eastAsiaTheme="minorHAnsi" w:hAnsi="MS Shell Dlg 2"/>
+                    <w:sz w:val="17"/>
+                    <w:szCs w:val="17"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve">must blacken the oval </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>(</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Segoe UI Symbol" w:cs="Segoe UI Symbol" w:eastAsiaTheme="minorHAnsi" w:hAnsi="Segoe UI Symbol"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>⬬</w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve">) </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>to the left of the line provided, and write or print the name in the blank space provided for that purpose.</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B7142E">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="10"/>
+                    <w:szCs w:val="10"/>
+                </w:rPr>
+            </w:pPr>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>3.</w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve"> To vote in FAVOR of a Question, fill in the oval (</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Segoe UI Symbol" w:cs="Segoe UI Symbol" w:eastAsiaTheme="minorHAnsi" w:hAnsi="Segoe UI Symbol"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>⬬</w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>) to the left of the word YES. To vote AGAINST a Question. fill in the oval (</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00800E50">
+                <w:rPr>
+                    <w:rFonts w:ascii="Segoe UI Symbol" w:cs="Segoe UI Symbol" w:eastAsiaTheme="minorHAnsi" w:hAnsi="Segoe UI Symbol"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>⬬</w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>) to the left of the word NO.</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B7142E">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B7142E">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>4</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve">. </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>Use only a black pen or marker.</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B7142E">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="10"/>
+                    <w:szCs w:val="10"/>
+                </w:rPr>
+            </w:pPr>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00140D6C" w:rsidRDefault="00140D6C" w:rsidRPr="00B7142E">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>5</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>.</w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>If you make a mistake DO NOT</w:t>
+            </w:r>
+        </w:p>
+        <w:p w:rsidP="00140D6C" w:rsidR="00000000" w:rsidRDefault="00140D6C" w:rsidRPr="00140D6C">
+            <w:pPr>
+                <w:autoSpaceDE w:val="false"/>
+                <w:autoSpaceDN w:val="false"/>
+                <w:adjustRightInd w:val="false"/>
+                <w:ind w:right="-216"/>
+                <w:jc w:val="both"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00B7142E">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="18"/>
+                    <w:szCs w:val="18"/>
+                </w:rPr>
+                <w:t>ERASE. Ask for a new ballot</w:t>
+            </w:r>
+            <w:r w:rsidRPr="006E1FBC">
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="20"/>
+                </w:rPr>
+                <w:t>.</w:t>
+            </w:r>
+        </w:p>
+        <w:sectPr w:rsidR="00000000" w:rsidRPr="00140D6C">
+            <w:pgSz w:h="15840" w:w="12240"/>
+            <w:pgMar w:bottom="1440" w:footer="720" w:gutter="0" w:header="720" w:left="1440" w:right="1440" w:top="1440"/>
+            <w:cols w:space="720"/>
+        </w:sectPr>
+    </w:body>
+</w:document>

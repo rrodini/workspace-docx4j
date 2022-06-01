@@ -1,0 +1,24 @@
+// get reference to default header and footer
+// - the template MUST have a header and footer otherwise NPE
+
+		HeaderPart headerPart = docx.getDocumentModel().getSections().get(0).getHeaderFooterPolicy().getDefaultHeader();
+		FooterPart footerPart = docx.getDocumentModel().getSections().get(0).getHeaderFooterPolicy().getDefaultFooter();
+		System.out.printf("headerPart: %s footerPart: %s%n",headerPart, footerPart);
+		String hct = headerPart.getContentType();
+		String fct = footerPart.getContentType();
+		System.out.printf("headerContentType: %s footerContentType: %s%n",hct, fct);
+		List<Object> headerContents = headerPart.getContent();
+		System.out.printf("BEFORE headerContentsList%n");
+
+		for (int i=0; i < headerContents.size(); i++) {
+			System.out.printf("%d object class: %s val: %s%n", i, headerContents.get(i).getClass().getName(), headerContents.get(i).toString());
+		}
+		GenUpdateHeader guh = new GenUpdateHeader();
+		headerContents.set(0, guh.updateHeader(fileBaseName));
+				
+		System.out.printf("AFTER headerContentsList%n");
+		for (int i=0; i < headerContents.size(); i++) {
+			System.out.printf("%d object class: %s val: %s%n", i, headerContents.get(i).getClass().getName(), headerContents.get(i).toString());
+		}
+
+

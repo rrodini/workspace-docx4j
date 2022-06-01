@@ -1,0 +1,2 @@
+1,/^%contest name%\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$/
+2,/^%contest name%\n(?<term>.*)\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$/

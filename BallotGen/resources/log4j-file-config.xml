@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="BallotGen" packages="">
+  <Appenders>
+    <File name="BallotGen" fileName="../logs/ballotgen.log">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="ERROR">
+      <AppenderRef ref="BallotGen"/>
+    </Root>
+  </Loggers>
+</Configuration>
