@@ -18,7 +18,9 @@ public class GeneralCandidate extends Candidate {
 	GeneralCandidate(String name, Party party) {
 		super(name);
 		this.party = party;
-		this.endorsed = party == Party.DEMOCRATIC;
+		// typically Initialize.endorsedParty is Party.DEMOCRATIC is
+		// but now the value is read from a property file.
+		this.endorsed = party == Initialize.endorsedParty;
 	}
 
 	public Party getParty() {

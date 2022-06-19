@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 public class Initialize {
 	// Global variables
 	public static ElectionType elecType;	// e.g. PRIMARY or GENERAL
+	public static Party endorsedParty;		// e.g. Democratic (or NULL)
 	public static List<String> ballotFiles; // e.g. List: "Atglen_VS.txt","Avondale_VS.txt",..,"West_Chester_7_VS.txt"
 //	public static String contestsText;  	// e.g. Justice of the Supreme Court,1
 //											// 		Judge of the Superior Court,1
@@ -45,6 +46,7 @@ public class Initialize {
 	static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
 
 	private static final Logger logger = LoggerFactory.getLogger(Initialize.class);
+	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WORD_TEMPLATE_DEFAULT = "word.template.default";
 	private static final String PROP_CONTEST_FORMAT_PREFIX = "contest.format";
 	private static final String CONTEST_FILE_LEVEL = "contest.file.level";
@@ -129,6 +131,13 @@ public class Initialize {
 		logger.info(String.format("election.type: %s", type));
 		elecType = ElectionType.toEnum(type);
 	}
+	
+	static void validateEndorsedParty() {
+		String endorsedPartyString = Utils.getPropValue(ballotGenProps, PROP_ENDORSED_PARTY);
+		logger.info(String.format("endorsed.party: %s", endorsedPartyString));
+		endorsedParty = endorsedPartyString.isEmpty()? null : Party.toEnum(endorsedPartyString);
+	}
+	
 	static void validateContestFileLevel() {
 		String level = Utils.getPropValue(ballotGenProps, "contest.file.level");
 		logger.info(String.format("contet.file.level: %s", level));
@@ -185,9 +194,9 @@ public class Initialize {
 		validateWordTemplate();
 		// very little validation here.
 		validateElectionType();
+		validateEndorsedParty();
 		validateContestFileLevel();
 		validateFormatsText();
-		//validateContestFormats();
 	}
 	
 	

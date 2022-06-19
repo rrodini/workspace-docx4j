@@ -21,9 +21,15 @@
 				<version>3.0.0-M5</version>
 
 				<configuration>
+					<skipTests>false</skipTests>
+					<excludes>
+						<exclude>**/TestContestFactory.java</exclude>
+					</excludes>
+<!-- 					
 					<includes>
 						<include>**/Test*.java</include>
 					</includes>
+-->
 				</configuration>
 
 			</plugin>
