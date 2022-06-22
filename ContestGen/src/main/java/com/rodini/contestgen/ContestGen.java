@@ -94,8 +94,8 @@ public class ContestGen {
 					"args[0]: path Voter Services specimen text file.\n" +
 					"args[1]: path to directory for generated municipal level \"XYZ_contests.txt\" files.");
 		} else {
-			String msg0 = String.format("path to Voter Services specimen text   : ", args[0]);
-			String msg1 = String.format("path to directory for generate contests: ", args[1]);
+			String msg0 = String.format("path to Voter Services specimen text   : %s", args[0]);
+			String msg1 = String.format("path to directory for generate contests: %s", args[1]);
 			System.out.println(msg0);
 			System.out.println(msg1);
 		}

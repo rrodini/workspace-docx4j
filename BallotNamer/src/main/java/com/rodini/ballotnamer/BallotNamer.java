@@ -81,6 +81,10 @@ public class BallotNamer {
 		if (args.length < 1) {
 			logFatalError("initialize: missing command line argument:\n" +
 					"args[0]: path to directory w/ PDF and text files");
+		} else {
+			String msg0 = String.format("path to dir w/ PDF and text files: %s", args[0]);
+			System.out.println(msg0);
+			logger.info(msg0);
 		}
 		// validate the CLI args
 		dirPath = args[0];
@@ -92,15 +96,6 @@ public class BallotNamer {
 		} catch (SecurityException e) {
 			logFatalError("initialize: can't access this directory" + dirPath);
 		}
-//		outPath = args[1];
-//		File directory2 = new File(outPath);
-//		try {
-//			if (!directory2.isDirectory()) {
-//				logFatalError("initialize: command line arg[1] is not a directory: " + outPath);
-//			}
-//		} catch (SecurityException e) {
-//			logFatalError("initialize: can't access this directory" + outPath);
-//		}
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
 		// get ballotname properties
 		props = getPropsFromFile(propsFilePath);
@@ -111,7 +106,6 @@ public class BallotNamer {
 		logger.info("initialize: properties file loaded: " + propsFilePath);
 		// build compile matching pattern
 		fileBallotPattern = getFileBallotPattern();
-//		ballotContestPattern = getBallotContestPattern();
 		String envStr = props.getProperty("environment");
 		env = ENVIRONMENT.valueOf(envStr);	
 	}
