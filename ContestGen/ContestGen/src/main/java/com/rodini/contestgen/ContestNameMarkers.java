@@ -30,15 +30,15 @@ public class ContestNameMarkers {
 			contestNameFormats = new String[formatList.size()];
 			for (int i = 0; i < formatList.size(); i++) {
 				contestNameFormats[i] = (String) formatList.get(i);
-System.out.printf("resource: %s%n", contestNameFormats[i]);		
+				//System.out.printf("resource: %s%n", contestNameFormats[i]);		
 			}
 			
 		} else {
 			// use test formats
 			contestNameFormats = testContestNameFormats;
-			for (int i=0; i<testContestNameFormats.length; i++) {
-System.out.printf("test   : %s%n", contestNameFormats[i]);		
-			}
+//			for (int i=0; i<testContestNameFormats.length; i++) {
+//				System.out.printf("test   : %s%n", contestNameFormats[i]);		
+//			}
 		}
 		contestNamePatterns = new Pattern[contestNameFormats.length];		
 		for (int i = 0; i < contestNameFormats.length; i++) {

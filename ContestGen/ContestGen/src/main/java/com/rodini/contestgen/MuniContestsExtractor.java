@@ -71,13 +71,13 @@ public class MuniContestsExtractor {
 		String contestText = muniContestsText.substring(start, end);
 		ContestNameExtractor cnm = new ContestNameExtractor();
 		int format = cnm.match(contestText);
-System.out.printf("extractContestName: format: %d%n", format);
+		//System.out.printf("extractContestName: format: %d%n", format);
 		if (format == -1) {
 			logger.error("No format for: " + contestText);
 			return;
 		}
 		String name = cnm.getContestName();
-System.out.printf("extractContestName: name: %s%n", name);
+		//System.out.printf("extractContestName: name: %s%n", name);
 		muniContestNames.add(new ContestName(name, format));
 	}
 	/**
