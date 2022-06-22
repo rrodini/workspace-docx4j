@@ -93,11 +93,14 @@ public class ContestGen {
 			Utils.logFatalError("missing command line arguments:\n" +
 					"args[0]: path Voter Services specimen text file.\n" +
 					"args[1]: path to directory for generated municipal level \"XYZ_contests.txt\" files.");
+		} else {
+			String msg0 = String.format("path to Voter Services specimen text   : ", args[0]);
+			String msg1 = String.format("path to directory for generate contests: ", args[1]);
+			System.out.println(msg0);
+			System.out.println(msg1);
 		}
 		// check args[0] is present and a text file
 		String specimenFilePath = args[0];
-System.out.printf("args.length: %d%n", args.length);
-System.out.printf("args[0]: %s%n", args[0]);
 		specimenText = Utils.readTextFile(specimenFilePath);
 		// check args[1] is present and a directory
 		outPath = args[1];
@@ -158,7 +161,7 @@ System.out.printf("args[0]: %s%n", args[0]);
 			String msg = String.format("writing file: %s%n", contestFilePath);
 			System.out.printf(msg);
 			logger.info(msg);
-			try (FileWriter preContestsFile = new FileWriter(contestFilePath, true);) {
+			try (FileWriter preContestsFile = new FileWriter(contestFilePath, false);) {
 				for (ContestName mcn: cnList) {
 					String contestName = mcn.getName();
 					contestName = contestName.replaceAll("\n", "\\\\\\n");

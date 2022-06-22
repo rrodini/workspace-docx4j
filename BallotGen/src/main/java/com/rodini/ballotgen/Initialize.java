@@ -66,6 +66,13 @@ public class Initialize {
 			logFatalError("missing CLI arguments:\n" +
 					"args[0]: path to single ballot text file or directory containing such.\n" +
 					"args[1]: path to directory for generated municipal level \"XYZ_contests.txt\" files.");
+		} else {
+			String msg0 = String.format("input dir:      : %s%n", args[0]);
+			String msg1 = String.format("contest file/dir: %s%n", args[1]);
+			System.out.println(msg0);
+			System.out.println(msg1);
+			logger.info(msg0);
+			logger.info(msg1);
 		}
 		String ballotFilePath = args[0];
 		processBallotFiles(ballotFilePath);

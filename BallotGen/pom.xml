@@ -22,10 +22,10 @@
 
 				<configuration>
 					<skipTests>false</skipTests>
+<!-- 					
 					<excludes>
 						<exclude>**/TestContestFactory.java</exclude>
 					</excludes>
-<!-- 					
 					<includes>
 						<include>**/Test*.java</include>
 					</includes>
