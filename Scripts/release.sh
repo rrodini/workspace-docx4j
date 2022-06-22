@@ -11,9 +11,9 @@ fi
 
 
 PARENT_FOLDER=/Users/robert/Documents/"Sample Ballot Production"
-CONTESTGEN_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/ContestGen
-BALLOTGEN_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/BallotGen
-BALLOTNAMER_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/BallotNamer
+CONTESTGEN_FOLDER=/Users/robertgit/workspace-docx4j/ContestGen
+BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
+BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
 PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBOX
 SAMPLES_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/samples
 SCRIPTS_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/scripts
