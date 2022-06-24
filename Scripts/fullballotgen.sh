@@ -8,7 +8,7 @@ VOTER_SERVICES_SPECIMEN="General-2021.pdf"
 VOTER_SERVICES_PAGES_PER_BALLOT=2
 #CONTESTS_FILE="../contests"
 JVM_LOG4J_LEVEL="-Dlog.level=ERROR"
-JVM_LOG4J_CONFIG="-Dlog4j.configurationFile=./resources/log4j-console-config.xml"
+JVM_LOG4J_CONFIG="-Dlog4j.configurationFile=./resources/log4j-file-config.xml"
 
 if [ -n BALLOTGEN_VERSION ]; then
   echo -e "\nBALLOTGEN_VERSION: ${BALLOTGEN_VERSION}\n"
