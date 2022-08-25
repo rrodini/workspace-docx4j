@@ -15,9 +15,9 @@ import static com.rodini.contestgen.ENVIRONMENT.*;
  * ContestGen is the program that analyzes the text of the Voter Services specimen
  * file and extracts the municipal level contests from it. At the end of the run
  * the contests folder should be populated as follows:
- *   Atglen_contests.txt
- *   Avondale_contests.txt
- *   etc.
+ *   005_Atglen_contests.txt
+ *   010_Avondale_contests.txt
+ *   ...
  *   common_contests.txt
  *   
  * CLI arguments: 
@@ -92,7 +92,7 @@ public class ContestGen {
 		if (args.length < 2) {
 			Utils.logFatalError("missing command line arguments:\n" +
 					"args[0]: path Voter Services specimen text file.\n" +
-					"args[1]: path to directory for generated municipal level \"XYZ_contests.txt\" files.");
+					"args[1]: path to directory for generated municipal level \"NNN_XYZ_contests.txt\" files.");
 		} else {
 			String msg0 = String.format("path to Voter Services specimen text   : %s", args[0]);
 			String msg1 = String.format("path to directory for generate contests: %s", args[1]);
