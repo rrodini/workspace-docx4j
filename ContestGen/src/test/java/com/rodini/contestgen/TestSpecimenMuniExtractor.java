@@ -49,9 +49,9 @@ class TestSpecimenMuniExtractor {
 //		System.out.printf("last: %s%n", muniExtracts.get(muniExtracts.size()-1).getMuniName());
 		assertEquals(232, muniExtracts.size());
 		// first name in list
-		assertEquals("Atglen", muniExtracts.get(0).getMuniName());
+		assertEquals("005_Atglen", muniExtracts.get(0).getMuniName());
 		// last name in list
-		assertEquals("West_Chester_7", muniExtracts.get(muniExtracts.size()-1).getMuniName());;
+		assertEquals("860_West_Chester_7", muniExtracts.get(muniExtracts.size()-1).getMuniName());;
 	}
 
 }

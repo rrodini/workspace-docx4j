@@ -1,14 +1,19 @@
 package com.rodini.contestgen;
 
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.rodini.contestgen.Utils.logFatalError;
 import static com.rodini.contestgen.ENVIRONMENT.*;
 
 /**
@@ -22,7 +27,7 @@ import static com.rodini.contestgen.ENVIRONMENT.*;
  *   
  * CLI arguments: 
  * args[0] path Voter Services specimen text file.
- * args[1] path to directory for generated municipal level "XYZ_contests.txt" files.
+ * args[1] path to directory for generated municipal level "NNN_XYZ_contests.txt" files.
  * 
  * @author Bob Rodini
  *
@@ -99,8 +104,14 @@ public class ContestGen {
 			System.out.println(msg0);
 			System.out.println(msg1);
 		}
-		// check args[0] is present and a text file
+		// check args[0] is present is a TXT file
 		String specimenFilePath = args[0];
+		if (!Files.exists(Path.of(specimenFilePath), NOFOLLOW_LINKS)) {
+			Utils.logFatalError("can't find \"" + specimenFilePath + "\" file.");
+		}
+		if (!specimenFilePath.endsWith("txt")) {
+			Utils.logFatalError("file \"" + specimenFilePath + "\" doesn't end with TXT extension.");
+		}
 		specimenText = Utils.readTextFile(specimenFilePath);
 		// check args[1] is present and a directory
 		outPath = args[1];
@@ -158,8 +169,8 @@ public class ContestGen {
 		} else {
 			// PRODUCTION
 			String contestFilePath = outPath + File.separator + muniName + CONTESTS_FILE;
-			String msg = String.format("writing file: %s%n", contestFilePath);
-			System.out.printf(msg);
+			String msg = String.format("writing file: %s", contestFilePath);
+			System.out.println(msg);
 			logger.info(msg);
 			try (FileWriter preContestsFile = new FileWriter(contestFilePath, false);) {
 				for (ContestName mcn: cnList) {
