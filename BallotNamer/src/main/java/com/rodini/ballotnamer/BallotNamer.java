@@ -326,7 +326,7 @@ public class BallotNamer {
 			logger.error(msg);
 		}
  		String fileText = fileLines.stream().collect(joining("\n"));
-		logger.debug(String.format("first 100 characters of fileText: %n", fileText.substring(0, 100)));
+		logger.debug(String.format("first 100 characters of fileText: %n", fileText.substring(0, Math.min(fileText.length(), 100))));
  		return fileText;
 	}
 	/**
