@@ -31,8 +31,9 @@ import org.slf4j.LoggerFactory;
  * is broken into precinct-level files and before the the BallotGen program runs.
  * 
  * It's main purpose is to re-name all of the files from data in within the text
- * of the file. Example: municipal-1.txt -> Atglen_VS.txt
- *                       municipal-1.pdf -> Atglen_VS.pdf
+ * of the file. Example: municipal-1.txt -> 005_Atglen(005)_VS.txt
+ *                       municipal-1.pdf -> 005_Atglen(005)_VS.pdf
+ *                       ...
  * 
  * CLI arguments: 
  * arg[0] path to directory w/ PDF and text files
@@ -129,7 +130,11 @@ public class BallotNamer {
 		}
 		org.apache.logging.log4j.core.config.Configurator.setLevel("com.rodini.ballotnamer",log4jLevel);
 	}
-
+	/**
+	 * Get the program properties.
+	 * @param filePath to properties file.
+	 * @return Properties object.
+	 */
 	static Properties getPropsFromFile(String filePath) {
 		Properties props = new Properties();
 		try (FileInputStream resourceStream = new FileInputStream(filePath);) {
@@ -180,36 +185,6 @@ public class BallotNamer {
 		return compiledRegex;
 	}
 	
-	/* private */ 
-//	static Pattern getBallotContestPattern() {
-//		String startRegex = props.getProperty("ballot.contest.format");
-//		logger.debug(String.format("getBallotContestPattern: startRegex: %s", startRegex));
-//		Pattern compiledRegex = null;
-//		if (startRegex == null) {
-//			String msg = "property \"ballot.contest.format\" cannot be found: ";
-//			logFatalError(msg);
-//		}
-//		String endRegex = startRegex.replace(GENERIC_NAME, props.getProperty("ballot.title"));
-//		if (endRegex.startsWith("/")) {
-//			// strip off leading "/"
-//			endRegex = endRegex.substring(1);
-//		}
-//		if (endRegex.endsWith("/")) {
-//			// strip off trailing "/"
-//			endRegex = endRegex.substring(0, endRegex.length() - 1);
-//		}
-//		logger.debug(String.format("getBallotContestPattern: endRegex: %s", endRegex));
-//		try {
-//			compiledRegex = Pattern.compile(endRegex, Pattern.MULTILINE);
-//		} catch (Exception e) {
-//			String msg = String.format("can't compile regex: %s msg: %s", endRegex , e.getMessage());
-//			logFatalError(msg);
-//		}
-//		logger.debug(String.format("getBallotContestPattern: compiledRegex: %s", compiledRegex.toString()));
-//		return compiledRegex;
-//	}
-
-	
 	/** 
 	 * main entry point for program.
 	 * @param args CLI arguments
@@ -222,8 +197,7 @@ public class BallotNamer {
 		logger.info(startMsg);
 		initialize(args);
         processFiles();
- //       processContestTitles();
-		logger.info("End of BallotNamer app.");
+ 		logger.info("End of BallotNamer app.");
 		System.out.println("End of BallotNamer app.");
 	}
 	/**
@@ -251,33 +225,6 @@ public class BallotNamer {
 		
 	}
 	/**
-	 * processContestTitles produces "pre-contests.txt" file that lists
-	 * the contest titles within the overall ballot.  This process is
-	 * far from perfect and requires a human to further process the file
-	 * as follows:
-	 * 
-	 * pre-contests.txt => contests.txt
-	 */
-	/* private */
-//	static void processContestTitles() {
-//		Set<String> titles = new TreeSet<>();
-//		String msg = String.format("writing file: %s%n", PRE_CONTESTS_FILE);
-//		System.out.printf(msg);
-//		logger.info(msg);
-//		try (FileWriter preContestsFile = new FileWriter(outPath + File.separator + PRE_CONTESTS_FILE, true);) {
-//			for (String ballot: preContests.keySet()) {
-//				for (String title: preContests.get(ballot)) {
-//					if (!titles.contains(title)) {
-//						preContestsFile.write(String.format("%s: %s%n", ballot, title));
-//						titles.add(title);
-//					}
-//				}
-//			}	
-//		} catch (IOException e) {
-//			logger.error(e.getMessage());
-//		}
-//	}
-	/**
 	 * collectFilesByExtension returns a list of files in a directory that have 
 	 * the given extension e.g. ".txt".
 	 * @param ext e.g. ".txt"
@@ -304,10 +251,7 @@ public class BallotNamer {
 		logger.info(msg);
 		// get the file text for searching
 		String fileText = getFileText(txtFileName);
-		String ballotFileName = getBallotFileName(txtFileName, fileText);
-		
-//		getBallotContests(ballotFileName, fileText);
-		
+		String ballotFileName = getBallotFileName(txtFileName, fileText);	
 		// now rename the files
 		String newTxtFileName = ballotFileName + FILE_SUFFIX + ".txt";
 		String newPdfFileName = ballotFileName + FILE_SUFFIX + ".pdf";
@@ -355,7 +299,7 @@ public class BallotNamer {
 			logFatalError(msg);
 		} else {
 			try {
-				ballotFileName = m.group("name");
+				ballotFileName = m.group("id") + "_" + m.group("name");
 			} catch (Exception e) {
 				String msg = e.getMessage();
 				logFatalError(msg);
@@ -382,7 +326,7 @@ public class BallotNamer {
 			logger.error(msg);
 		}
  		String fileText = fileLines.stream().collect(joining("\n"));
-		logger.debug(String.format("first 100 characters of fileText: %n", fileText.substring(0, 100)));
+		logger.debug(String.format("first 100 characters of fileText: %n", fileText.substring(0, Math.min(fileText.length(), 100))));
  		return fileText;
 	}
 	/**

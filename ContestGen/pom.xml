@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>contest-gen</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>ContestGen</name>
 	<description>ContestGen generates contests.txt files for BallotGen program.</description>
 	<build>

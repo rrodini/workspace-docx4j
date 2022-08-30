@@ -1,6 +1,7 @@
 #!/bin/bash
-# release.sh creates the folders and moves files
-# for a full release of SampleBallotGen.
+# release.sh creates the folders and moves files for a full release of SampleBallotGen. 
+#
+# Script must be run in "Sample Ballot Production" folder.
 
 if [ -n BALLOTGEN_VERSION ]; then
   echo -e "\nBALLOTGEN_VERSION: ${BALLOTGEN_VERSION}\n"
@@ -11,19 +12,20 @@ fi
 
 
 PARENT_FOLDER=/Users/robert/Documents/"Sample Ballot Production"
-CONTESTGEN_FOLDER=/Users/robertgit/workspace-docx4j/ContestGen
+RELEASE_FOLDER="SampleBallotGen-${BALLOTGEN_VERSION}"
+CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
 BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
 BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
-PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBOX
-SAMPLES_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/samples
-SCRIPTS_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/scripts
+BALLOTZIPPER_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/BallotZipper
+PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBox
+SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
+SPECIMENS_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/Specimens
 
 
 # do all work in the parent folder
 cd "${PARENT_FOLDER}"
 
 # don't clobber an existing folder
-RELEASE_FOLDER="SampleBallotGen-${BALLOTGEN_VERSION}"
 echo "Generating release for ${RELEASE_FOLDER}"
 if [ -d ${RELEASE_FOLDER} ]
 then
@@ -39,13 +41,16 @@ cd "${RELEASE_FOLDER}"
 #   /resources
 # /ballotnamer
 #   /resources
+# /ballotzipper
+#   /resources
 # /contestgen
 #  /resources
 # /contests
 # /logs
 # /output
 # /PDFBOX
-# /samples
+# /specimens
+# /zip
   
 echo "Creating contestgen folder"
 mkdir contestgen
@@ -71,8 +76,17 @@ echo "Creating ballotnamer/resources folder"
 mkdir resources
 cd ..
 
+echo "Creating ballotzipper"
+mkdir ballotzipper
+cd ballotzipper
+
+echo "Creating ballotzipper/resources folder"
+mkdir resources
+cd ..
+
 echo "Creating contests folder"
 mkdir contests
+
 
 echo "Creating logs folder"
 mkdir logs
@@ -83,12 +97,16 @@ mkdir output
 echo "Creating PDFBOX folder"
 mkdir PDFBOX
 
-echo "Creating samples folder"
-mkdir samples
+echo "Creating specimens folder"
+mkdir specimens
+
+echo "Creating zip folder"
+mkdir zip
 
 echo "folder structure creating...Now moving files..."
 
 echo "copying contestgen files and resources"
+
 cp "${CONTESTGEN_FOLDER}/target/contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" contestgen/
 cp -a "${CONTESTGEN_FOLDER}"/resources/. contestgen/resources/
 
@@ -100,16 +118,20 @@ echo "copying ballotnamer files and resources"
 cp "${BALLOTNAMER_FOLDER}/target/ballot-namer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotnamer/
 cp -a "${BALLOTNAMER_FOLDER}"/resources/. ballotnamer/resources/
 
+echo "copying zipper files and resources"
+cp "${BALLOTZIPPER_FOLDER}/target/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
+cp "${BALLOTZIPPER_FOLDER}"/precincts-zones.csv ballotzipper/
+cp -a "${BALLOTZIPPER_FOLDER}"/resources/. ballotzipper/resources/
+
 echo "copying PDFBox files and resources"
 cp "${PDFBOX_FOLDER}/pdfbox-app-2.0.25.jar" PDFBOX/
 
-echo "copying samples files"
-cp -a "${SAMPLES_FOLDER}"/. samples/
+echo "copying specimens files"
+cp -a "${SPECIMENS_FOLDER}"/. specimens/
 
 echo "copying script files"
 cp -a "${SCRIPTS_FOLDER}"/. .
 
 cd ..
-#echo "zipping files in {$RELEASE_FOLDER}"
-#zip -r "${RELEASE_FOLDER}.zip" "${RELEASE_FOLDER}"
+echo "DONE."
 

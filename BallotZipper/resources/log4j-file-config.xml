@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="BallotZipper" packages="">
+  <Appenders>
+    <File name="BallotZipper" fileName="../logs/ballotzipper.log">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="ERROR">
+      <AppenderRef ref="BallotZipper"/>
+    </Root>
+  </Loggers>
+</Configuration>

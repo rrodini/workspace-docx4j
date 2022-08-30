@@ -1,10 +1,10 @@
 # fullballotgen.psq is a powershell script that drives the generation
 # of municipal ballot docx files (approx. 232).
 
-$VOTER_SERVICES_SPECIMEN="Primary-Dems-2018.pdf"
-$VOTER_SERVICES_PAGES_PER_BALLOT=1
-$CONTESTS_FILE="contests-primary-2018.txt"
-$JVM_LOG4J_LEVEL="-Dlog.level=INFO"
+$VOTER_SERVICES_SPECIMEN="General-2021.pdf"
+$VOTER_SERVICES_PAGES_PER_BALLOT=2
+$PRECINCTS_ZONES_CSV="contests-zones.csv"
+$JVM_LOG4J_LEVEL="-Dlog.level=ERROR"
 $JVM_LOG4J_CONFIG="-Dlog4j.configurationFile=.\resources\log4j-file-config.xml"
 
 $BALLOTGEN_VERSION=(Get-Item env:BALLOTGEN_VERSION).value
@@ -40,4 +40,10 @@ Set-Location ..
 Write-Output "Generating municipal .docx files."
 Set-Location .\ballotgen
 java $JVM_LOG4J_LEVEL $JVM_LOG4J_CONFIG -jar "ballot-gen-$BALLOTGEN_VERSION-jar-with-dependencies.jar"  ..\output ..\contests
+Set-Location ..
+
+# run BallotZipper to generate .zip files for distribution
+Write-Output "Generating zone .zip files."
+Set-Location .\ballotzipper
+java $JVM_LOG4J_LEVEL $JVM_LOG4J_CONFIG -jar "ballot-zipper-$BALLOTGEN_VERSION-jar-with-dependencies.jar" "..\${$PRECINCTS_ZONES_CSV}" ..\output ..\zip
 Set-Location ..

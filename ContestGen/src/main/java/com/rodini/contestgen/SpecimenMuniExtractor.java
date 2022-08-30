@@ -58,7 +58,8 @@ public class SpecimenMuniExtractor {
 		} else {
 			try {
 				muniNames = m.results()
-						.map(mr -> mr.group(2))
+						//              id               name
+						.map(mr -> mr.group(1) + " " + mr.group(2))
 						.distinct()
 						// avoid embedded spaces
 						.map( name -> name.replace(" ", "_"))
