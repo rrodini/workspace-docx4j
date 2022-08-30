@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * 
  * CLI arguments:
  * args[0] - path to single ballot text file or directory containing such.
- * args[1] - path to directory for generated municipal level "XYZ_contests.txt" files.
+ * args[1] - path to directory for generated municipal level "NNN_XYZ_contests.txt" files.
  *
  * @author Bob Rodini
  *
@@ -33,7 +33,7 @@ public class BallotGen {
 			GenDocxBallot gdb = new GenDocxBallot(
 					Initialize.msWordTemplateFile, 
 					ballotFile,
-					Initialize.contestLevel, // goal - make this parameter unique to municipality
+					Initialize.contestLevel,
 					Initialize.formatsText);
 					gdb.generate();
 		}
