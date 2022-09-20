@@ -10,7 +10,9 @@ public enum Party {
 	REP_DEM("Republican/Democratic"),
 	LIBERTARIAN("Libertarian"),
 	NOAFFILIATION("No Affiliation"),
-	LEADERSHIPFORALL("Leadership for All");
+	LEADERSHIPFORALL("Leadership for All"),
+	GREEN_PARTY("Green Party"),
+	KEYSTONE("Keystone");
 	
 	private static final Logger logger = LoggerFactory.getLogger(Party.class);
 
@@ -29,6 +31,8 @@ public enum Party {
 		case "Libertarian":	party = LIBERTARIAN; break;
 		case "No Affiliation":	party = NOAFFILIATION; break;
 		case "Leadership for All":	party = LEADERSHIPFORALL; break;
+		case "Green Party":	party = GREEN_PARTY; break;
+		case "Keystone":	party = KEYSTONE; break;
 		default: logger.error("can't convert string to Party: " + display);
 		}
 		if (party == null) {

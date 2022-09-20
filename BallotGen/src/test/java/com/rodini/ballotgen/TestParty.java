@@ -36,13 +36,29 @@ class TestParty {
 			case REP_DEM:
 				assertEquals("Republican/Democratic", p.toString());
 				break;
+			case LIBERTARIAN:
+				assertEquals("Libertarian", p.toString());
+				break;
+			case NOAFFILIATION:
+				assertEquals("No Affiliation", p.toString());
+				break;
+			case LEADERSHIPFORALL:
+				assertEquals("Leadership for All", p.toString());
+				break;
+			case GREEN_PARTY:
+				assertEquals("Green Party", p.toString());
+				break;
+			case KEYSTONE:
+				assertEquals("Keystone", p.toString());
+				break;
 			}
 		}
 	}
 	@Test
 	void testToEnum() {
 		List<String> names = List.of("Democratic", "Republican", "Independent", "Democratic/Republican",
-				"Republican/Democratic");
+				"Republican/Democratic","Libertarian","No Affiliation","Leadership for All","Green Party",
+				"Keystone");
 		for (String name : names) {
 			switch (name) {
 			case "Democratic":
@@ -59,6 +75,21 @@ class TestParty {
 				break;
 			case "Republican/Democratic":
 				assertEquals(Party.REP_DEM, Party.toEnum(name));
+				break;
+			case "Libertarian":
+				assertEquals(Party.LIBERTARIAN, Party.toEnum(name));
+				break;
+			case "Leadership for All":
+				assertEquals(Party.LEADERSHIPFORALL, Party.toEnum(name));
+				break;
+			case "No Affiliation":
+				assertEquals(Party.NOAFFILIATION, Party.toEnum(name));
+				break;
+			case "Green Party":
+				assertEquals(Party.GREEN_PARTY, Party.toEnum(name));
+				break;
+			case "Keystone":
+				assertEquals(Party.KEYSTONE, Party.toEnum(name));
 				break;
 			}
 		}

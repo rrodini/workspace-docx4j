@@ -20,11 +20,6 @@ import org.slf4j.LoggerFactory;
 		this.endorsed = false;
 	}
 	
-	public PrimaryCandidate(String name) {
-		super(name);
-		this.residence = "";
-		this.endorsed = false;
-	}
 	public String getResidence() {
 		return residence;
 	}

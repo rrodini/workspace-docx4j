@@ -240,7 +240,13 @@ public class ContestFactory {
 				display2 = elements[i+1];
 			}
 			if (elecType == GENERAL) {
-				candidates.add(new GeneralCandidate(display1, Party.toEnum(display2)));
+				Party party = Party.toEnum(display2);
+				// if party is unrecognized just use the text from Voter Services
+				if (party == null) {
+					candidates.add(new GeneralCandidate(display1, party, display2));
+				} else {
+					candidates.add(new GeneralCandidate(display1, party, party.toString()));
+				}
 			} else if (elecType == PRIMARY) {
 				candidates.add(new PrimaryCandidate(display1, display2));
 			} else {

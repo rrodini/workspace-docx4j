@@ -13,8 +13,8 @@ class TestContest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		GeneralCandidate cand1 = new GeneralCandidate("Maria McLaughlin", Party.DEMOCRATIC);
-		GeneralCandidate cand2 = new GeneralCandidate("Kevin Brobson", Party.REPUBLICAN);
+		GeneralCandidate cand1 = new GeneralCandidate("Maria McLaughlin", Party.DEMOCRATIC, "");
+		GeneralCandidate cand2 = new GeneralCandidate("Kevin Brobson", Party.REPUBLICAN, "");
 		List<Candidate> cands = List.of(cand1, cand2);
 		contest = new Contest("Justice of the Supreme Court", "", "Vote for ONE", cands);
 	}

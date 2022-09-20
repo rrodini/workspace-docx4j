@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.rodini.ballotgen.ContestFileLevel.*;
 import static com.rodini.ballotgen.Utils.logFatalError;
+import static com.rodini.ballotgen.ElectionType.*;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -362,9 +363,15 @@ public class GenDocxBallot {
 		List<Candidate> cands = contest.getCandidates();
 		// Endorsements here.
 		for (Candidate cand: cands) {
-			String endorse = (cand.getEndorsement())? blackEllipse : whiteEllipse;
+			// Note: there is no ellipse (black or white) when the party is null.
+			// This is part of the kludge for "tickets" but also useful for other
+			// situations
+			String endorse = "   ";  // Need 3 spaces for 2nd name on ticket
+			if (Initialize.elecType == GENERAL && ((GeneralCandidate) cand).getParty() != null) {
+				endorse = (cand.getEndorsement())? blackEllipse : whiteEllipse;
+			}
 			String partyOrResidence = (Initialize.elecType == ElectionType.GENERAL) ?
-					((GeneralCandidate) cand).getParty().toString():
+					((GeneralCandidate) cand).getTextBeneathName():
 					((PrimaryCandidate) cand).getResidence();
 			mdp.addStyledParagraphOfText(STYLEID_CANDIDATE_NAME, endorse + " " + cand.getName());
 			mdp.addStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, partyOrResidence);
