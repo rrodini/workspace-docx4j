@@ -1,7 +1,7 @@
 #!/bin/bash
 # updatebinaries.sh refresh the jar files for ContestGen, BallotNamer, BallotGen, BallotZipper.
 
-if [ -n BALLOTGEN_VERSION ]; then
+if [ -n "$BALLOTGEN_VERSION" ]; then
   echo -e "\nBALLOTGEN_VERSION: ${BALLOTGEN_VERSION}\n"
 else 
   echo -e "\nBALLOTGEN_VERSION environment variable not defined -- Quitting.\n"
@@ -12,31 +12,27 @@ RELEASE_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/SampleBallotGe
 CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
 BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
 BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
-BALLOTZIPPER_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/BallotZipper
-SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
+BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
+#SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
 
 # do all work in the release folder
-cd "$RELEASE_FOLDER"
+cd "$RELEASE_FOLDER" || exit
 
-echo "copying contestgen files and resources"
+echo "copying contestgen binary"
 cp "${CONTESTGEN_FOLDER}/target/contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" contestgen/
-cp -a "${CONTESTGEN_FOLDER}"/resources/. contestgen/resources/
+#cp -a "${CONTESTGEN_FOLDER}"/resources/. contestgen/resources/
 
-echo "copying ballotgen files and resources"
+echo "copying ballotgen binary"
 cp "${BALLOTGEN_FOLDER}/target/ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotgen/
-cp -a "${BALLOTGEN_FOLDER}"/resources/. ballotgen/resources/
+#cp -a "${BALLOTGEN_FOLDER}"/resources/. ballotgen/resources/
 
-echo "copying ballotnamer files and resources"
+echo "copying ballotnamer binary"
 cp "${BALLOTNAMER_FOLDER}/target/ballot-namer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotnamer/
-cp -a "${BALLOTNAMER_FOLDER}"/resources/. ballotnamer/resources/
+#cp -a "${BALLOTNAMER_FOLDER}"/resources/. ballotnamer/resources/
 
-echo "copying ballotzipper files and resources"
+echo "copying ballotzipper binary"
 cp "${BALLOTZIPPER_FOLDER}/target/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
-cp "${BALLOTZIPPER_FOLDER}"/precincts-zones.csv ballotzipper/
-cp -a "${BALLOTZIPPER_FOLDER}"/resources/. ballotzipper/resources/
+#cp "${BALLOTZIPPER_FOLDER}"/precincts-zones.csv ballotzipper/
+#cp -a "${BALLOTZIPPER_FOLDER}"/resources/. ballotzipper/resources/
 
-echo "copying script files"
-cp -a "${SCRIPTS_FOLDER}"/. .
-
-cd ..
 echo "DONE."
