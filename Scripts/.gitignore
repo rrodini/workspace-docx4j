@@ -18,3 +18,4 @@ target/
 
 ### ContestGen ###
 contests/
+/.DS_Store
