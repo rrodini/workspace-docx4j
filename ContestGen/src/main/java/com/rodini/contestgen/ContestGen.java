@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.rodini.contestgen.Utils.logFatalError;
-import static com.rodini.contestgen.ENVIRONMENT.*;
+import static com.rodini.contestgen.Environment.*;
 
 /**
  * ContestGen is the program that analyzes the text of the Voter Services specimen
@@ -40,7 +40,7 @@ public class ContestGen {
 	static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTS_FILE = "_contests.txt";
 
-	static ENVIRONMENT env;		// TEST vs. PRODUCTION
+	static Environment env;		// TEST vs. PRODUCTION
 	static String specimenText; // text of the Voter Services specimen.
 	static String outPath;		// path to output directory
 	static Properties props;
@@ -127,7 +127,7 @@ public class ContestGen {
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
 		props = Utils.loadProperties(propsFilePath);
 		String envStr = props.getProperty("environment");
-		env = ENVIRONMENT.valueOf(envStr);
+		env = Environment.valueOf(envStr);
 		// initialize marker classes
 		initMarkers(propsFilePath);
 	}
@@ -172,11 +172,11 @@ public class ContestGen {
 			String msg = String.format("writing file: %s", contestFilePath);
 			System.out.println(msg);
 			logger.info(msg);
-			try (FileWriter preContestsFile = new FileWriter(contestFilePath, false);) {
+			try (FileWriter contestsFile = new FileWriter(contestFilePath, false);) {
 				for (ContestName mcn: cnList) {
 					String contestName = mcn.getName();
 					contestName = contestName.replaceAll("\n", "\\\\\\n");
-					preContestsFile.write(String.format("%s,%d%n", contestName, mcn.getFormat()));
+					contestsFile.write(String.format("%s,%d%n", contestName, mcn.getFormat()));
 				}
 	
 			} catch (IOException e) {

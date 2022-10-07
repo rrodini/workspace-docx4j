@@ -5,7 +5,7 @@ package com.rodini.contestgen;
  * @author Bob Rodini
  *
  */
-public enum ENVIRONMENT {
+public enum Environment {
 	TEST,
 	INTEGRATION,
 	PRODUCTION,

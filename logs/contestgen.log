@@ -474,3 +474,398 @@
 17:35:11.469 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/common_contests.txt
 
 17:35:11.470 [main] INFO  com.rodini.contestgen.ContestGen - End of ContestGen app.
+17:26:11.974 [main] INFO  com.rodini.contestgen.ContestGen - Start of ContestGen app. Version: 1.1.0
+17:26:12.051 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:26:12.055 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:26:12.057 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:26:12.057 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:26:12.058 [main] ERROR com.rodini.contestgen.Utils - propery value not found for property name: contest.format.5
+17:26:12.058 [main] INFO  com.rodini.contestgen.ContestGen - Environment: PRODUCTION
+17:26:12.082 [main] ERROR com.rodini.contestgen.SpecimenMuniExtractor - no match for municipal names. Bad regex? (?m)^OFFICIAL GENERAL ELECTION BALLOT$
+(?<id>\d+)[\s]*(?<name>.*)
+
+17:31:50.228 [main] INFO  com.rodini.contestgen.ContestGen - Start of ContestGen app. Version: 1.1.0
+17:31:50.280 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:31:50.284 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:31:50.287 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:31:50.288 [main] INFO  com.rodini.contestgen.Utils - properties file loaded from: ./resources/contestgen.properties
+17:31:50.288 [main] ERROR com.rodini.contestgen.Utils - propery value not found for property name: contest.format.5
+17:31:50.288 [main] INFO  com.rodini.contestgen.ContestGen - Environment: PRODUCTION
+17:31:50.377 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/005_Atglen_contests.txt
+17:31:50.419 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/010_Avondale_contests.txt
+17:31:50.436 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/014_Birmingham_1_contests.txt
+17:31:50.453 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/015_Birmingham_2_contests.txt
+17:31:50.469 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/020_E_Bradford_N-1_contests.txt
+17:31:50.484 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/021_E_Bradford_N-2_contests.txt
+17:31:50.500 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/023_E_Bradford_S-1_contests.txt
+17:31:50.514 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/024_E_Bradford_S-2_contests.txt
+17:31:50.528 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/025_W_Bradford_1_contests.txt
+17:31:50.543 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/030_W_Bradford_2_contests.txt
+17:31:50.557 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/031_W_Bradford_3_contests.txt
+17:31:50.572 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/032_W_Bradford_4_contests.txt
+17:31:50.587 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/033_W_Bradford_5_contests.txt
+17:31:50.602 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/035_E_Brandywine_N-1_contests.txt
+17:31:50.617 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/036_E_Brandywine_N-2_contests.txt
+17:31:50.632 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/038_E_Brandywine_S_contests.txt
+17:31:50.647 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/040_W_Brandywine_E-1_contests.txt
+17:31:50.665 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/041_W_Brandywine_E-2_contests.txt
+17:31:50.680 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/043_W_Brandywine_W_contests.txt
+17:31:50.696 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/045_Caln_1_contests.txt
+17:31:50.710 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/050_Caln_2_contests.txt
+17:31:50.728 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/053_Caln_3_contests.txt
+17:31:50.743 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/054_Caln_4_contests.txt
+17:31:50.757 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/055_East_Caln_1_contests.txt
+17:31:50.772 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/056_East_Caln_2_contests.txt
+17:31:50.787 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/060_West_Caln_1_contests.txt
+17:31:50.805 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/061_West_Caln_2_contests.txt
+17:31:50.821 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/065_Charlestown_contests.txt
+17:31:50.835 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/070_Coatesville_1_contests.txt
+17:31:50.851 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/080_Coatesville_2_contests.txt
+17:31:50.865 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/090_Coatesville_3_contests.txt
+17:31:50.880 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/100_Coatesville_4-1_contests.txt
+17:31:50.895 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/110_Coatesville_4-2_contests.txt
+17:31:50.910 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/120_Coatesville_5_contests.txt
+17:31:50.925 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/140_S_Coatesville_contests.txt
+17:31:50.940 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/145_N_Coventry_E_contests.txt
+17:31:50.955 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/150_N_Coventry_M_contests.txt
+17:31:50.969 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/155_N_Coventry_W-1_contests.txt
+17:31:50.983 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/156_N_Coventry_W-2_contests.txt
+17:31:50.999 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/160_E_Coventry_1_contests.txt
+17:31:51.018 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/165_E_Coventry_2_contests.txt
+17:31:51.033 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/170_S_Coventry_contests.txt
+17:31:51.048 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/175_E_Downingtown_E_contests.txt
+17:31:51.063 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/180_E_Downingtown_W_contests.txt
+17:31:51.079 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/185_W_Downingtown_N_contests.txt
+17:31:51.092 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/190_W_Downingtown_S_contests.txt
+17:31:51.107 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/195_Easttown_1_contests.txt
+17:31:51.123 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/198_Easttown_2_contests.txt
+17:31:51.137 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/201_Easttown_3_contests.txt
+17:31:51.151 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/204_Easttown_4_contests.txt
+17:31:51.166 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/207_Easttown_5_contests.txt
+17:31:51.180 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/210_Easttown_6_contests.txt
+17:31:51.194 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/213_Easttown_7_contests.txt
+17:31:51.209 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/215_Elk_contests.txt
+17:31:51.223 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/220_Elverson_contests.txt
+17:31:51.238 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/225_E_Fallowfield_E_contests.txt
+17:31:51.253 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/230_E_Fallowfield_W_contests.txt
+17:31:51.267 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/235_W_Fallowfield_contests.txt
+17:31:51.281 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/240_Franklin_contests.txt
+17:31:51.297 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/243_E_Goshen_1_contests.txt
+17:31:51.311 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/244_E_Goshen_2_contests.txt
+17:31:51.325 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/245_E_Goshen_3_contests.txt
+17:31:51.339 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/246_E_Goshen_4_contests.txt
+17:31:51.353 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/247_E_Goshen_5_contests.txt
+17:31:51.368 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/248_E_Goshen_6_contests.txt
+17:31:51.385 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/249_E_Goshen_7_contests.txt
+17:31:51.398 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/250_E_Goshen_8_contests.txt
+17:31:51.413 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/251_E_Goshen_9_contests.txt
+17:31:51.426 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/255_W_Goshen_N-1_contests.txt
+17:31:51.442 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/260_W_Goshen_N-2_contests.txt
+17:31:51.459 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/261_W_Goshen_N-3_contests.txt
+17:31:51.473 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/262_W_Goshen_N-4_contests.txt
+17:31:51.487 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/265_W_Goshen_M-1_contests.txt
+17:31:51.501 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/270_W_Goshen_M-2_contests.txt
+17:31:51.517 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/275_W_Goshen_S-1_contests.txt
+17:31:51.530 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/280_W_Goshen_S-2_contests.txt
+17:31:51.545 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/285_W_Goshen_S-3_contests.txt
+17:31:51.559 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/286_W_Goshen_S-4_contests.txt
+17:31:51.574 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/290_Highland_contests.txt
+17:31:51.589 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/295_Honey_Brook_Borough_contests.txt
+17:31:51.604 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/300_Honey_Brook_Township_1_contests.txt
+17:31:51.617 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/301_Honey_Brook_Township_2_contests.txt
+17:31:51.632 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/305_Kennett_Square_N_contests.txt
+17:31:51.646 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/310_Kennett_Square_S-1_contests.txt
+17:31:51.660 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/315_Kennett_Square_S-2_contests.txt
+17:31:51.674 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/320_Kennett_Township_1_contests.txt
+17:31:51.688 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/325_Kennett_Township_2_contests.txt
+17:31:51.702 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/328_Kennett_Township_3_contests.txt
+17:31:51.718 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/329_Kennett_Township_4_contests.txt
+17:31:51.731 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/330_London_Britain_contests.txt
+17:31:51.746 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/335_Londonderry_contests.txt
+17:31:51.762 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/340_London_Grove_Ch_contests.txt
+17:31:51.778 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/345_London_Grove_S_contests.txt
+17:31:51.792 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/350_Malvern_contests.txt
+17:31:51.805 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/355_E_Marlborough_E_contests.txt
+17:31:51.819 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/356_E_Marlborough_S_-_01_contests.txt
+17:31:51.834 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/356_E_Marlborough_S_-_02_contests.txt
+17:31:51.847 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/360_E_Marlborough_W_contests.txt
+17:31:51.861 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/365_W_Marlborough_contests.txt
+17:31:51.876 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/370_Modena_contests.txt
+17:31:51.891 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/375_E_Nantmeal_contests.txt
+17:31:51.904 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/380_W_Nantmeal_contests.txt
+17:31:51.918 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/385_New_Garden_N_contests.txt
+17:31:51.932 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/390_New_Garden_S-1_contests.txt
+17:31:51.946 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/391_New_Garden_S-2_contests.txt
+17:31:51.960 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/395_New_London_contests.txt
+17:31:51.973 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/400_Newlin_contests.txt
+17:31:51.987 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/405_E_Nottingham_E_contests.txt
+17:31:52.001 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/406_E_Nottingham_W_contests.txt
+17:31:52.016 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/410_W_Nottingham_contests.txt
+17:31:52.030 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/415_Oxford_E_contests.txt
+17:31:52.044 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/420_Oxford_W_contests.txt
+17:31:52.058 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/425_Lower_Oxford_E_contests.txt
+17:31:52.071 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/430_Lower_Oxford_W_contests.txt
+17:31:52.085 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/435_Upper_Oxford_contests.txt
+17:31:52.099 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/440_Parkesburg_N_contests.txt
+17:31:52.113 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/445_Parkesburg_S_contests.txt
+17:31:52.126 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/450_Penn_contests.txt
+17:31:52.140 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/453_Pennsbury_N-1_contests.txt
+17:31:52.157 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/454_Pennsbury_N-2_contests.txt
+17:31:52.171 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/456_Pennsbury_S-1_contests.txt
+17:31:52.186 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/457_Pennsbury_S-2_contests.txt
+17:31:52.200 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/461_Phoenixville_N-1_contests.txt
+17:31:52.213 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/462_Phoenixville_N-2_contests.txt
+17:31:52.228 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/463_Phoenixville_N-3_contests.txt
+17:31:52.242 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/467_Phoenixville_M-1_contests.txt
+17:31:52.255 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/468_Phoenixville_M-2_contests.txt
+17:31:52.269 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/469_Phoenixville_M-3_contests.txt
+17:31:52.283 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/472_Phoenixville_E-1_contests.txt
+17:31:52.297 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/473_Phoenixville_E-2_contests.txt
+17:31:52.311 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/474_Phoenixville_E-3_contests.txt
+17:31:52.324 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/477_Phoenixville_W-1_contests.txt
+17:31:52.338 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/478_Phoenixville_W-2_contests.txt
+17:31:52.352 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/479_Phoenixville_W-3_contests.txt
+17:31:52.365 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/515_E_Pikeland_1_contests.txt
+17:31:52.379 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/520_E_Pikeland_2_contests.txt
+17:31:52.393 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/521_E_Pikeland_3_contests.txt
+17:31:52.408 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/525_W_Pikeland_contests.txt
+17:31:52.422 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/530_Pocopson_contests.txt
+17:31:52.436 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/535_Sadsbury_N_contests.txt
+17:31:52.449 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/540_Sadsbury_S_contests.txt
+17:31:52.464 [main] ERROR com.rodini.contestgen.MuniContestsExtractor - No format for: West Sadsbury Referendum
+"Do you favor the continued
+imposition of the .70% tax rate by
+West Sadsbury Township to be used
+to raise revenue for the purpose of
+retiring the indebtedness incurred in
+purchasing interests in real property
+or in making additional acquisitions of
+real property for the purpose of
+securing an open space benefit or
+benefits?"
+YES
+NO
+Write-in
+
+17:31:52.465 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/545_W_Sadsbury_contests.txt
+17:31:52.479 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/550_Schuylkill_1_contests.txt
+17:31:52.492 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/555_Schuylkill_2_contests.txt
+17:31:52.506 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/556_Schuylkill_3_contests.txt
+17:31:52.520 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/558_Schuylkill_4_contests.txt
+17:31:52.533 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/560_Spring_City_1_contests.txt
+17:31:52.547 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/565_Spring_City_2_contests.txt
+17:31:52.560 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/570_Spring_City_3_contests.txt
+17:31:52.574 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/575_Spring_City_4_contests.txt
+17:31:52.588 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/580_Thornbury_1_contests.txt
+17:31:52.601 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/581_Thornbury_2_contests.txt
+17:31:52.615 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/585_Tredyffrin_E-1_contests.txt
+17:31:52.629 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/590_Tredyffrin_E-2_contests.txt
+17:31:52.643 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/595_Tredyffrin_E-3_contests.txt
+17:31:52.656 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/600_Tredyffrin_E-4_contests.txt
+17:31:52.670 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/605_Tredyffrin_E-5_contests.txt
+17:31:52.684 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/614_Tredyffrin_M-1_contests.txt
+17:31:52.697 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/615_Tredyffrin_M-2_contests.txt
+17:31:52.711 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/616_Tredyffrin_M-3_contests.txt
+17:31:52.724 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/617_Tredyffrin_M-4_contests.txt
+17:31:52.738 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/618_Tredyffrin_M-5_contests.txt
+17:31:52.752 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/619_Tredyffrin_M-6_contests.txt
+17:31:52.766 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/620_Tredyffrin_M-7_contests.txt
+17:31:52.780 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/630_Tredyffrin_W-1_contests.txt
+17:31:52.794 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/635_Tredyffrin_W-2_contests.txt
+17:31:52.808 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/640_Tredyffrin_W-3_contests.txt
+17:31:52.821 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/645_Tredyffrin_W-4_contests.txt
+17:31:52.835 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/647_Tredyffrin_W-5_contests.txt
+17:31:52.848 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/653_Uwchlan_1_contests.txt
+17:31:52.862 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/654_Uwchlan_2_contests.txt
+17:31:52.876 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/655_Uwchlan_3_contests.txt
+17:31:52.889 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/656_Uwchlan_4_contests.txt
+17:31:52.903 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/657_Uwchlan_5_contests.txt
+17:31:52.917 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/658_Uwchlan_6_contests.txt
+17:31:52.931 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/659_Uwchlan_7_contests.txt
+17:31:52.946 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/660_Uwchlan_8_contests.txt
+17:31:52.960 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/661_Uwchlan_9_contests.txt
+17:31:52.973 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/665_Upper_Uwchlan_1_contests.txt
+17:31:52.987 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/666_Upper_Uwchlan_2_contests.txt
+17:31:53.001 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/667_Upper_Uwchlan_3_contests.txt
+17:31:53.016 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/670_Valley_N-1_contests.txt
+17:31:53.030 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/671_Valley_N-2_contests.txt
+17:31:53.044 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/672_Valley_N-3_contests.txt
+17:31:53.057 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/675_Valley_S_contests.txt
+17:31:53.073 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/680_E_Vincent_1_contests.txt
+17:31:53.087 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/681_E_Vincent_2_contests.txt
+17:31:53.100 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/682_E_Vincent_3_contests.txt
+17:31:53.114 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/683_E_Vincent_4_contests.txt
+17:31:53.128 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/690_W_Vincent_1_contests.txt
+17:31:53.142 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/693_W_Vincent_2_contests.txt
+17:31:53.155 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/695_Wallace_contests.txt
+17:31:53.169 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/700_Warwick_E_contests.txt
+17:31:53.183 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/705_Warwick_W_contests.txt
+17:31:53.196 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/710_West_Grove_1_contests.txt
+17:31:53.210 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/715_West_Grove_2_contests.txt
+17:31:53.224 [main] ERROR com.rodini.contestgen.MuniContestsExtractor - No format for: Westtown Township Referendum
+"Do you favor the imposition of an
+increase in the earned income tax at
+a rate not to exceed eight one
+hundredths (8/100th) of one percent
+(0.08%) and an increase in the real
+property tax at a rate not to exceed
+0.42 mills ($0.42 per $1,000
+assessed valuation) by the Township
+of Westtown to be used to purchase
+interest in real property for purposes
+of securing open space benefits and
+for transactional fees incidental to
+acquisitions of open space property;
+retire indebtedness incurred in
+acquiring open space; and the
+expenditure of funds for any purpose
+relating to the acquisition, planning for
+acquisition, preservation,
+improvement and maintenance of
+open space or for an open space
+benefits?"
+YES
+NO
+Write-in
+
+17:31:53.224 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/720_Westtown_1_contests.txt
+17:31:53.238 [main] ERROR com.rodini.contestgen.MuniContestsExtractor - No format for: Westtown Township Referendum
+"Do you favor the imposition of an
+increase in the earned income tax at
+a rate not to exceed eight one
+hundredths (8/100th) of one percent
+(0.08%) and an increase in the real
+property tax at a rate not to exceed
+0.42 mills ($0.42 per $1,000
+assessed valuation) by the Township
+of Westtown to be used to purchase
+interest in real property for purposes
+of securing open space benefits and
+for transactional fees incidental to
+acquisitions of open space property;
+retire indebtedness incurred in
+acquiring open space; and the
+expenditure of funds for any purpose
+relating to the acquisition, planning for
+acquisition, preservation,
+improvement and maintenance of
+open space or for an open space
+benefits?"
+YES
+NO
+Write-in
+
+17:31:53.238 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/725_Westtown_2_contests.txt
+17:31:53.252 [main] ERROR com.rodini.contestgen.MuniContestsExtractor - No format for: Westtown Township Referendum
+"Do you favor the imposition of an
+increase in the earned income tax at
+a rate not to exceed eight one
+hundredths (8/100th) of one percent
+(0.08%) and an increase in the real
+property tax at a rate not to exceed
+0.42 mills ($0.42 per $1,000
+assessed valuation) by the Township
+of Westtown to be used to purchase
+interest in real property for purposes
+of securing open space benefits and
+for transactional fees incidental to
+acquisitions of open space property;
+retire indebtedness incurred in
+acquiring open space; and the
+expenditure of funds for any purpose
+relating to the acquisition, planning for
+acquisition, preservation,
+improvement and maintenance of
+open space or for an open space
+benefits?"
+YES
+NO
+Write-in
+
+17:31:53.252 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/730_Westtown_3_contests.txt
+17:31:53.265 [main] ERROR com.rodini.contestgen.MuniContestsExtractor - No format for: Westtown Township Referendum
+"Do you favor the imposition of an
+increase in the earned income tax at
+a rate not to exceed eight one
+hundredths (8/100th) of one percent
+(0.08%) and an increase in the real
+property tax at a rate not to exceed
+0.42 mills ($0.42 per $1,000
+assessed valuation) by the Township
+of Westtown to be used to purchase
+interest in real property for purposes
+of securing open space benefits and
+for transactional fees incidental to
+acquisitions of open space property;
+retire indebtedness incurred in
+acquiring open space; and the
+expenditure of funds for any purpose
+relating to the acquisition, planning for
+acquisition, preservation,
+improvement and maintenance of
+open space or for an open space
+benefits?"
+YES
+NO
+Write-in
+
+17:31:53.265 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/733_Westtown_4_contests.txt
+17:31:53.279 [main] ERROR com.rodini.contestgen.MuniContestsExtractor - No format for: Westtown Township Referendum
+"Do you favor the imposition of an
+increase in the earned income tax at
+a rate not to exceed eight one
+hundredths (8/100th) of one percent
+(0.08%) and an increase in the real
+property tax at a rate not to exceed
+0.42 mills ($0.42 per $1,000
+assessed valuation) by the Township
+of Westtown to be used to purchase
+interest in real property for purposes
+of securing open space benefits and
+for transactional fees incidental to
+acquisitions of open space property;
+retire indebtedness incurred in
+acquiring open space; and the
+expenditure of funds for any purpose
+relating to the acquisition, planning for
+acquisition, preservation,
+improvement and maintenance of
+open space or for an open space
+benefits?"
+YES
+NO
+Write-in
+
+17:31:53.279 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/734_Westtown_5_contests.txt
+17:31:53.293 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/735_E_Whiteland_1_contests.txt
+17:31:53.309 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/740_E_Whiteland_2_contests.txt
+17:31:53.323 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/745_E_Whiteland_3_contests.txt
+17:31:53.337 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/750_E_Whiteland_4_contests.txt
+17:31:53.351 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/752_E_Whiteland_5_contests.txt
+17:31:53.364 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/754_E_Whiteland_6_contests.txt
+17:31:53.378 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/759_W_Whiteland_1_contests.txt
+17:31:53.392 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/760_W_Whiteland_2_contests.txt
+17:31:53.406 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/761_W_Whiteland_3_contests.txt
+17:31:53.419 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/762_W_Whiteland_4_contests.txt
+17:31:53.433 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/763_W_Whiteland_5_contests.txt
+17:31:53.446 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/764_W_Whiteland_6_contests.txt
+17:31:53.460 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/765_W_Whiteland_7_contests.txt
+17:31:53.474 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/770_Willistown_N-1_contests.txt
+17:31:53.487 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/775_Willistown_N-2_contests.txt
+17:31:53.501 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/780_Willistown_N-3_contests.txt
+17:31:53.515 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/785_Willistown_N-4_contests.txt
+17:31:53.528 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/790_Willistown_N-5_contests.txt
+17:31:53.542 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/795_Willistown_N-6_contests.txt
+17:31:53.556 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/800_Willistown_S-1_contests.txt
+17:31:53.570 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/805_Willistown_S-2_contests.txt
+17:31:53.583 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/806_Willistown_S-3_contests.txt
+17:31:53.597 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/810_West_Chester_1_contests.txt
+17:31:53.610 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/820_West_Chester_2-E_contests.txt
+17:31:53.624 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/825_West_Chester_2-W_contests.txt
+17:31:53.638 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/835_West_Chester_3_contests.txt
+17:31:53.651 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/842_West_Chester_4_contests.txt
+17:31:53.665 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/846_West_Chester_5_contests.txt
+17:31:53.679 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/850_West_Chester_6_contests.txt
+17:31:53.693 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/860_West_Chester_7_contests.txt
+17:31:53.694 [main] INFO  com.rodini.contestgen.ContestGen - writing file: ./contests/common_contests.txt
+17:31:53.694 [main] INFO  com.rodini.contestgen.ContestGen - End of ContestGen app.
