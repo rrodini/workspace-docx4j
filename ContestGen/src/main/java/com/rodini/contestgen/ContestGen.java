@@ -1,5 +1,6 @@
 package com.rodini.contestgen;
 
+import static com.rodini.contestgen.Environment.TEST;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 import java.io.File;
@@ -12,9 +13,6 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.rodini.contestgen.Utils.logFatalError;
-import static com.rodini.contestgen.Environment.*;
 
 /**
  * ContestGen is the program that analyzes the text of the Voter Services specimen
@@ -52,7 +50,7 @@ public class ContestGen {
 	 * main entry point for program.
 	 * @param args CLI arguments
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		Utils.setLoggingLevel();
 		String version = System.getenv(ENV_BALLOTGEN_VERSION);
 		String startMsg = String.format("Start of ContestGen app. Version: %s", version);
@@ -104,7 +102,7 @@ public class ContestGen {
 			System.out.println(msg0);
 			System.out.println(msg1);
 		}
-		// check args[0] is present is a TXT file
+		// check args[0] is present and is a TXT file
 		String specimenFilePath = args[0];
 		if (!Files.exists(Path.of(specimenFilePath), NOFOLLOW_LINKS)) {
 			Utils.logFatalError("can't find \"" + specimenFilePath + "\" file.");

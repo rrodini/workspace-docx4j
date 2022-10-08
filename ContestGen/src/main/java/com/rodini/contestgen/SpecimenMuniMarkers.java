@@ -18,7 +18,7 @@ public class SpecimenMuniMarkers {
 //System.out.printf("muniNameRegex: %s%n", muniNameRegex);
 		} else {
 			repeatCount = 2;
-			muniNameRegex = "(?m)^OFFICIAL MUNICIPAL ELECTION BALLOT$\n(?<id>\\d+)[\\s]*(?<name>.*)\n";
+			muniNameRegex = "(?m)^OFFICIAL GENERAL ELECTION BALLOT$\n(?<id>\\d+)[\\s]*(?<name>.*)\n";
 		}
 		muniNamePattern = Utils.compileRegex(muniNameRegex);
 	}

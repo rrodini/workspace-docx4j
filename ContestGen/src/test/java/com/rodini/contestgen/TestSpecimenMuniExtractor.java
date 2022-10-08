@@ -41,13 +41,13 @@ class TestSpecimenMuniExtractor {
 	@Test
 	public void testExtract1() {
 		List<MuniTextExtractor> muniExtracts = new ArrayList<>();
-		String specText = readTextFile("./src/test/java/General-2021.txt");
+		String specText = readTextFile("./src/test/java/General-2022.txt");
 		sme = new SpecimenMuniExtractor(specText);
 		muniExtracts = sme.extract();
 //		System.out.printf("size: %d%n", muniExtracts.size());
 //		System.out.printf("first: %s%n", muniExtracts.get(0).getMuniName());
 //		System.out.printf("last: %s%n", muniExtracts.get(muniExtracts.size()-1).getMuniName());
-		assertEquals(232, muniExtracts.size());
+		assertEquals(231, muniExtracts.size());
 		// first name in list
 		assertEquals("005_Atglen", muniExtracts.get(0).getMuniName());
 		// last name in list

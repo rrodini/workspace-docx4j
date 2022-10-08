@@ -14,10 +14,12 @@ import java.util.List;
 public class MuniContestNames {
 	
 	String muniName;
+	String muniNo;	// precinct # - 3 characters
 	List<ContestName> contestNames;
 
 	public MuniContestNames(String muniName) {
 		this.muniName = muniName;
+		this.muniNo = muniName.substring(0, 3);
 		contestNames = new ArrayList<ContestName>();
 	}
 	/**
@@ -27,10 +29,13 @@ public class MuniContestNames {
 	String getMuniName() {
 		return muniName;
 	}
-	
-//	void setMuniName(String name) {
-//		muniName = name;
-//	}
+	/**
+	 * getMuniNo return the municipality's #.
+	 * @return return the municipality's #.
+	 */
+	String getMuniNo() {
+		return muniNo;
+	}
 	/**
 	 * add adds a ContestName object to the list.
 	 * @param c ContestName object to add.
@@ -51,6 +56,9 @@ public class MuniContestNames {
 	 * under the assumption that common contests are at the beginning
 	 * of each list and are in the same cardinal order.
 	 * 
+	 * Note:
+	 * - This method must be called as each new municipality is processed.
+	 * 
 	 * @param that another MuniContestNames object
 	 * @return a new list reflecting the common contests.
 	 */
@@ -70,5 +78,17 @@ public class MuniContestNames {
 		}
 		return common;
 	}
-
+	/**
+	 * getMuniContestsText returns a long string with all of
+	 * the contest names.
+	 * 
+	 * Note:
+	 * - This should only be called AFTER all of the contests for
+	 *   the municipality have been identified.
+	 */
+	String getMuniContestsText() {
+		StringBuilder sb = new StringBuilder();
+		contestNames.forEach(cn -> sb.append(cn + "\n"));
+		return sb.toString();
+	}
 }

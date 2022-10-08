@@ -2,10 +2,9 @@ package com.rodini.contestgen;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.rodini.contestgen.Utils.logFatalError;
 
 /**
  * ContestNameExtractor - attempts to match the contest text against

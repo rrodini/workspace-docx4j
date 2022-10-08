@@ -30,9 +30,9 @@ public class MuniTextMarkers {
 			page2Regex = Utils.getPropValue(props, "muniTextPage2Regex");
 //System.out.printf("page2Regex: %s%n", page2Regex);
 		} else {
-			// use test data
-			pageCount = 2;
-			page1Regex = "(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*?)^Continued from front side of ballot$(.*)";
+			// test data for 2022 General
+			pageCount = 1;
+			page1Regex = "(?m)(.*?)(.*?)(^Typ:01 Seq:\\d+ Spl:01$\n)(?<page>((.*)\n)*?)^Review$(.*)";
 			// special case since some pages end:  Write-in Superior Court Retention\n
             // rather than:                        Write-in Superior\nCourt Retention\n
 			page2Regex = "(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)(?<page>((.*)\n)*?)^(Write-in\n|Write-in )Superior Court Retention$(.*)";

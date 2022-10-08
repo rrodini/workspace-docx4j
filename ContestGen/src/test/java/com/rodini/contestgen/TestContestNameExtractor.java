@@ -183,4 +183,9 @@ class TestContestNameExtractor {
 		assertEquals(1, format);
 		assertEquals("Inspector Of Elections\n759 W Whiteland 1", name);
 	}
+	@Test
+	void testDumpPatterns() {
+		ContestNameExtractor.dumpPatterns();
+		assertTrue(true);
+	}
 }
