@@ -61,6 +61,7 @@ class TestMuniContestNames {
 		mcn.add(new ContestName("Justice of the Supreme Court", 1));
 		mcn.add(new ContestName("Judge of the\nCourt of Common Pleas", 1));
 		String contestsText = mcn.getMuniContestsText();
+		//System.out.printf("testGetMuniContestsText: %s%n", contestsText);
 		assertEquals(expected, contestsText);
 	}
 
