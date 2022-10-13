@@ -1,21 +1,21 @@
 package com.rodini.ballotgen;
 
-import static com.rodini.ballotgen.Utils.logFatalError;
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Stream;
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.rodini.ballotutils.Utils;
 /** 
  * Initialize gets the program ready to generate sample ballots.
  * It attempts to validate critical inputs and FAIL EARLY if things
@@ -63,7 +63,7 @@ public class Initialize {
 	static void validateCommandLineArgs(String [] args) {
 		// check for 2 command args
 		if (args.length < 2) {
-			logFatalError("missing CLI arguments:\n" +
+			Utils.logFatalError("missing CLI arguments:\n" +
 					"args[0]: path to single ballot text file or directory containing such.\n" +
 					"args[1]: path to directory for generated municipal level \"NNN_XYZ_contests.txt\" files.");
 		} else {
@@ -102,10 +102,10 @@ public class Initialize {
 				ballotFiles.add(ballotFilePath);
 				
 			} else {
-				logFatalError("invalid args[0] value, not a file or directory: " + ballotFilePath);
+				Utils.logFatalError("invalid args[0] value, not a file or directory: " + ballotFilePath);
 			}
 		} catch (SecurityException e) {
-			logFatalError("can't access this file/directory: " + ballotFilePath);
+			Utils.logFatalError("can't access this file/directory: " + ballotFilePath);
 		}
 		// prepare logging message
 		String fileListString = ballotFiles.toString();
@@ -125,11 +125,11 @@ public class Initialize {
 	static void processBallotContests(String ballotContestsPath) {
 		File path = new File(ballotContestsPath);
 		if (!path.isDirectory()) {
-			logFatalError("invalid args[1] value, ballotContestsPath does not exist: " + ballotContestsPath);
+			Utils.logFatalError("invalid args[1] value, ballotContestsPath does not exist: " + ballotContestsPath);
 		}
 		String commonFilePath = ballotContestsPath + File.separator + COMMON_CONTESTS_FILE;
 		if (!Files.exists(Path.of(commonFilePath), NOFOLLOW_LINKS)) {
-			logFatalError("can't find \"" + COMMON_CONTESTS_FILE + "\" file here: " + commonFilePath);
+			Utils.logFatalError("can't find \"" + COMMON_CONTESTS_FILE + "\" file here: " + commonFilePath);
 		}
 	}
 
@@ -182,13 +182,13 @@ public class Initialize {
 
 	static void validateWordTemplate() {
 		if (msWordTemplateFile.isEmpty()) {
-			logFatalError("MS Word template file not specified (blank)");
+			Utils.logFatalError("MS Word template file not specified (blank)");
 		}
 		if (!Files.exists(Path.of(msWordTemplateFile))) {
-			logFatalError("MS Word template file does not exist: " + msWordTemplateFile);
+			Utils.logFatalError("MS Word template file does not exist: " + msWordTemplateFile);
 		}
 		if (!msWordTemplateFile.endsWith(".dotx")) {
-			logFatalError("MS Word template file should end with \"dotx\": " + msWordTemplateFile);
+			Utils.logFatalError("MS Word template file should end with \"dotx\": " + msWordTemplateFile);
 		}
 	}
 	

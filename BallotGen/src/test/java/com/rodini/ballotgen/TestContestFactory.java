@@ -24,6 +24,8 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 
+import com.rodini.ballotutils.Utils;
+
 // TODO: add more test cases
 class TestContestFactory {
 	
@@ -350,14 +352,14 @@ class TestContestFactory {
 			"(?<instructions>^Vote.*)\\n" +
 			"(?<candidates>((.*\\n){2})*)" +
 			"^Write-in$";
-		Pattern p = cf.getContestPattern(Utils.processContestName(contestName), format);
+		Pattern p = cf.getContestPattern(Contest.processContestName(contestName), format);
 		assertEquals(expected, p.toString());
 	}
 	@Test
 	void testGetContestPattern1() {
 		String contestName = "Judge of the\nCourt of Common Pleas";
 		String expected = "format key for contest cannot be found: 300";
-		contestName = Utils.processContestName(contestName);
+		contestName = Contest.processContestName(contestName);
 		cf.getContestPattern(contestName,"300");
 		assertEquals(1, mockedAppender.messages.size());
 		assertEquals(expected, mockedAppender.messages.get(0));
@@ -414,7 +416,7 @@ class TestContestFactory {
 						"PJ Redmond\n" +
 						"Republican\n" +
 						"Write-in";
-		contestName = Utils.processContestName(contestName);
+		contestName = Contest.processContestName(contestName);
 		Contest contest = cf.parseContestText(contestName, contestText, "1");
 		assertEquals(contestName, contest.getName());
 		assertEquals("Vote for no more than TWO", contest.getInstructions());

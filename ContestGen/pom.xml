@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>contest-gen</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<name>ContestGen</name>
 	<description>ContestGen generates contests.txt files for BallotGen program.</description>
 	<build>
@@ -117,6 +117,11 @@
     	  <artifactId>junit5-system-exit</artifactId>
     	  <version>1.1.2</version>
      	  <scope>test</scope>
+		</dependency>
+		<dependency>
+   		  <groupId>com.rodini</groupId>
+    	  <artifactId>ballot-utils</artifactId>
+    	  <version>1.2.0</version>
 		</dependency>
 	</dependencies>
 </project>

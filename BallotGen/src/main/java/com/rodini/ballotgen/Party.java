@@ -33,10 +33,8 @@ public enum Party {
 		case "Leadership for All":	party = LEADERSHIPFORALL; break;
 		case "Green Party":	party = GREEN_PARTY; break;
 		case "Keystone":	party = KEYSTONE; break;
-		default: logger.error("can't convert string to Party: " + display);
-		}
-		if (party == null) {
-			logger.error("cannot convert value to Party enum: " + display);
+		// Below is no longer an ERROR, just an INFO
+		default: logger.info("can't convert string to Party: " + display);
 		}
 		return party;
 	}

@@ -20,4 +20,6 @@ target/
 
 ### ContestGen ###
 contests/
-/.DS_Store
+
+### BallotZipper ###
+*.zip

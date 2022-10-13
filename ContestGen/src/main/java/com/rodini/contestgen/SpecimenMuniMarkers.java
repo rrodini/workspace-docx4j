@@ -3,6 +3,8 @@ package com.rodini.contestgen;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import com.rodini.ballotutils.Utils;
+
 public class SpecimenMuniMarkers {
 
 	private static int repeatCount; // # of times the ballot name is repeated

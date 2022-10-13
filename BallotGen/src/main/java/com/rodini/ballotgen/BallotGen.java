@@ -3,6 +3,8 @@ package com.rodini.ballotgen;
 //import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.rodini.ballotutils.Utils;
 /**
  * BallotGen is the program that generated the municipal level .docx (Word) files.
  * It is dependent on an upstream program (ContestGen) to generate municipal
@@ -22,7 +24,7 @@ public class BallotGen {
 	
 	public static void main(String[] args){
 		// Get the logging level from JVM parameter on command line.
-		Utils.setLoggingLevel();
+		Utils.setLoggingLevel("com.rodini.ballotgen");
 		String version = System.getenv(ENV_BALLOTGEN_VERSION);
 		String startMsg = String.format("Start of BallotGen app. Version: %s", version);
 		System.out.println(startMsg);
@@ -40,4 +42,6 @@ public class BallotGen {
 		System.out.printf("End of BallotGen app%n");
 		logger.info("End of BallotGen app");
 	}
+	
+	
 }

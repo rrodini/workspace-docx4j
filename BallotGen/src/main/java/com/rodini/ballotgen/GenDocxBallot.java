@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rodini.ballotgen.ContestFileLevel.*;
-import static com.rodini.ballotgen.Utils.logFatalError;
 import static com.rodini.ballotgen.ElectionType.*;
+import com.rodini.ballotutils.Utils;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -172,7 +172,7 @@ public class GenDocxBallot {
 		try {
 			contestsLines = Files.readAllLines(Path.of(contestsPath));
 		} catch (IOException e) {
-			logFatalError("can't read: " + contestsPath);
+			Utils.logFatalError("can't read: " + contestsPath);
 		}
 		contestsText = contestsLines.stream().collect(joining("\n"));
 		// prepare logging message
@@ -327,7 +327,7 @@ public class GenDocxBallot {
 		for (String line: contestLines) {
 			String [] elements = line.split(",");
 			String contestName = elements[0];
-			contestName = Utils.processContestName(contestName);
+			contestName = Contest.processContestName(contestName);
 			String contestFormat = elements[1];
 			genContest(contestName, contestFormat);
 		}

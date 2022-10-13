@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com-rodini</groupId>
   <artifactId>ballot-zipper</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <name>BallotZipper</name>
   <description>Create zip files for each zone containing precinct ballots for that zone.</description>
   <build>
@@ -74,6 +74,11 @@
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.8.2</version>
 			<scope>test</scope>
+		</dependency>
+				<dependency>
+   		  <groupId>com.rodini</groupId>
+    	  <artifactId>ballot-utils</artifactId>
+    	  <version>1.2.0</version>
 		</dependency>
 	</dependencies>
   

@@ -1,6 +1,5 @@
 package com.rodini.ballotzipper;
 
-import static com.rodini.ballotzipper.Utils.logFatalError;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 import java.io.File;
@@ -10,6 +9,7 @@ import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotutils.Utils;
 
 /**
  * Initialize class performs all initializations needed trying
@@ -31,7 +31,7 @@ public class Initialize {
 	static void initialize(String [] args) {
 		// check the # command line arguments
 		if (args.length != 3) {
-			logFatalError("incorrect CLI arguments:\n" +
+			Utils.logFatalError("incorrect CLI arguments:\n" +
 					"args[0]: path to precincts to zones CSV file.\n" +
 					"args[1]: path to directory with municipal level \"NNN_name.docx\" files." +
 					"args[2]: path to directory for zoneNN.zip files.");
@@ -49,20 +49,20 @@ public class Initialize {
 		// Check that args[0] exists and is a CSV file.
 		csvFilePath = args[0];
 		if (!Files.exists(Path.of(csvFilePath), NOFOLLOW_LINKS)) {
-			logFatalError("can't find \"" + csvFilePath + "\" file.");
+			Utils.logFatalError("can't find \"" + csvFilePath + "\" file.");
 		}
 		if (!csvFilePath.endsWith("csv")) {
-			logFatalError("file \"" + csvFilePath + "\" doesn't end with CSV extension.");
+			Utils.logFatalError("file \"" + csvFilePath + "\" doesn't end with CSV extension.");
 		}
 		// Check that args[1] is a directory and has files.
 		inDirPath = args[1];
 		if (!Files.isDirectory(Path.of(inDirPath))) {
-			logFatalError("invalid args[1] value, DOCX dir doesn't exist: " + inDirPath);
+			Utils.logFatalError("invalid args[1] value, DOCX dir doesn't exist: " + inDirPath);
 		}		
 		// Check that args[2] is a directory.
 		outDirPath = args[2];
 		if (!Files.isDirectory(Path.of(outDirPath))) {
-			logFatalError("invalid args[2] value, ZIP dir doesn't exist: " + inDirPath);
+			Utils.logFatalError("invalid args[2] value, ZIP dir doesn't exist: " + inDirPath);
 		}
 		// Clear out args[2] directory of ZIP files since inDir may equal outDir.
 		File outDir = new File(outDirPath);

@@ -1,5 +1,7 @@
 ### General
 *.DS_Store
+codemr/
+../logs/
 
 ### Eclipse ###
 bin/
@@ -18,3 +20,6 @@ target/
 
 ### ContestGen ###
 contests/
+
+### BallotZipper ###
+*.zip

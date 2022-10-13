@@ -2,7 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>ballot-gen</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
+	<packaging>jar</packaging>
 	<name>Bob Rodini</name>
 	<description>Ballot Generator</description>
 	<build>
@@ -22,14 +23,6 @@
 
 				<configuration>
 					<skipTests>false</skipTests>
-<!-- 					
-					<excludes>
-						<exclude>**/TestContestFactory.java</exclude>
-					</excludes>
-					<includes>
-						<include>**/Test*.java</include>
-					</includes>
--->
 				</configuration>
 
 			</plugin>
@@ -136,6 +129,11 @@
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.8.2</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+   		  <groupId>com.rodini</groupId>
+    	  <artifactId>ballot-utils</artifactId>
+    	  <version>1.2.0</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -2,6 +2,9 @@ package com.rodini.contestgen;
 
 import java.util.Properties;
 import java.util.regex.Pattern;
+
+import com.rodini.ballotutils.Utils;
+
 /**
  * MuniTextMarkers is a container for markers that
  * delimit the contest text area of a 1 or 2 page

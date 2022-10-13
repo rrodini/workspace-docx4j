@@ -18,6 +18,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotutils.Utils;
 /**
  * ContestGen is the program that analyzes the text of the Voter Services specimen
  * file and extracts the municipal level contests from it. At the end of the run
@@ -55,7 +56,7 @@ public class ContestGen {
 	 * @param args CLI arguments
 	 */
 	public static void main(String[] args){
-		Utils.setLoggingLevel();
+		Utils.setLoggingLevel("com.rodini.contestgen");
 		String version = System.getenv(ENV_BALLOTGEN_VERSION);
 		String startMsg = String.format("Start of ContestGen app. Version: %s", version);
 		System.out.println(startMsg);

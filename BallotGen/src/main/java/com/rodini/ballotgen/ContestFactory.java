@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotutils.Utils;
 import static com.rodini.ballotgen.ElectionType.*;
 
 /**
