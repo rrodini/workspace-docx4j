@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # fullballotgen.sh is the script that drives the generation of
-# municipal sample ballot docx files (approx. 232).
+# municipal sample ballot docx files (approx. 232). See
+# BallotGen Super User Guide.docx for usage.
 #
 
 VOTER_SERVICES_SPECIMEN="General-2022.pdf"
