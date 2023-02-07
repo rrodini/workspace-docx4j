@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
  * is broken into precinct-level files and before the the BallotGen program runs.
  * 
  * It's main purpose is to re-name all of the files from data in within the text
- * of the file. Example: municipal-1.txt -> 005_Atglen(005)_VS.txt
- *                       municipal-1.pdf -> 005_Atglen(005)_VS.pdf
+ * of the file. Example: municipal-1.txt -> 005_Atglen_VS.txt
+ *                       municipal-1.pdf -> 005_Atglen_VS.pdf
  *                       ...
  * 
  * CLI arguments: 
