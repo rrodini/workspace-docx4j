@@ -37,6 +37,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rodini.ballotutils.Utils;
+import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.Zone;
+import com.rodini.zoneprocessor.ZoneFactory;
 
 public class BallotZipper {
 
@@ -57,8 +60,9 @@ public class BallotZipper {
 		Initialize.initialize(args);
 		// Process CSV file into two data structures
 		//  muniNoMap (TreeMap) key: MuniNo (String) value: zone (Zone object)
-		//  zoneMap (TreeMap) key: zone no. (String) value: zone (Zone Object)
-		GenMuniMap.processCSVFile();
+		//  zoneMap (TreeMap) key: zone no. (String) value: zone (Zone Object)		
+		String csvText = Utils.readTextFile(Initialize.csvFilePath);
+		GenMuniMap.processCSVText(csvText);
 		Map<String, Zone> zoneMap = ZoneFactory.getZones();
 		// Produce zone report to console & log file
 		message = "Zone report:";

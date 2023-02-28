@@ -3,6 +3,8 @@ package com.rodini.ballotzipper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +14,9 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.Zone;
+import com.rodini.zoneprocessor.ZoneFactory;
 /**
  * GenZipFile class generates the zip files for each zone.
  * @author Bob Rodini
@@ -21,7 +26,7 @@ public class GenZipFiles {
 	static final Logger logger = LoggerFactory.getLogger(GenZipFiles.class);
 	
 	static final String ZIP = ".zip";
-
+	
 	// Prevent instantiation.
 	private GenZipFiles() {
 	}
@@ -53,6 +58,8 @@ public class GenZipFiles {
 		Map<String, Zone> zoneMap = ZoneFactory.getZones();
 		Map<String, Zone> muniNoMap = GenMuniMap.getMuniNoMap();
 		Map<String, MuniFiles> docxNoMap = GenDocxMap.getDocxNoMap();
+		Map<Zone, List<MuniFiles>> zoneMuniFiles = new HashMap<>();
+
 		Set<String> docxKeys = docxNoMap.keySet();
 		// Check docxNo against muniNo. Error if CSV file doesn't contain docxNo.
 		for (String muniNo: muniNoMap.keySet()) {
@@ -62,7 +69,15 @@ public class GenZipFiles {
 				// Transfer the muniFiles to the zone that owns them.
 				Zone zone = muniNoMap.get(muniNo);
 				MuniFiles muniFiles = docxNoMap.get(muniNo);
-				zone.addFiles(muniFiles);
+				// OLD
+				//zone.addFiles(muniFiles);
+				// NEW
+				List<MuniFiles> currentMuniFiles = zoneMuniFiles.get(zone);
+				if (currentMuniFiles == null) {
+					currentMuniFiles = new ArrayList<MuniFiles>();
+				}
+				currentMuniFiles.add(muniFiles);
+				zoneMuniFiles.put(zone, currentMuniFiles);
 			}
 		}
 		Set<String> muniKeys = muniNoMap.keySet();
@@ -78,7 +93,10 @@ public class GenZipFiles {
 			String message = String.format("%nZone no: %s name %s", zone.getZoneNo(), zone.getZoneName());
 			logger.info(message);
 			System.out.println(message);
-			List<MuniFiles> zoneFiles = zone.getZoneBallotFiles();
+			// OLD
+			//List<MuniFiles> zoneFiles = zone.getZoneBallotFiles();
+			// NEW
+			List<MuniFiles> zoneFiles = zoneMuniFiles.get(zone);
 			File zipFilePath = new File(Initialize.outDirPath + File.separator + "zone" + zoneNo + ZIP);
 			message = "Zip file: " + zipFilePath;
 			logger.info(message);
