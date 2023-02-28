@@ -10,15 +10,16 @@ public abstract class Candidate {
 	private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
 
 	protected String name;
-	protected boolean endorsed;
+	protected Party party;
 	
-	Candidate(String name) {
+	protected Candidate(String name, Party party) {
 		this.name = name;
+		this.party = party;
 	}	
 	public String getName() {
 		return name;
 	}
-	public boolean getEndorsement() {
-		return endorsed;
+	public Party getParty() {
+		return party;
 	}
 }

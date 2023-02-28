@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rodini.ballotutils.Utils;
+import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.Zone;
 /** 
  * Initialize gets the program ready to generate sample ballots.
  * It attempts to validate critical inputs and FAIL EARLY if things
@@ -25,6 +28,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class Initialize {
+	private static final Logger logger = LoggerFactory.getLogger(Initialize.class);
 	// Global variables
 	public static ElectionType elecType;	// e.g. PRIMARY or GENERAL
 	public static Party endorsedParty;		// e.g. Democratic (or NULL)
@@ -38,19 +42,27 @@ public class Initialize {
 	public static ENVIRONMENT env;			// TEST vs. PRODUCTION
 	public static Properties ballotGenProps;
 	public static Properties contestGenProps;
+	private static Map<String, Zone> precinctToZoneMap;
+	private static Map<String, List<Endorsement>> candidateEndorsements;
+	public static EndorsementProcessor endorsementProcessor;
+	public static boolean writeInDisplay;
+	
 
 //	ATTENTION: Within Eclipse you must put ./resources in the dependencies
 	public static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTGEN_RESOURCE_PATH = "../contestgen/resources/";
 	public static final String PROPS_FILE = "ballotgen.properties";
 	static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
-
-	private static final Logger logger = LoggerFactory.getLogger(Initialize.class);
+//	Property names - must match names within ballotgen.properties
 	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WORD_TEMPLATE_DEFAULT = "word.template.default";
 	private static final String PROP_CONTEST_FORMAT_PREFIX = "contest.format";
 	private static final String CONTEST_FILE_LEVEL = "contest.file.level";
-	public static final String COMMON_CONTESTS_FILE = "common_contests.txt";
+	public  static final String COMMON_CONTESTS_FILE = "common_contests.txt";
+	public  static final String PRECINCT_TO_ZONE_FILE = "precinct.to.zone.file";
+	public  static final String ENDORSEMENTS_FILE = "endorsements.file";
+	public  static final String WRITE_IN_DISPLAY = "write.in.display";
+	
 
 	/**
 	 * validateCommandLineArgs checks that there are at least 2 CLI args
@@ -147,7 +159,7 @@ public class Initialize {
 	
 	static void validateContestFileLevel() {
 		String level = Utils.getPropValue(ballotGenProps, "contest.file.level");
-		logger.info(String.format("contet.file.level: %s", level));
+		logger.info(String.format("contest.file.level: %s", level));
 		contestLevel = ContestFileLevel.valueOf(level);
 	}
 	/**
@@ -179,7 +191,6 @@ public class Initialize {
 		logger.info(String.format("there are %d contest formats in the contestgen properties file", count-1));
 	}
 	
-
 	static void validateWordTemplate() {
 		if (msWordTemplateFile.isEmpty()) {
 			Utils.logFatalError("MS Word template file not specified (blank)");
@@ -192,6 +203,44 @@ public class Initialize {
 		}
 	}
 	
+	static void validatePrecinctZoneFile() {
+		String precinctZoneFile = Utils.getPropValue(ballotGenProps, PRECINCT_TO_ZONE_FILE);
+		logger.info(String.format("%s: %s", PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+		String precinctZoneCSVText = "";
+		if (!Utils.checkFileExists(precinctZoneFile)) {
+			logger.info(String.format("%s does not exist: %s ", PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+			logger.info("Cannot endorse at the zone/precinct level.");
+		} else {
+			precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
+		}
+		GenMuniMap.processCSVText(precinctZoneCSVText);
+		precinctToZoneMap = GenMuniMap.getMuniNoMap();
+	}
+	
+	static void validateEndorsementsFile() {
+		String endorsementsFile = Utils.getPropValue(ballotGenProps, ENDORSEMENTS_FILE);
+		logger.info(String.format("%s: %s", ENDORSEMENTS_FILE, endorsementsFile));
+		String endorsementsCSVText = "";
+		if (!Utils.checkFileExists(endorsementsFile)) {
+			logger.info(String.format("%s does not exist: %s ", ENDORSEMENTS_FILE, endorsementsFile));
+			logger.info("Can only endorse at the party level in general elections.");
+		} else {
+			endorsementsCSVText = Utils.readTextFile(endorsementsFile);
+		}
+		EndorsementFactory.processCSVText(endorsementsCSVText);
+		candidateEndorsements = EndorsementFactory.getCandidateEndorsements();
+	}
+
+	static void validateWriteInDisplay() {
+		String value = ballotGenProps.getProperty(WRITE_IN_DISPLAY);
+		if (value == null) {
+			value = "false";
+		}
+		writeInDisplay = Boolean.parseBoolean(value);
+	}
+	static void validateEnsorsementFile() {
+		
+	}
 	public static void start(String [] args) {
 		ballotGenProps = Utils.loadProperties(RESOURCE_PATH + PROPS_FILE);
 		contestGenProps = Utils.loadProperties(CONTESTGEN_RESOURCE_PATH + CONTESTGEN_PROPS_FILE);
@@ -204,6 +253,13 @@ public class Initialize {
 		validateEndorsedParty();
 		validateContestFileLevel();
 		validateFormatsText();
+		validateContestFormats();
+		validatePrecinctZoneFile();
+		validateEndorsementsFile();
+		// create the endorsement processor
+		endorsementProcessor  = new EndorsementProcessor(elecType, endorsedParty,
+				candidateEndorsements, precinctToZoneMap);
+		validateWriteInDisplay();
 	}
 	
 	

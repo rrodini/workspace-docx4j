@@ -11,13 +11,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.rodini.ballotgen.ContestFileLevel.*;
 import static com.rodini.ballotgen.ElectionType.*;
 import com.rodini.ballotutils.Utils;
+import com.rodini.zoneprocessor.Zone;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 
 import org.docx4j.Docx4J;
 import org.docx4j.XmlUtils;
@@ -27,6 +29,8 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.TraversalUtil;
+import org.docx4j.TraversalUtil.CallbackImpl;
 import org.docx4j.wml.P;
 import org.docx4j.wml.R;
 import org.docx4j.wml.Style;
@@ -52,30 +56,37 @@ public class GenDocxBallot {
 	private static final Logger logger = LoggerFactory.getLogger(GenDocxBallot.class);
 
 	// from constructor
-	String dotxPath;  // path to DOTX template file
-	String ballotTextFilePath; // path to ballot text file
-	ContestFileLevel contestLevel; // COMMON or MUNICIPAL
-	String contestsText; // text of contests on this ballot
+	private String dotxPath;  // path to DOTX template file
+	private String ballotTextFilePath; // path to ballot text file
+	private ContestFileLevel contestLevel; // COMMON or MUNICIPAL
+	private String contestsText; // text of contests on this ballot
 	// local variables
-	WordprocessingMLPackage docx;  // document under construction
-	String ballotName; // e.g. "Atglen" or "East Whiteland 4"
-	String contestFilePath; // path to contest file e.g. XYZ_contests.txt
-	static final String FILE_SUFFIX = "_VS";
-	String ballotText; // text of ballotTextFile
-	String fileOutputPath; // generated DOCX file
-	String formatsText;   // formats (regexes) read from properties
-	// Sty[es
+	private WordprocessingMLPackage docx;  // document under construction
+	private String ballotName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
+	private String precinctNo; // precinct No. - first three digits of ballotName
+	private String contestFilePath; // path to contest file e.g. XYZ_contests.txt
+	private static final String FILE_SUFFIX = "_VS";
+	private String ballotText; // text of ballotTextFile
+	private String fileOutputPath; // generated DOCX file
+	private String formatsText;   // formats (regexes) read from properties
+	private EndorsementProcessor endorsementProcessor;
+	// Placeholders are predefined strings that may be embedded in the template file
+	// so they can be located programmatically by this program.
+	private static final String PLACEHOLDER_CONTESTS = "Contests";
+	private static final String PLACEHOLDER_BALLOTNAME = "BallotName";
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
 	// so when the template is loaded the existence of the styles is checked.
 	// If style is not found "Normal" style is used.
-	String STYLEID_CONTEST_TITLE = "ContestTitle";
-	String STYLEID_CONTEST_INSTRUCTIONS = "ContestInstructions";
-	String STYLEID_CANDIDATE_NAME = "CandidateName";
-	String STYLEID_CANDIDATE_PARTY = "CandidateParty";
+	private static String STYLEID_CONTEST_TITLE = "ContestTitle";
+	private static String STYLEID_CONTEST_INSTRUCTIONS = "ContestInstructions";
+	private static String STYLEID_CANDIDATE_NAME = "CandidateName";
+	private static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
+	private static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
+	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	// These are unicode characters (also Segoe UI Symbol font)
-	final String whiteEllipse = "⬭";
-	final String blackEllipse = "⬬";
+	private static final String whiteEllipse = "⬭";
+	private static final String blackEllipse = "⬬";
 	/** 
 	 * GenDocxBallot constructor just saves input references.
 	 * @param dotxPath path to the Word template.
@@ -83,25 +94,46 @@ public class GenDocxBallot {
 	 * @param contestsLevel which contests text file to use.
 	 * @param formatsText formats (regexes) to use.
 	 */
-	public GenDocxBallot(String dotxPath, String textFilePath, ContestFileLevel contestLevel, String formatsText) {
+	public GenDocxBallot(String dotxPath, String textFilePath, ContestFileLevel contestLevel,
+			String formatsText, EndorsementProcessor ep) {
 		this.dotxPath = dotxPath;
 		this.ballotTextFilePath = textFilePath;
 		this.contestLevel = contestLevel;
 		this.formatsText = formatsText;
+		this.endorsementProcessor = ep;
 	}
 	/**
-	 * generate is line main() in most programs.
+	 * generate generates the contents of the docx file.
+	 * Its implementation is subject to change.  In the first few versions
+	 * it did not get any content from the Word template.  In later versions
+	 * it gets significant content from the template such as:
+	 * 1. CCDC Header with graphics.
+	 * 2. CCDC voter instructions and candidate info.
+	 * 3. CCDC info with graphics,
+	 * 
+	 * In version 1.3 of BallotGen the Contests and Candidates are inserted
+	 * between 2. and 3. above.
 	 */
 	public void generate() {
 		// validate all inputs.
 		logger.info("start new docx file");
 		initialize();
-		// generate the header
-		genHeader(getHeaderContents(), ballotName.replace("_", " "));
-		// generate the voter instructions
-		genBallotInstructions();	
-		// generate the contests on the ballot 
-		genContests();	
+		// Header
+		// If next line is commented out, then template header is used.
+		// genHeader(getHeaderContents(), "New Header");
+		// Body
+		// generate the contests on the ballot as DOCX4J paragraphs.
+		List<P> insertParagraphs = genContests();
+		P placeholder = findContestsPlaceholder();
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		List<Object> contentList = mdp.getContent();
+		int removeIndex = contentList.indexOf(placeholder);
+		// Insert new paragraphs
+		contentList.addAll(removeIndex, insertParagraphs);
+		// Remove the placeholder paragraph
+		contentList.remove(placeholder);
+		// Footer
+		genFooter(getFooterContents(), ballotName.replace("_", " "));
 		// shutdown cleanly
 		terminate();
 		logger.info("end new docx file");
@@ -138,11 +170,16 @@ public class GenDocxBallot {
 		if (ballotName.endsWith(FILE_SUFFIX)) {
 			ballotName = ballotName.substring(0, ballotName.length() - FILE_SUFFIX.length());
 		}
+		precinctNo = ballotName.substring(0, 3);
+		try {
+			int number = Integer.parseInt(precinctNo);
+		} catch (NumberFormatException e) {
+			logger.error("Ballot Name doesn't start with precinct No. See: " + ballotName);
+			precinctNo = "000";
+		}
 		fileOutputPath = pathName + File.separator + ballotName + ".docx";
 		System.out.printf("Generating %s%n", ballotName + ".docx");
 		logger.info(String.format("fileOutputPath: %s", fileOutputPath));
-		// If the file base name has underscores, replace them with blanks
-//		ballotName = ballotName.replace("_", " ");
 		WordprocessingMLPackage dotx = null;
 		try {
 			dotx = Docx4J.load(dotxFile);
@@ -176,12 +213,12 @@ public class GenDocxBallot {
 		}
 		contestsText = contestsLines.stream().collect(joining("\n"));
 		// prepare logging message
-//		int len = contestsText.length();
-//		if (len > 400) {
-//			contestsText = contestsText.substring(0, 200) + "..." + 
-//		                     contestsText.substring(len - 200, len);
-//		}
-		logger.debug("contestsText: " + contestsText);
+		int len = contestsText.length();
+		String msgText = contestsText;
+		if (len > 100) {
+			msgText = contestsText.substring(0, 50) + "..." + contestsText.substring(len - 50, len);
+		}
+		logger.debug("contestsText: " + msgText);
 	}
 	/**
 	 * initReadBallotText reads the contents of the ballot text file
@@ -199,6 +236,7 @@ public class GenDocxBallot {
 	void initStyles() {
 //		List<String> neededIdStyles = List.of(
 //				STYLEID_CANDIDATE_NAME,
+//				STYLEID_ENDORSED_CANDIDATE_NAME,
 //				STYLEID_CANDIDATE_PARTY,
 //				STYLEID_CONTEST_INSTRUCTIONS,
 //				STYLEID_CONTEST_TITLE
@@ -216,7 +254,7 @@ public class GenDocxBallot {
 		if (!templateIdStyles.contains(STYLEID_CANDIDATE_PARTY)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CANDIDATE_PARTY);
 			STYLEID_CANDIDATE_PARTY = "Normal";
-		} else
+		}
 		if (!templateIdStyles.contains(STYLEID_CONTEST_INSTRUCTIONS)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_INSTRUCTIONS);
 			STYLEID_CONTEST_INSTRUCTIONS = "Normal";
@@ -224,6 +262,14 @@ public class GenDocxBallot {
 		if (!templateIdStyles.contains(STYLEID_CONTEST_TITLE)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_TITLE);
 			STYLEID_CONTEST_TITLE = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_ENDORSED_CANDIDATE_NAME)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_NAME);
+			STYLEID_ENDORSED_CANDIDATE_NAME = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_BOTTOM_BORDER)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_BOTTOM_BORDER);
+			STYLEID_BOTTOM_BORDER = "Normal";
 		}
 	}
 	/**
@@ -264,9 +310,8 @@ public class GenDocxBallot {
 		List<Object> headerContents = footerPart.getContent();
 		return headerContents;
 	}
-	/* private */
 	/** 
-	 * updateHeader updates the default header with the headerText.
+	 * genHeader updates the default header with the headerText.
 	 * Code was generated by DOCX4J Word Add-in.
 	 * @param headerContents reference to docx4j part.
 	 * @param headerText new header text.
@@ -288,20 +333,42 @@ public class GenDocxBallot {
 		// Line below replaces what was in the dotx templatel
 		headerContents.set(0, p);
 	}
-	/**
-	 * genBallotInstructions demonstrates the technique of generating
-	 * a big chunk of content using Word, then exporting the .xml
-	 * using the DOCX4J word add-in, then importing the .xml file.
+	/** 
+	 * genFooter updates the default footer with the footerText.
+	 * Code was generated by DOCX4J Word Add-in.
+	 * @param footerContents reference to docx4j part.
+	 * @param footText new header text.
 	 */
 	/* private */
-	void genBallotInstructions() {
-		// load stream from resources
-		//InputStream inStream = ClassLoader.getSystemResourceAsStream("ballot_instructions.wml");
+	void genFooter(List<Object> footerContents, String footText) {
+		logger.debug("generating header for document");
+		org.docx4j.wml.ObjectFactory wmlObjectFactory = new org.docx4j.wml.ObjectFactory();
+		// Create object for p
+		P p = wmlObjectFactory.createP();
+		// Create object for r
+		R r = wmlObjectFactory.createR();
+		p.getContent().add(r);
+		// Create object for t (wrapped in JAXBElement)
+		Text text = wmlObjectFactory.createText();
+		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(text);
+		r.getContent().add(textWrapped);
+		text.setValue(footText);
+		// Line below replaces what was in the dotx templatel
+		footerContents.set(0, p);
+	}
+	/**
+	 * genWmlChunk demonstrates the technique of generating
+	 * a big chunk of content using Word, then exporting the .xml
+	 * using the DOCX4J word add-in, then importing the .xml file.
+	 * 
+	 * WARNING: Export/import does not work with graphics, hyperlinks, etc.
+	 */
+	void genWmlChunk(String wmlFileName) {
 		String text = "";
-		try (FileInputStream inStream = new FileInputStream(Initialize.RESOURCE_PATH + "ballot_instructions.wml");) {
+		try (FileInputStream inStream = new FileInputStream(Initialize.RESOURCE_PATH + wmlFileName);) {
 			text = new String(inStream.readAllBytes(), StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			logger.error("error reading xml chunk.");
+			logger.error("error reading xml chunk: " + wmlFileName);
 		}
 		Object o = null;
 		try {
@@ -317,20 +384,31 @@ public class GenDocxBallot {
 		}
 	}
 	/**
+	 * genBallotInstructions generates the ballot instructions provided by Voter Services.
+	 */
+	/* private */
+	void genBallotInstructions() {
+		genWmlChunk("ballot_instructions.wml");
+	}
+	/**
 	 * genContests uses the contestsText to generate each "contest group"
 	 * It assumes that the format (regex) is correct for each contest.
 	 */
 	/* private */
-	void genContests() {
+	List<P> genContests() {
 		logger.debug("generating contests for document");
+		// contestsParagraph is the list of all of the contest paragraphs.
+		List<P> contestsParagraphs = new ArrayList<>();		
 		String[] contestLines = contestsText.split("\n");
 		for (String line: contestLines) {
 			String [] elements = line.split(",");
 			String contestName = elements[0];
 			contestName = Contest.processContestName(contestName);
 			String contestFormat = elements[1];
-			genContest(contestName, contestFormat);
+			List<P> contestParagraphs = genContest(contestName, contestFormat);
+			contestsParagraphs.addAll(contestParagraphs);
 		}
+		return contestsParagraphs;
 	}
 	/**
 	 * genContest generates a particular contest group.
@@ -338,45 +416,138 @@ public class GenDocxBallot {
 	 * @param format number # that references "contest.format.#"
 	 */
 	/* private */
-	void genContest(String name, String format) {
+	List<P> genContest(String name, String format) {
 		logger.debug(String.format("generating contest name: %s format: %s%n", name, format));
+		List<P> contestParagraphs = new ArrayList<>();
 		MainDocumentPart mdp = docx.getMainDocumentPart();
-		ContestFactory cf = new ContestFactory(ballotText, formatsText, Initialize.elecType);
+		ContestFactory cf = new ContestFactory(ballotText, formatsText, Initialize.elecType, Initialize.endorsedParty);
 		String contestText = cf.findContestText(name);
-		if (!contestText.isEmpty()) {
+		if (!contestText.isBlank()) {
 			Contest contest = cf.parseContestText(name, contestText, format);
-			genContestParagraphs(mdp, contest);
+			// TODO: configuration item?
+//			if (contest.getCandidates().size() > 0) {
+				contestParagraphs = genContestParagraphs(mdp, contest);
+//			}
 		}
+		return contestParagraphs;
 	}
 	/**
 	 * genContestParagraphs generates the paragraphs of a contest group
 	 * @param mdp MainDocumentPart from DOCX4J API.
 	 * @param contest contest group
 	 */
-	void genContestParagraphs(MainDocumentPart mdp, Contest contest) {
-		mdp.addStyledParagraphOfText(STYLEID_CONTEST_TITLE, contest.getName());
+	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {
+		List<P> contestParagraphs = new ArrayList<>();
+		P newParagraph;
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, contest.getName());
+		contestParagraphs.add(newParagraph);
 		if (!contest.getTerm().isEmpty()) {
-			mdp.addStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getTerm());
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getTerm());
+			contestParagraphs.add(newParagraph);
 		}
-		mdp.addStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getInstructions());
-		mdp.addParagraphOfText(null);  // Paragraph separator
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getInstructions());
+		contestParagraphs.add(newParagraph);
+		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
+		contestParagraphs.add(newParagraph);
 		List<Candidate> cands = contest.getCandidates();
-		// Endorsements here.
+		// Endorsements here. See the classes Endorsement, EndorsementFactory, EndorsementProcessor
 		for (Candidate cand: cands) {
 			// Note: there is no ellipse (black or white) when the party is null.
 			// This is part of the kludge for "tickets" but also useful for other
-			// situations
-			String endorse = "   ";  // Need 3 spaces for 2nd name on ticket
-			if (Initialize.elecType == GENERAL && ((GeneralCandidate) cand).getParty() != null) {
-				endorse = (cand.getEndorsement())? blackEllipse : whiteEllipse;
+			// situations.
+			
+			String oval = "";
+			String candName = cand.getName();
+			boolean endorsed = endorsementProcessor.isEndorsed(candName, contest.getName(), cand.getParty(), precinctNo);
+			oval = endorsed? blackEllipse : whiteEllipse;
+//			OLD kludge for ticket (e.g. US President & Vice-President, Governor and Lieutenant Governor
+//			if (Initialize.elecType == GENERAL && ((GeneralCandidate) cand).getParty() != null) {
+//				oval = (cand.getEndorsement())? blackEllipse : whiteEllipse;
+//			} else {
+//				// TODO - endoresement logic
+//				// PRIMARY
+//				oval = whiteEllipse;
+//			}
+			String partyOrResidence = "";
+			boolean bottomOfTicket = false;
+			if (Initialize.elecType == ElectionType.GENERAL) {
+				partyOrResidence = ((GeneralCandidate) cand).getTextBeneathName();
+				bottomOfTicket = ((GeneralCandidate) cand).getBottomOfTicket();
+				if (bottomOfTicket) {
+					oval = "   ";  // Need 3 spaces for 2nd name on ticket
+				}
+			} else {
+				// PRIMARY
+				partyOrResidence = ((PrimaryCandidate) cand).getResidence();
 			}
-			String partyOrResidence = (Initialize.elecType == ElectionType.GENERAL) ?
-					((GeneralCandidate) cand).getTextBeneathName():
-					((PrimaryCandidate) cand).getResidence();
-			mdp.addStyledParagraphOfText(STYLEID_CANDIDATE_NAME, endorse + " " + cand.getName());
-			mdp.addStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, partyOrResidence);
+			if (endorsed) {
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_ENDORSED_CANDIDATE_NAME, oval + " " + candName);
+			} else {
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, oval + " " + candName);
+			}
+			contestParagraphs.add(newParagraph);
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, partyOrResidence);
+			contestParagraphs.add(newParagraph);
 		}
-		mdp.addParagraphOfText(null);  // Paragraph separator
+		// Display (or not) a write-in line
+		if (Initialize.writeInDisplay) {
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, whiteEllipse + "   " + "_".repeat(16));
+			contestParagraphs.add(newParagraph);
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
+			contestParagraphs.add(newParagraph);
+		}
+		// Draw a border line as a separator
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+		contestParagraphs.add(newParagraph);  // Paragraph separator
+		return contestParagraphs;
 	}
-	
+	/**
+	 * Finder is a DOCX utility method for finding types of parts within a Word document.
+	 * Note that it is a call back function which the Traversal utility calls when it
+	 * finds an part of the specific type, and that the results are accessed as a member
+	 * variable.
+	 */
+	static class Finder extends CallbackImpl {
+		Class<?> typeToFind;
+		public List<Object> results = new ArrayList<Object>();
+		Finder (Class<?> typeToFind) {
+			this.typeToFind = typeToFind;
+		}
+		@Override
+		public List<Object> apply(Object obj) {
+			if (obj.getClass().equals(typeToFind)) {
+				results.add(obj);
+			}
+			return null;
+		}
+	}
+	/**
+	 * findContestsPlaceholder traverses the paragraphs of the DOCX4J parts list
+	 * looking for the paragraph that contains the PLACEHOLDER_CONTESTS text.
+	 * This acts as the insertion point for the paragraphs to be generated.
+	 * 
+	 * @return P paragraph which is the placeholder.
+	 */
+	P findContestsPlaceholder() {
+		P placeholder = null;
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		Finder pFinder = new Finder(P.class);
+		new TraversalUtil (mdp, pFinder);
+		List<Object> paragraphs  = pFinder.results;
+		for (Object p: paragraphs) {
+			Finder textFinder = new Finder(Text.class);
+			new TraversalUtil (p, textFinder);
+			List<Object> texts = textFinder.results;
+			for (Object text: texts) {
+				Text content = (Text) text;
+				if (content.getValue().equals(PLACEHOLDER_CONTESTS)) {
+					logger.info("found Contests placeholder.");
+					placeholder = (P) p;
+					break;
+				}
+			}
+		}
+		return placeholder;
+	}
+
 }

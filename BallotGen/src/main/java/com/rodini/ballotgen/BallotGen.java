@@ -36,8 +36,9 @@ public class BallotGen {
 					Initialize.msWordTemplateFile, 
 					ballotFile,
 					Initialize.contestLevel,
-					Initialize.formatsText);
-					gdb.generate();
+					Initialize.formatsText,
+					Initialize.endorsementProcessor);					
+			gdb.generate();
 		}
 		System.out.printf("End of BallotGen app%n");
 		logger.info("End of BallotGen app");

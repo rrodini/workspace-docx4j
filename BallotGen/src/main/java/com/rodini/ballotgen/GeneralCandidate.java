@@ -24,21 +24,14 @@ public class GeneralCandidate extends Candidate {
 	private static final Logger logger = LoggerFactory.getLogger(GeneralCandidate.class);
 	
 	// general election use party
-	private Party party;
 	private String textBeneathName;
+	private boolean bottomOfTicket;
 
 	
-	GeneralCandidate(String name, Party party, String textBeneathName) {
-		super(name);
-		this.party = party;
-		if (party != null) {
-			this.textBeneathName = party.toString();
-		} else {
-			this.textBeneathName = textBeneathName;
-		}
-		// typically Initialize.endorsedParty is Party.DEMOCRATIC is
-		// but now the value is read from a property file.
-		this.endorsed = party == Initialize.endorsedParty;
+	GeneralCandidate(String name, Party party, String textBeneathName, boolean bottomOfTicket) {
+		super(name, party);
+		this.textBeneathName = textBeneathName;
+		this.bottomOfTicket = bottomOfTicket;
 	}
 
 	public Party getParty() {
@@ -49,9 +42,13 @@ public class GeneralCandidate extends Candidate {
 		return textBeneathName;
 	}
 	
+	public boolean getBottomOfTicket() {
+		return bottomOfTicket;
+	}
+	
 	@Override
 	public String toString() {
-		return String.format("%s : %s", name, textBeneathName);
+		return String.format("%s : %s %s", name, party.toString(), textBeneathName);
 	}
 
 }

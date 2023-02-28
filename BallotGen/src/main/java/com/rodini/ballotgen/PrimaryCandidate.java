@@ -10,14 +10,12 @@ import org.slf4j.LoggerFactory;
 	private static final Logger logger = LoggerFactory.getLogger(PrimaryCandidate.class);
 
 	// this could be a county, township, or "Male - Tredyffrin township"
-	private String residence;
+	private String residence;  // Note: May be "".
 
 	
-	public PrimaryCandidate(String name, String residence) {
-		super(name);
+	public PrimaryCandidate(String name, Party party, String residence) {
+		super(name, party);
 		this.residence = residence;
-		// need list of endorsements
-		this.endorsed = false;
 	}
 	
 	public String getResidence() {
@@ -26,7 +24,7 @@ import org.slf4j.LoggerFactory;
 	
 	@Override
 	public String toString() {
-		return String.format("%s : %s", name, residence);
+		return String.format("%s : %s %s", name, party.toString(), residence);
 	}
 
 }
