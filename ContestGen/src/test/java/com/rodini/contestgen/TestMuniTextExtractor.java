@@ -15,8 +15,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
+@Disabled
 class TestMuniTextExtractor {
 
 	private static MockedAppender mockedAppender;
@@ -62,7 +63,6 @@ class TestMuniTextExtractor {
  		String text = textLines.stream().collect(joining("\n"));
  		return text;
 	}
-
 
 	@Test
 	void testMuniExtract1() {

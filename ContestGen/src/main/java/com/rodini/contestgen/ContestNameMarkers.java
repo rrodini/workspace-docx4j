@@ -13,10 +13,10 @@ import com.rodini.ballotutils.Utils;
 public class ContestNameMarkers {
 	// use during testing
 	private static final String [] testContestNameFormats = {
-			"^(?<name>(.*\n){1,3})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$",
-			"^(?<name>(.*\n){1,3})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$",
-			"^(?<name>(.*\n){1,3})(?<region>^Region [A-Z].*)\n(?<term>^(\\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$",
-			"^(?<name>(.*\n){1,3})(?<instructions>^Vote(.*\n)*?Vote for ONE)\n(?<candidates>((.*\n){2})*)^Write-in$"
+			"^(?<name>(.*\n){1,3})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
+			"^(?<name>(.*\n){1,3})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
+			"^(?<name>(.*\n){1,3})(?<region>^Region [A-Z].*)\n(?<term>^(\\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
+			"^(?<name>(.*\n){1,3})(?<instructions>^Vote(.*\n)*?Vote for ONE)\n(?<candidates>((.*\n){1})*)^Write-in$"
 	};
 	// test or resource values
 	private static String [] contestNameFormats;

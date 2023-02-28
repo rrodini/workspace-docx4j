@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 class TestContestNameMarkers {
 
 //	private static final String [] testContestNameFormats = {
-//			"^(?<name>(.*\n){1,2})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$",
-//			"^(?<name>(.*\n){1,2})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$",
-//			"^(?<name>(.*\n){1,2})(?<region>^Region [A-Z].*)\n(?<term>^(\\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){2})*)^Write-in$"
+//			"^(?<name>(.*\n){1,2})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
+//			"^(?<name>(.*\n){1,2})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
+//			"^(?<name>(.*\n){1,2})(?<region>^Region [A-Z].*)\n(?<term>^(\\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$"
 //	};
 
 	private static Pattern [] testContestNamePatterns; 

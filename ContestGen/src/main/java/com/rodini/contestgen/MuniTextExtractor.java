@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotutils.Utils;
+
 /**
  * MuniTextExtractor "rips" the text of each page of a 
  * municipal ballot and creates a muniContestsExtractor object.
@@ -29,6 +31,9 @@ public class MuniTextExtractor {
 	public MuniTextExtractor(String muniName, String muniText) {
 		this.muniName = muniName;
 		this.muniText = muniText;
+		logger.info("MuniTextExtractor: " + muniName);
+		int len = muniText.length();
+		logger.info("MuniTextExtractor: " + muniText.substring(0,32) + "..." + muniText.substring(len-32,len));
 	}
 	/**
 	 * Extract the contest(s) text as per the given pattern.
@@ -39,8 +44,11 @@ public class MuniTextExtractor {
 		String text = "";
 		Matcher m = pattern.matcher(muniText);
 		if (!m.find()) {
-			String msg = String.format("no match for municipal page. Bad regex? %s", pattern.pattern());
+			String msg = String.format("no match for municipal page. muniName: %s regex: %s",muniName, pattern.pattern());
 			logger.error(msg);
+			msg = String.format("muniText: %s%n", muniText);
+			Utils.logFatalError(msg);
+			
 		} else {
 			try {
 				text = m.group("page");

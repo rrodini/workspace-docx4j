@@ -58,6 +58,7 @@ public class MuniContestsExtractor {
 	public MuniContestsExtractor(String muniName, String muniContestsText) {
 		this.muniName = muniName;
 		this.muniContestsText = muniContestsText;
+		logger.info(String.format("MuniContestsExtractor: name: %s", muniName));
 		muniContestNames = new MuniContestNames(muniName);
 	}
 	/**
@@ -71,13 +72,15 @@ public class MuniContestsExtractor {
 		String contestText = muniContestsText.substring(start, end);
 		ContestNameExtractor cnm = new ContestNameExtractor();
 		int format = cnm.match(contestText);
-		//System.out.printf("extractContestName: format: %d%n", format);
+		logger.info(String.format("extractContestName: format: %d", format));
 		if (format == -1) {
-			logger.error("No format for: " + contestText);
+			// this error is typical for long referendum questions.
+			int len = contestText.length();
+			logger.error("No format for: " + contestText.substring(0, Math.min(len, 8)));
 			return;
 		}
 		String name = cnm.getContestName();
-		//System.out.printf("extractContestName: name: %s%n", name);
+		logger.info(String.format("extractContestName: name: %s", name));
 		muniContestNames.add(new ContestName(name, format));
 	}
 	/**

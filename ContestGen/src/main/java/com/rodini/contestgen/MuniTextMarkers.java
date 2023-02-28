@@ -34,7 +34,7 @@ public class MuniTextMarkers {
 //System.out.printf("page2Regex: %s%n", page2Regex);
 		} else {
 			// test data for 2022 General
-			pageCount = 1;
+			pageCount = 2;
 			page1Regex = "(?m)(.*?)(.*?)(^Typ:01 Seq:\\d+ Spl:01$\n)(?<page>((.*)\n)*?)^Review$(.*)";
 			// special case since some pages end:  Write-in Superior Court Retention\n
             // rather than:                        Write-in Superior\nCourt Retention\n

@@ -38,6 +38,7 @@ public class SpecimenMuniExtractor {
 	 */
 	SpecimenMuniExtractor(String specimenText) {
 		this.specimenText = specimenText;
+		//TODO: logger.info specimenText
 		muniExtracts = new ArrayList<MuniTextExtractor>();
 	}
 	/**
@@ -69,12 +70,16 @@ public class SpecimenMuniExtractor {
 				String msg = e.getMessage();
 				logger.error(msg);
 			}
+			logger.debug(String.format("Specimen Muni Names: %d%n", muniNames.size()));
+			for (String name: muniNames) {
+				logger.debug(String.format("%s%n", name));
+			}
 		}
 		return muniNames;
 	}
 	
 	/**
-	 * extract extracts the municipal text from the text of the Voter Services pdf.
+	 * extract extracts the municipal text from the text of the Voter Services text.
 	 * It relies on a critical format (regular expression) passed to the constructor.
 	 * 
 	 * Note: The regex that extracts the name also delimits the text boundaries.
@@ -83,8 +88,10 @@ public class SpecimenMuniExtractor {
 	 */
 	List<MuniTextExtractor> extract() {
 		List<String> muniNames = extractMuniNames();
+		logger.info(String.format("SpecimenMuniExtractor: there are %d%n municipalities", muniNames.size()));
 		String [] muniStringExtracts = specimenText.split(SpecimenMuniMarkers.getMuniNamePattern().pattern(), 0);
 		int repeat = SpecimenMuniMarkers.getRepeatCount();
+		// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
 		for (int i = 0; i < muniNames.size(); i++) {
 			int j = (i + 1) * repeat;
 			// log below

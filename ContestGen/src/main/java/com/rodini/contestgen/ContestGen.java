@@ -76,7 +76,8 @@ public class ContestGen {
 		for (MuniTextExtractor mte: mteList) {
 			MuniContestsExtractor mce = mte.extract();
 			muniContestNames = mce.extract();
-			// debug
+			// TODO: test if name is unique (as it should be, except for "356 E Marlborough S"
+			// 
 			String muniName = muniContestNames.getMuniName();
 			if (first) {
 				commonContestNames = muniContestNames;

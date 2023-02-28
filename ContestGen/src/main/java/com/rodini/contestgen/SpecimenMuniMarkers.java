@@ -3,9 +3,13 @@ package com.rodini.contestgen;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rodini.ballotutils.Utils;
 
 public class SpecimenMuniMarkers {
+	private static final Logger logger = LoggerFactory.getLogger(SpecimenMuniMarkers.class);
 
 	private static int repeatCount; // # of times the ballot name is repeated
 	private static String muniNameRegex;
@@ -17,7 +21,7 @@ public class SpecimenMuniMarkers {
 			props = Utils.loadProperties(resourceFilePath);
 			repeatCount = Integer.parseInt(Utils.getPropValue(props, "muniNameRepeatCount"));
 			muniNameRegex = Utils.getPropValue(props, "muniNameRegex");
-//System.out.printf("muniNameRegex: %s%n", muniNameRegex);
+			logger.info(String.format("muniNameRegex: %s%n", muniNameRegex));
 		} else {
 			repeatCount = 2;
 			muniNameRegex = "(?m)^OFFICIAL GENERAL ELECTION BALLOT$\n(?<id>\\d+)[\\s]*(?<name>.*)\n";
