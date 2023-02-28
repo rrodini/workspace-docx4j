@@ -1,5 +1,6 @@
 package com.rodini.ballotutils;
 
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.stream.Collectors.joining;
 import static org.apache.logging.log4j.Level.DEBUG;
 import static org.apache.logging.log4j.Level.ERROR;
@@ -20,7 +21,13 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * Utils class contains common utility methods across all ballot
+ * generation programs.  Subject to constants additions due to refactoring.
+ * 
+ * @author Bob Rodini
+ *
+ */
 public class Utils {
 
 	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
@@ -46,7 +53,6 @@ public class Utils {
 				);
 		// get logging level from JVM argument
 		String level = System.getProperty(JVM_LOG_LEVEL, "ERROR").toUpperCase();
-System.out.printf("level: %s%n", level);
 		org.apache.logging.log4j.Level log4jLevel = logLevels.get(level);
 System.out.printf("log4jLevel: %s%n", log4jLevel);
 		if (log4jLevel == null) {
@@ -54,7 +60,7 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 		}
 		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,log4jLevel);
 	}
-
+	// load program properties (as per Java conventions).
 	public static Properties loadProperties(String resourcePath) {
 		// get properties
 		Properties props = new Properties();
@@ -66,7 +72,7 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 		logger.info("properties file loaded from: " + resourcePath);
 		return props;
 	}
-	
+	// get a property value.
 	public static String getPropValue(Properties props, String propName) {
 		String value = props.getProperty(propName);
 		if (value == null) {
@@ -96,7 +102,16 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 		}
 		return propValues;
 	}
-	
+	// check if file exits.
+	public static boolean checkFileExists(String filePath) {
+		boolean exists = true;
+		if (!Files.exists(Path.of(filePath), NOFOLLOW_LINKS)) {
+			logger.error("file \"" + filePath + "\" does not exist");
+			exists = false;
+		}
+		return exists;
+	}
+	// read all the text of a file.
 	public static String readTextFile(String textFilePath) {
  		List<String> textLines = null;
 		try {
@@ -107,7 +122,7 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
  		String text = textLines.stream().collect(joining("\n"));
  		return text;
 	}
-	
+	// compile a regular expression.
 	public static Pattern compileRegex(String regex) {
 		Pattern pattern = null;
 		try {

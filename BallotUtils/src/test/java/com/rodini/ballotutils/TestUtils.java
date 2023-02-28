@@ -138,6 +138,16 @@ class TestUtils {
 //		assertTrue(mockedAppender.messages.get(1).startsWith(expected2));
 	}
 	@Test
+	void textCheckFileExistsTrue() {
+		boolean exists = Utils.checkFileExists("./src/test/java/gettysburg.txt");
+		assertTrue(exists);
+	}
+	@Test
+	void textCheckFileExistsFalse() {
+		boolean exists = Utils.checkFileExists("./src/test/java/non-existant.txt");
+		assertFalse(exists);
+	}
+	@Test
 	void testReadTextFile() {
 		String expected = 
 				"Four score and seven years ago our fathers brought forth\n" +
