@@ -1,0 +1,9 @@
+precinct no,precinct name,zone name,zone no
+0005,ATGLEN,OXGrove,3
+,ATGLEN,OXGrove,3
+10,AVONDALE,KAD,
+11,AVONDALE,,8
+14,BIRMINGHAM 1,Thornbury,6
+15,BIRMINGHAM 1,Thornbury,,
+16,BIRMINGHAM 1,Thornbury,x,y,z
+17,BIRMINGHAM 1,Thornbury,600
