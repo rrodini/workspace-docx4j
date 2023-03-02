@@ -324,7 +324,6 @@ class TestContestFactory {
 			ballotFileLines = Files.readAllLines(Path.of("./src/test/java/test-ballot-text.txt"));
 			contestsLines = Files.readAllLines(Path.of("./src/test/java/test-contests.txt"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
  		String ballotFileText = ballotFileLines.stream().collect(joining("\n"));
@@ -375,98 +374,5 @@ class TestContestFactory {
 		assertEquals(1, mockedAppender.messages.size());
 		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
 	}
-//	@Test
-//	void testCreateCandidates() {
-//		String candidatesText = 
-//				"Alita Rovito\n" +
-//				"Democratic\n" +
-//				"Tony Verwey\n" +
-//				"Democratic\n" +
-//				"Lou Mincarelli\n" +
-//				"Republican\n" +
-//				"PJ Redmond\n" +
-//				"Republican\n";
-//		List<Candidate> candidates = cf.createCandidates(candidatesText, 2);
-//		assertTrue(4 == candidates.size());
-//		assertEquals("PJ Redmond", candidates.get(3).getName());
-//	}
-//	@Test
-//	void testCreateCandidates1() {
-//		cf = new ContestFactory(ballotTextPrimary, formatsText, ElectionType.PRIMARY, Party.DEMOCRATIC);
-//		String candidatesText = 
-//				"THERESA M SCHATZ\n" +
-//				"SAMANTHA JOUIN\n";
-//		List<Candidate> candidates = cf.createCandidates(candidatesText, 1);
-//		assertTrue(2 == candidates.size());
-//		assertEquals("SAMANTHA JOUIN", candidates.get(1).getName());
-//	}
-//	@Test
-//	void testParseContestText() {
-//		String contestName = "Judge of the\nCourt of Common Pleas";
-//		String contestText =
-//						"Judge of the\n" +
-//						"Court of Common Pleas\n" +
-//						"Vote for no more than TWO\n" +
-//						"Alita Rovito\n" +
-//						"Democratic\n" +
-//						"Tony Verwey\n" +
-//						"Democratic\n" +
-//						"Lou Mincarelli\n" +
-//						"Republican\n" +
-//						"PJ Redmond\n" +
-//						"Republican\n" +
-//						"Write-in";
-//		contestName = Contest.processContestName(contestName);
-//		Contest contest = cf.parseContestText(contestName, contestText, "1");
-//		assertEquals(contestName, contest.getName());
-//		assertEquals("Vote for no more than TWO", contest.getInstructions());
-//		assertEquals(4, contest.getCandidates().size());
-//	}
-//	@Test
-//	void testParseContestText1() {
-//		String contestName = "Judge of the\nCourt of Common Pleas";
-//		String contestText =
-//						"Judge of the\n" +
-//						"Court of Common Pleas\n" +
-//						"Vote for no more than TWO\n" +
-//						"Alita Rovito\n" +
-//						"Democratic\n" +
-//						"Tony Verwey\n" +
-//						"Democratic\n" +
-//						"Lou Mincarelli\n" +
-//						"Republican\n" +
-//						"PJ Redmond\n" +
-//						"Republican\n" +
-//						"Write-in";
-//		// wrong format here (should be "1")
-//		Contest contest = cf.parseContestText(contestName, contestText, "2");
-//		String expected = String.format("no match for contest name: %s and format: %s%n",
-//				contestName, "2");
-//		assertEquals(1, mockedAppender.messages.size());
-//		assertEquals(expected, mockedAppender.messages.get(0));
-//	}
-//	//@Disabled
-//	@Test
-//	void testParseContestText2() {
-//		String contestFormat2 = "/^%contest name%\\n(?<term>.*)\\n(?<instruction>.*)\\n(?<candidates>((.*\\n){2})*)^Write-in$/";
-//		String formatsText = contestFormat1 + "\n" + contestFormat2;
-//
-//		String contestName = "Treasurer";
-//		String contestText =
-//						"Treasurer\n" +
-//						"4 Year Term\n" +
-//						"Vote for ONE\n" +
-//						"Patricia A. Maisano\n" +
-//						"Democratic\n" +
-//						"Jennifer Nicolas\n" +
-//						"Republican\n" +
-//						"Write-in";
-//		// misspelling of "instructions"
-//		
-//		cf = new ContestFactory(ballotTextGeneral, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
-//		Contest contest = cf.parseContestText(contestName, contestText, "2");
-//		String expected = String.format("No group with name <%s>", "instructions");
-//		assertEquals(expected, mockedAppender.messages.get(0));
-//	}
 
 }

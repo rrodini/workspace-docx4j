@@ -1,27 +1,21 @@
 package com.rodini.ballotgen;
 
+import static com.rodini.ballotgen.ContestFileLevel.COMMON;
+import static com.rodini.ballotgen.ContestFileLevel.MUNICIPAL;
 import static java.util.stream.Collectors.joining;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static com.rodini.ballotgen.ContestFileLevel.*;
-import static com.rodini.ballotgen.ElectionType.*;
-import com.rodini.ballotutils.Utils;
-import com.rodini.zoneprocessor.Zone;
-
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
 
 import org.docx4j.Docx4J;
+import org.docx4j.TraversalUtil;
+import org.docx4j.TraversalUtil.CallbackImpl;
 import org.docx4j.XmlUtils;
 import org.docx4j.openpackaging.contenttype.ContentTypes;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -29,8 +23,8 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-import org.docx4j.TraversalUtil;
-import org.docx4j.TraversalUtil.CallbackImpl;
+import org.docx4j.wml.Br;
+import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
 import org.docx4j.wml.R;
 import org.docx4j.wml.Style;
@@ -38,6 +32,11 @@ import org.docx4j.wml.Styles;
 import org.docx4j.wml.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.rodini.ballotutils.Utils;
+
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 /**
  * GenDocxBallot is the workhorse class that produces a new Word file
  * based on inputs.  Those inputs are:
@@ -45,9 +44,15 @@ import org.slf4j.LoggerFactory;
  * 2. The contests (text) file for the municipality.
  * 3. The dotx template file which is referenced by the program's
  *    properties file.
+ * 
+ *  DOCX4J
+ *  Website: https://www.docx4java.org/trac/docx4j
+ *  API: https://javadoc.io/doc/org.docx4j/docx4j/latest/index.html
+ *    
+ *    
  * Notes:
  * 1. The class is designed to FAIL FAST if initialization fails.
- * 2. The class is designed are THREAD SAFE.  It may not be.
+ * 2. The class is designed to be THREAD SAFE.  It may not be.
  * 3. private visibility is NOT used so that unit tests can be written. 
  * @author Bob Rodini
  *
@@ -64,7 +69,6 @@ public class GenDocxBallot {
 	private WordprocessingMLPackage docx;  // document under construction
 	private String ballotName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
 	private String precinctNo; // precinct No. - first three digits of ballotName
-	private String contestFilePath; // path to contest file e.g. XYZ_contests.txt
 	private static final String FILE_SUFFIX = "_VS";
 	private String ballotText; // text of ballotTextFile
 	private String fileOutputPath; // generated DOCX file
@@ -73,7 +77,6 @@ public class GenDocxBallot {
 	// Placeholders are predefined strings that may be embedded in the template file
 	// so they can be located programmatically by this program.
 	private static final String PLACEHOLDER_CONTESTS = "Contests";
-	private static final String PLACEHOLDER_BALLOTNAME = "BallotName";
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
 	// so when the template is loaded the existence of the styles is checked.
@@ -84,6 +87,7 @@ public class GenDocxBallot {
 	private static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
 	private static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
 	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
+	private static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
 	// These are unicode characters (also Segoe UI Symbol font)
 	private static final String whiteEllipse = "⬭";
 	private static final String blackEllipse = "⬬";
@@ -156,7 +160,6 @@ public class GenDocxBallot {
 	/* private */ 
 	void initDocxFile() {
 		File dotxFile = new File(dotxPath);
-		logger.info(String.format("dotxFile: %s", dotxPath));
 		File textFile = new File(ballotTextFilePath);
 		String fileName = textFile.getName();
 		String pathName = textFile.getAbsolutePath();
@@ -194,7 +197,9 @@ public class GenDocxBallot {
 			Utils.logFatalError("critical DOCX4J load/clone/attach operation failed.");
 		}
 	}
-	
+	/**
+	 * initContestsText reads in the contests file for this ballot.
+	 */
 	void initContestsText() {
 		String contestsPath = Initialize.ballotContestsPath + File.separator;
 		if (contestLevel == COMMON) {
@@ -230,17 +235,10 @@ public class GenDocxBallot {
 	}
 	/**
 	 * initStyles checks that the expected StyleIds (just strings) exist
-	 * in the dotx file.  If not, it substitutes "Normal"
+	 * in the dotx file.  If not, it substitutes style "Normal"
 	 */
 	/* private */ 	
 	void initStyles() {
-//		List<String> neededIdStyles = List.of(
-//				STYLEID_CANDIDATE_NAME,
-//				STYLEID_ENDORSED_CANDIDATE_NAME,
-//				STYLEID_CANDIDATE_PARTY,
-//				STYLEID_CONTEST_INSTRUCTIONS,
-//				STYLEID_CONTEST_TITLE
-//				);
 		List<String> templateIdStyles = new ArrayList<>();
 		Styles styles = docx.getMainDocumentPart().getStyleDefinitionsPart().getJaxbElement();
 		for (Style style : styles.getStyle()) {
@@ -270,6 +268,10 @@ public class GenDocxBallot {
 		if (!templateIdStyles.contains(STYLEID_BOTTOM_BORDER)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_BOTTOM_BORDER);
 			STYLEID_BOTTOM_BORDER = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_COLUMN_BREAK_PARAGRAPH)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_COLUMN_BREAK_PARAGRAPH);
+			STYLEID_COLUMN_BREAK_PARAGRAPH = "Normal";
 		}
 	}
 	/**
@@ -341,7 +343,7 @@ public class GenDocxBallot {
 	 */
 	/* private */
 	void genFooter(List<Object> footerContents, String footText) {
-		logger.debug("generating header for document");
+		logger.debug("generating footer for document");
 		org.docx4j.wml.ObjectFactory wmlObjectFactory = new org.docx4j.wml.ObjectFactory();
 		// Create object for p
 		P p = wmlObjectFactory.createP();
@@ -353,7 +355,7 @@ public class GenDocxBallot {
 		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(text);
 		r.getContent().add(textWrapped);
 		text.setValue(footText);
-		// Line below replaces what was in the dotx templatel
+		// Line below replaces what was in the dotx template.
 		footerContents.set(0, p);
 	}
 	/**
@@ -393,25 +395,43 @@ public class GenDocxBallot {
 	/**
 	 * genContests uses the contestsText to generate each "contest group"
 	 * It assumes that the format (regex) is correct for each contest.
+	 * 
+	 * Notes:
+	 * The property column.break.contest.count is a crude way of formatting
+	 * the ballot layout. A human counts (starting at 1) the contests
+	 * after which a column break should be generated.  This is crude since
+	 * a contest names and # of candidates can vary from municipality to
+	 * municipality.
 	 */
 	/* private */
 	List<P> genContests() {
 		logger.debug("generating contests for document");
-		// contestsParagraph is the list of all of the contest paragraphs.
+		// contestsParagraphs is the list of all of the contest paragraphs.
 		List<P> contestsParagraphs = new ArrayList<>();		
 		String[] contestLines = contestsText.split("\n");
+		int i = 0;
+		int j = 0;
 		for (String line: contestLines) {
 			String [] elements = line.split(",");
 			String contestName = elements[0];
 			contestName = Contest.processContestName(contestName);
 			String contestFormat = elements[1];
 			List<P> contestParagraphs = genContest(contestName, contestFormat);
+			// Insert column break after contest.
+			if (i+1 == Initialize.columnBreaks[j]) {
+				P columnBreakParagraph = genColumnBreakParagraph();
+				contestParagraphs.add(columnBreakParagraph);
+				j++;
+			}
 			contestsParagraphs.addAll(contestParagraphs);
+			i++;
 		}
 		return contestsParagraphs;
 	}
 	/**
-	 * genContest generates a particular contest group.
+	 * genContest generates a particular contest group. This consists 
+	 * of the contest name, contest instructions, candidates, etc.
+	 *  
 	 * @param name e.g. "Justice of the Supreme Court"
 	 * @param format number # that references "contest.format.#"
 	 */
@@ -439,6 +459,7 @@ public class GenDocxBallot {
 	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {
 		List<P> contestParagraphs = new ArrayList<>();
 		P newParagraph;
+		// first paragraph
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, contest.getName());
 		contestParagraphs.add(newParagraph);
 		if (!contest.getTerm().isEmpty()) {
@@ -464,7 +485,7 @@ public class GenDocxBallot {
 //			if (Initialize.elecType == GENERAL && ((GeneralCandidate) cand).getParty() != null) {
 //				oval = (cand.getEndorsement())? blackEllipse : whiteEllipse;
 //			} else {
-//				// TODO - endoresement logic
+//				// TODO - endorsement logic
 //				// PRIMARY
 //				oval = whiteEllipse;
 //			}
@@ -498,8 +519,30 @@ public class GenDocxBallot {
 		}
 		// Draw a border line as a separator
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+		// last paragraph
 		contestParagraphs.add(newParagraph);  // Paragraph separator
 		return contestParagraphs;
+	}
+	/** 
+	 * genColumnBreakParagraph generates a column break object tree.
+	 * This can be used to "post-format" the columns after a human evaluation as to where
+	 * a column break should be injected.
+	 * @return paragraph effecting a column break
+	 */
+	P genColumnBreakParagraph() {
+		logger.info("generating column break");
+		org.docx4j.wml.ObjectFactory wmlObjectFactory = new ObjectFactory();
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+        // Create object for p
+        P p = mdp.createStyledParagraphOfText(STYLEID_COLUMN_BREAK_PARAGRAPH,null);
+        // Create object for r
+        R r = wmlObjectFactory.createR(); 
+        p.getContent().add(r); 
+        // Create object for br
+        Br br = wmlObjectFactory.createBr(); 
+        r.getContent().add(br); 
+        br.setType(org.docx4j.wml.STBrType.COLUMN);
+        return p;
 	}
 	/**
 	 * Finder is a DOCX utility method for finding types of parts within a Word document.
