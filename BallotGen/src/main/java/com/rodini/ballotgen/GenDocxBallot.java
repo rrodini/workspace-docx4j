@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.docx4j.Docx4J;
 import org.docx4j.TraversalUtil;
@@ -74,6 +76,9 @@ public class GenDocxBallot {
 	private String fileOutputPath; // generated DOCX file
 	private String formatsText;   // formats (regexes) read from properties
 	private EndorsementProcessor endorsementProcessor;
+	//          Candidate Candidate
+	//          Name      Object
+	public  static Map<String,   Integer> endorsedCandidates = new TreeMap<>();
 	// Placeholders are predefined strings that may be embedded in the template file
 	// so they can be located programmatically by this program.
 	private static final String PLACEHOLDER_CONTESTS = "Contests";
@@ -473,22 +478,15 @@ public class GenDocxBallot {
 		List<Candidate> cands = contest.getCandidates();
 		// Endorsements here. See the classes Endorsement, EndorsementFactory, EndorsementProcessor
 		for (Candidate cand: cands) {
-			// Note: there is no ellipse (black or white) when the party is null.
-			// This is part of the kludge for "tickets" but also useful for other
-			// situations.
-			
+			// Candidate objects are created for each ballot which makes them no good
+			// for counting endorsements.  That's why endorsedCandidates variable is used.
 			String oval = "";
 			String candName = cand.getName();
 			boolean endorsed = endorsementProcessor.isEndorsed(candName, contest.getName(), cand.getParty(), precinctNo);
+			if (endorsed) {
+				endorsedCandidates.merge(candName.toUpperCase(), 1, (prev, inc) -> prev + inc);
+			}
 			oval = endorsed? blackEllipse : whiteEllipse;
-//			OLD kludge for ticket (e.g. US President & Vice-President, Governor and Lieutenant Governor
-//			if (Initialize.elecType == GENERAL && ((GeneralCandidate) cand).getParty() != null) {
-//				oval = (cand.getEndorsement())? blackEllipse : whiteEllipse;
-//			} else {
-//				// TODO - endorsement logic
-//				// PRIMARY
-//				oval = whiteEllipse;
-//			}
 			String partyOrResidence = "";
 			boolean bottomOfTicket = false;
 			if (Initialize.elecType == ElectionType.GENERAL) {

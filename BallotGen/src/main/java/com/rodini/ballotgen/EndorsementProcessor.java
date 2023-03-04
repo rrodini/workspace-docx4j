@@ -96,6 +96,10 @@ public class EndorsementProcessor {
 		return endorsed;
 	}
 	
+	public Map<String,List<Endorsement>> getCandidateEndorsements() {
+		return candidateEndorsements;
+	}
+	
 	private boolean isEndorsedForGeneral(String candidateName, String contestName, Party candidateParty, String muniNoStr) {
 		boolean endorsed = false;
 		if (candidateParty == endorsedParty) {

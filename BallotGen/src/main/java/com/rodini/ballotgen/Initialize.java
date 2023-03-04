@@ -41,7 +41,7 @@ public class Initialize {
 	public static Properties ballotGenProps;
 	public static Properties contestGenProps;
 	private static Map<String, Zone> precinctToZoneMap;
-	private static Map<String, List<Endorsement>> candidateEndorsements;
+	        static Map<String, List<Endorsement>> candidateEndorsements;
 	public static EndorsementProcessor endorsementProcessor;
 	public static boolean writeInDisplay;
 	public static int [] columnBreaks = {999};

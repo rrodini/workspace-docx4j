@@ -1,5 +1,9 @@
 package com.rodini.ballotgen;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 //import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +44,43 @@ public class BallotGen {
 					Initialize.endorsementProcessor);					
 			gdb.generate();
 		}
+		terminate();
 		System.out.printf("End of BallotGen app%n");
 		logger.info("End of BallotGen app");
 	}
-	
-	
+	/**
+	 * Terminate ends the BallotGen with summary information.
+	 */
+	private static void terminate() {
+		// Generate list of endorsed candidates as a means for checking for errors
+		// The first loop just shows how many cumulative endorsements any candidate received.
+		// The second loop checks that a candidate with and explicit endorsement was
+		// endorsed on any ballot.  If the answer is "no" the candidate's name is probably misspelled.		
+		Set<String> names = GenDocxBallot.endorsedCandidates.keySet();
+		String line = "Endorsed Candidate      No. endorsements";
+		//             STEPHANIE GIBSON WILLIAMS           
+		logger.info(line);
+		// First loop
+		for (String name: names) {
+			line = String.format("%-25s %5d", name, GenDocxBallot.endorsedCandidates.get(name));
+			logger.info(line);
+		}
+		Map<String,List<Endorsement>> candidateEndorsements = Initialize.endorsementProcessor.getCandidateEndorsements();
+		names = candidateEndorsements.keySet();
+		// Second loop.
+		for (String name: names) {
+			if (GenDocxBallot.endorsedCandidates.get(name) == null) {
+				
+				line = String.format("%s received endorsements (below) but did not appear on any ballot:", name);
+				logger.error(line);
+				System.out.println(line);
+				for (Endorsement end: candidateEndorsements.get(name)) {
+					line = "   " + end.toString();
+					logger.error(line);
+					System.out.println(line);
+				}
+			}
+		}
+
+	}
 }
