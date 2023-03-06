@@ -23,24 +23,14 @@ public class MuniTextMarkers {
 	private static Pattern page1Pattern;
 	private static Pattern page2Pattern;
 	
-	public static void initialize(boolean useResourceFile, String resourceFilePath) {
-		if (useResourceFile) {
-			// use resource data
-			Properties props;
-			props = Utils.loadProperties(resourceFilePath);
-			pageCount = Integer.parseInt(Utils.getPropValue(props, "muniTextPageCount"));
-			page1Regex = Utils.getPropValue(props, "muniTextPage1Regex");
-			page2Regex = Utils.getPropValue(props, "muniTextPage2Regex");
+	public static void initialize(String resourceFilePath) {
+		// use resource data
+		Properties props;
+		props = Utils.loadProperties(resourceFilePath);
+		pageCount = Integer.parseInt(Utils.getPropValue(props, "muniTextPageCount"));
+		page1Regex = Utils.getPropValue(props, "muniTextPage1Regex");
+		page2Regex = Utils.getPropValue(props, "muniTextPage2Regex");
 //System.out.printf("page2Regex: %s%n", page2Regex);
-		} else {
-			// test data for 2022 General
-			pageCount = 2;
-			page1Regex = "(?m)(.*?)(.*?)(^Typ:01 Seq:\\d+ Spl:01$\n)(?<page>((.*)\n)*?)^Review$(.*)";
-			// special case since some pages end:  Write-in Superior Court Retention\n
-            // rather than:                        Write-in Superior\nCourt Retention\n
-			page2Regex = "(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)(?<page>((.*)\n)*?)^(Write-in\n|Write-in )Superior Court Retention$(.*)";
-			// compile 1x for entire application
-		}
 		page1Pattern = Utils.compileRegex(page1Regex);
 		page2Pattern = Utils.compileRegex(page2Regex);
 	}

@@ -16,33 +16,21 @@ public class ContestNameMarkers {
 			"^(?<name>(.*\n){1,3})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
 			"^(?<name>(.*\n){1,3})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
 			"^(?<name>(.*\n){1,3})(?<region>^Region [A-Z].*)\n(?<term>^(\\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
-			"^(?<name>(.*\n){1,3})(?<instructions>^Vote(.*\n)*?Vote for ONE)\n(?<candidates>((.*\n){1})*)^Write-in$"
 	};
 	// test or resource values
 	private static String [] contestNameFormats;
 	// compiled patterns
 	private static Pattern [] contestNamePatterns;
 	
-	public static void initialize(boolean useResourceFile, String resourceFilePath) {
-		if (useResourceFile) {
-			// read formats from resource file
-			Properties props = Utils.loadProperties(resourceFilePath);
-			List<String> formatList = Utils.getPropOrderedValues(props, "contest.format");
-//			Below fails at run-time
-//			contestNameFormats = (String[]) formatList.toArray();
-			contestNameFormats = new String[formatList.size()];
-			for (int i = 0; i < formatList.size(); i++) {
-				contestNameFormats[i] = (String) formatList.get(i);
-				//System.out.printf("resource: %s%n", contestNameFormats[i]);		
-			}
-			
-		} else {
-			// use test formats
-			contestNameFormats = testContestNameFormats;
-//			for (int i=0; i<testContestNameFormats.length; i++) {
-//				System.out.printf("test   : %s%n", contestNameFormats[i]);		
-//			}
-		}
+	public static void initialize(String resourceFilePath) {
+		// read formats from resource file
+		Properties props = Utils.loadProperties(resourceFilePath);
+		List<String> formatList = Utils.getPropOrderedValues(props, "contest.format");
+		contestNameFormats = new String[formatList.size()];
+		for (int i = 0; i < formatList.size(); i++) {
+			contestNameFormats[i] = (String) formatList.get(i);
+			//System.out.printf("resource: %s%n", contestNameFormats[i]);		
+		}		
 		contestNamePatterns = new Pattern[contestNameFormats.length];		
 		for (int i = 0; i < contestNameFormats.length; i++) {
 			compileRegex(i, contestNameFormats[i]);

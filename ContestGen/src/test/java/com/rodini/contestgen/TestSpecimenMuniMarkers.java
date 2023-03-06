@@ -10,15 +10,15 @@ import org.junit.jupiter.api.Test;
 
 class TestSpecimenMuniMarkers {
 	
-	private int testMuniNameRepeatCount;
-	private Pattern testMuniNamePattern;
+//	private int testMuniNameRepeatCount;
+//	private Pattern testMuniNamePattern;
+
+	private static final String [] testSpecimenMuniMarker = {
+			  "(?m)^OFFICIAL MUNICIPAL PRIMARY ELECTION BALLOT$\n(?<id>\\d+)[\\s]*(?<name>.*)\n"
+			};
 
 	@BeforeEach
 	void setUp() throws Exception {
-		SpecimenMuniMarkers.initialize(false, null);
-		// save the values immediately.
-		testMuniNameRepeatCount = SpecimenMuniMarkers.getRepeatCount();
-		testMuniNamePattern = SpecimenMuniMarkers.getMuniNamePattern();
 	}
 
 	@AfterEach
@@ -27,13 +27,12 @@ class TestSpecimenMuniMarkers {
 
 	@Test
 	void testLoadFromResources() {
-//		SpecimenMuniMarkers.initialize(true, "./src/test/java/test-props1.properties");
-		SpecimenMuniMarkers.initialize(true, "./resources/contestgen.properties");
-		assertEquals(testMuniNameRepeatCount, SpecimenMuniMarkers.getRepeatCount());
-		String regex = testMuniNamePattern.toString();
+		SpecimenMuniMarkers.initialize("./src/test/java/Primary-Dems-2021.properties");
+		assertEquals(2, SpecimenMuniMarkers.getRepeatCount());
+		String regex = testSpecimenMuniMarker[0];
 		String patternRegex = SpecimenMuniMarkers.getMuniNamePattern().toString();
 		//System.out.println(patternRegex);
-//		assertEquals(regex, patternRegex);
+		assertEquals(regex, patternRegex);
 	}
 
 }

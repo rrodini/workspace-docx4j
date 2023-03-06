@@ -157,16 +157,7 @@ class TestMuniContestsExtractor {
 	    logger = (Logger)LogManager.getLogger(MuniContestsExtractor.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
-	    ContestNameMarkers.initialize(false, null);
-
-//		testContestNamePatterns = ContestNameMarkers.getContestNamePatterns();
-//		for (int i = 0; i < testContestNamePatterns.length; i++) {
-//			Pattern pat = testContestNamePatterns[i];
-//			String testPatRegex = pat.toString();
-//			//testPatRegex = "\"" + testPatRegex.replaceAll("\n", "\\\\\\n") + "\"";
-//			testPatRegex =          testPatRegex.replaceAll("\n", "\\\\\\n")       ;
-//			System.out.printf("%s%n", testPatRegex);
-//		}
+	    ContestNameMarkers.initialize("./src/test/java/General-2021.properties");
 	}
 
 	@AfterAll

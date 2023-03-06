@@ -47,10 +47,10 @@ class TestContestGen {
 		String [] args1 = {
 				"bogus"
 		};
-		//String expected = "missing command line arguments";
+		String expected = "missing command line arguments";
 		ContestGen.initialize(args1);
-//		assertEquals(1, mockedAppender.messages.size());
-//		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
 	}
 	@Test
 	@ExpectSystemExit
@@ -59,10 +59,10 @@ class TestContestGen {
 				"non-existent.txt",
 				"./contests"
 		};
-		//String expected = "can't find ...";
+		String expected = "can't find ...";
 		ContestGen.initialize(args);
-//		assertEquals(1, mockedAppender.messages.size());
-//		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
 	}
 	@Test
 	@ExpectSystemExit
@@ -71,10 +71,10 @@ class TestContestGen {
 				"./src/test/java/Test.xyz",
 				"./contests"
 		};
-		//String expected = "file ... doesn't end with TXT";
+		String expected = "file ... doesn't end with TXT";
 		ContestGen.initialize(args);
-//		assertEquals(1, mockedAppender.messages.size());
-//		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
 	}
 	@Test
 	@ExpectSystemExit
@@ -83,10 +83,10 @@ class TestContestGen {
 				"./src/test/java/General-2021.txt",
 				"./non-existent-folder"
 		};
-		//String expected = "command line arg[1] is not a folder";
+		String expected = "command line arg[1] is not a folder";
 		ContestGen.initialize(args);
-//		assertEquals(1, mockedAppender.messages.size());
-//		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
 	}
 	@Test
 	void testInitializeArgsGood() {
@@ -94,7 +94,7 @@ class TestContestGen {
 				"./src/test/java/General-2021.txt",
 				"./contests"
 		};
-		//String expected = "command line arg[1] is not a folder";
+		String expected = "command line arg[1] is not a folder";
 		ContestGen.initialize(args);
 		assertTrue(ContestGen.props != null);
 	}

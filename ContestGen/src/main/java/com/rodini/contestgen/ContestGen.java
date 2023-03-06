@@ -147,19 +147,12 @@ public class ContestGen {
 	 * @param propsFilePath path to properties file.
 	 */
 	static void initMarkers(String propsFilePath) {
-		if (env == TEST) {
-			ContestNameMarkers.initialize(false, null);
-			MuniTextMarkers.initialize(false, null);
-			SpecimenMuniMarkers.initialize(false, null);
-		} else {
-			// PRODUCTION
-			// validate SpecimenMuniMarkers values
-			SpecimenMuniMarkers.initialize(true, propsFilePath);
-			// validate MuniTextMarkers values
-			MuniTextMarkers.initialize(true, propsFilePath);
-			// validate ContestNameMarkers values
-			ContestNameMarkers.initialize(true, propsFilePath);
-		}
+		// validate SpecimenMuniMarkers values
+		SpecimenMuniMarkers.initialize(propsFilePath);
+		// validate MuniTextMarkers values
+		MuniTextMarkers.initialize(propsFilePath);
+		// validate ContestNameMarkers values
+		ContestNameMarkers.initialize(propsFilePath);
 	}
 	/**
 	 * genMuniContestsFile generates the contest(s) file for the municipality.

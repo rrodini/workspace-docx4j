@@ -15,17 +15,12 @@ public class SpecimenMuniMarkers {
 	private static String muniNameRegex;
 	private static Pattern muniNamePattern;
 	
-	public static void initialize(boolean useResourceFile, String resourceFilePath) {
-		if (useResourceFile) {
-			Properties props;
-			props = Utils.loadProperties(resourceFilePath);
-			repeatCount = Integer.parseInt(Utils.getPropValue(props, "muniNameRepeatCount"));
-			muniNameRegex = Utils.getPropValue(props, "muniNameRegex");
-			logger.info(String.format("muniNameRegex: %s%n", muniNameRegex));
-		} else {
-			repeatCount = 2;
-			muniNameRegex = "(?m)^OFFICIAL GENERAL ELECTION BALLOT$\n(?<id>\\d+)[\\s]*(?<name>.*)\n";
-		}
+	public static void initialize(String resourceFilePath) {
+		Properties props;
+		props = Utils.loadProperties(resourceFilePath);
+		repeatCount = Integer.parseInt(Utils.getPropValue(props, "muniNameRepeatCount"));
+		muniNameRegex = Utils.getPropValue(props, "muniNameRegex");
+		logger.info(String.format("muniNameRegex: %s%n", muniNameRegex));
 		muniNamePattern = Utils.compileRegex(muniNameRegex);
 	}
 	/**

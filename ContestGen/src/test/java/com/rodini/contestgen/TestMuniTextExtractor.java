@@ -17,7 +17,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-@Disabled
+
+import com.ginsberg.junit.exit.ExpectSystemExit;
+
+/**
+ * Tests based on General 2021 election
+ *
+ */
 class TestMuniTextExtractor {
 
 	private static MockedAppender mockedAppender;
@@ -44,8 +50,8 @@ class TestMuniTextExtractor {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		MuniTextMarkers.initialize(false, null);;
-		
+		MuniTextMarkers.initialize("./src/test/java/General-2021.properties");
+		pageCount = MuniTextMarkers.getPageCount();
 	}
 
 	@AfterEach
@@ -66,18 +72,23 @@ class TestMuniTextExtractor {
 
 	@Test
 	void testMuniExtract1() {
-		String muniRawText = readTextFile("./src/test/java/Muni-2022-Raw-Text1.txt");
+		String muniRawText = readTextFile("./src/test/java/Muni-2021-Raw-Text1.txt");
 		String [] page1ContestName = {
-				"United States Senator",
-				"Governor and Lieutenant\nGovernor"
+				"Justice of the Supreme Court",
+				"Judge of the\nSuperior Court"
 			};
 		String [] page2ContestName = {
 					"Judge Of Elections\n005 Atglen",
 					"Inspector Of Elections\n005 Atglen"
 				};
-		MuniTextExtractor mte = new MuniTextExtractor("Atglen", muniRawText);
+		MuniTextExtractor mte = new MuniTextExtractor("050 Atglen", muniRawText);
 		MuniContestsExtractor mce = mte.extract();
 		String contestsText = mce.getMuniContestsText();
+		
+//		System.out.println();
+//		System.out.println(contestsText);
+//		System.out.println();
+		
 		// assert existence of first and last contest on page 1.
 		assertTrue(contestsText.indexOf(page1ContestName[0]) >= 0);
 		assertTrue(contestsText.indexOf(page1ContestName[1]) >= 0);
@@ -89,16 +100,16 @@ class TestMuniTextExtractor {
 	}
 	@Test
 	void testMuniExtract2() {
-		String muniRawText = readTextFile("./src/test/java/Muni-2022-Raw-Text2.txt");
+		String muniRawText = readTextFile("./src/test/java/Muni-2021-Raw-Text2.txt");
 		String [] page1ContestName = {
-			"Representative in Congress\n6th District",
-			"Assembly\n158th District"
+			"Magisterial District Judge\nDistrict 15-4-04",
+			"School Director\nAvon Grove Region 3"
 		};
 		String [] page2ContestName = {
-				"Judge Of Elections\n010 Avondale",
+				"Constable\nAvondale Borough",
 				"Inspector Of Elections\n010 Avondale"
 			};
-		MuniTextExtractor mte = new MuniTextExtractor("Avondale", muniRawText);
+		MuniTextExtractor mte = new MuniTextExtractor("010 Avondale", muniRawText);
 		mte.extract();
 		MuniContestsExtractor mce = mte.extract();
 		String contestsText = mce.getMuniContestsText();
@@ -112,6 +123,7 @@ class TestMuniTextExtractor {
 		}
 	}
 	@Test
+	@ExpectSystemExit
 	void testMuniExtractError1() {
 		String muniRawText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do\n" +
 					"eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut\n" +
@@ -120,21 +132,9 @@ class TestMuniTextExtractor {
 					"reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla\n" +
 					"pariatur. Excepteur sint occaecat cupidatat non proident, sunt in\n" +
 					"culpa qui officia deserunt mollit anim id est laborum.";
-		String [] page1ContestName = {
-			"Representative in Congress\n6th District",
-			"Assembly\n158th District"
-		};
-		String [] page2ContestName = {
-				"Judge Of Elections\n010 Avondale",
-				"Inspector Of Elections\n010 Avondale"
-			};
 		String expected = "no match for municipal page.";
-		MuniTextExtractor mte = new MuniTextExtractor("Avondale", muniRawText);
+		MuniTextExtractor mte = new MuniTextExtractor("010 Avondale", muniRawText);
 		mte.extract();
-		MuniContestsExtractor mce = mte.extract();
-		String contestsText = mce.getMuniContestsText();
-		// 2 error - one for each contest name listed above
-		assertEquals(2,  mockedAppender.messages.size());
-		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+		// fatal error should be detected.
 	}
 }

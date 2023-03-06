@@ -10,18 +10,14 @@ import org.junit.jupiter.api.Test;
 
 class TestMuniTextMarkers {
 
-	private static int testPageCount;
-	private static Pattern testPage1Pattern;
-	private static Pattern testPage2Pattern;
+	private static final String [] testMuniPageMarkers = {
+			  "(?m)(.*?)(ADDITIONAL CONTESTS AND\nQUESTIONS.\n)(?<page>((.*)\n)*?)^PROPOSED CONSTITUTIONAL$(.*)",
+			  "(?m)(.*?)(^PROPOSED CONSTITUTIONAL$\n)(?<page>((.*)\n)*)(^YES\nNO$)*"
+			};
 
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		MuniTextMarkers.initialize(false, null);
-		// save the values immediately.
-		testPageCount = MuniTextMarkers.getPageCount();
-		testPage1Pattern = MuniTextMarkers.getPage1Pattern();
-		testPage2Pattern = MuniTextMarkers.getPage2Pattern();
 	}
 
 	@AfterEach
@@ -30,14 +26,18 @@ class TestMuniTextMarkers {
 
 	@Test
 	void testLoadFromResources() {
-		MuniTextMarkers.initialize(true, "./resources/contestgen.properties");
-		assertEquals(testPageCount, MuniTextMarkers.getPageCount());
-		String regex = testPage1Pattern.toString();
-		System.out.println(regex);
+		MuniTextMarkers.initialize("./src/test/java/Primary-Dems-2021.properties");
+		assertEquals(2, MuniTextMarkers.getPageCount());
+		String regex = testMuniPageMarkers[0];
+		//System.out.println(regex);
 		String patternRegex = MuniTextMarkers.getPage1Pattern().toString();
-		System.out.println(patternRegex);
-//		assertEquals(regex, patternRegex);
-		
+		//System.out.println(patternRegex);
+		assertEquals(regex, patternRegex);	
+		regex = testMuniPageMarkers[1];		
+		patternRegex = MuniTextMarkers.getPage2Pattern().toString();
+		//System.out.println(patternRegex);
+		assertEquals(regex, patternRegex);	
+
 	}
 
 }
