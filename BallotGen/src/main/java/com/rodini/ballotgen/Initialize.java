@@ -255,7 +255,7 @@ public class Initialize {
 			value = "false";
 		}
 		writeInDisplay = Boolean.parseBoolean(value);
-		logger.error(String.format("%s: %s", WRITE_IN_DISPLAY, value));
+		logger.info(String.format("%s: %s", WRITE_IN_DISPLAY, value));
 	}
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
@@ -290,7 +290,7 @@ public class Initialize {
 		}
 		// sentinel value
 		columnBreaks[i] = 999;
-		logger.error(String.format("%s: %s", COlUMN_BREAK_CONTEST_COUNT, value));
+		logger.info(String.format("%s: %s", COlUMN_BREAK_CONTEST_COUNT, value));
 	}
 	/**
 	 * start begins the initialization process.

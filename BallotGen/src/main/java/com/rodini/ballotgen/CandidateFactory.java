@@ -47,7 +47,8 @@ public class CandidateFactory {
 			"SCHOOL DIRECTOR",
 			"TOWNSHIP COMMISSIONER",
 			"TOWNSHIP SUPERVISOR",
-			"TAX COLLECTOR"
+			"TAX COLLECTOR",
+			"DISTRICT SUPERVISOR"
 			);
 	
 	List<Candidate> candidates = new ArrayList<Candidate>();
