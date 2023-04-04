@@ -91,6 +91,8 @@ public class GenDocxBallot {
 	private static String STYLEID_CANDIDATE_NAME = "CandidateName";
 	private static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
 	private static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
+	private static String STYLEID_NONENDORSED_CANDIDATE_NAME = "NonEndorsedCandidateName";
+	private static String STYLEID_NONENDORSED_CANDIDATE_PARTY = "NonEndorsedCandidateParty";
 	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	private static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
 	// These are unicode characters (also Segoe UI Symbol font)
@@ -269,6 +271,14 @@ public class GenDocxBallot {
 		if (!templateIdStyles.contains(STYLEID_ENDORSED_CANDIDATE_NAME)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_NAME);
 			STYLEID_ENDORSED_CANDIDATE_NAME = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_NONENDORSED_CANDIDATE_NAME)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_NONENDORSED_CANDIDATE_NAME);
+			STYLEID_NONENDORSED_CANDIDATE_NAME = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_NONENDORSED_CANDIDATE_PARTY)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_NONENDORSED_CANDIDATE_PARTY);
+			STYLEID_NONENDORSED_CANDIDATE_PARTY = "Normal";
 		}
 		if (!templateIdStyles.contains(STYLEID_BOTTOM_BORDER)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_BOTTOM_BORDER);
@@ -502,10 +512,14 @@ public class GenDocxBallot {
 			if (endorsed) {
 				newParagraph = mdp.createStyledParagraphOfText(STYLEID_ENDORSED_CANDIDATE_NAME, oval + " " + candName);
 			} else {
-				newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, oval + " " + candName);
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_NONENDORSED_CANDIDATE_NAME, oval + " " + candName);
 			}
 			contestParagraphs.add(newParagraph);
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, partyOrResidence);
+			if (endorsed) {
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, partyOrResidence);
+			} else {
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_NONENDORSED_CANDIDATE_PARTY, partyOrResidence);
+			}
 			contestParagraphs.add(newParagraph);
 		}
 		// Display (or not) a write-in line

@@ -50,6 +50,15 @@ public class CandidateFactory {
 			"TAX COLLECTOR",
 			"DISTRICT SUPERVISOR"
 			);
+	// School districts below have boundaries that extend beyond Chester County.
+	// This results in the candidate name being followed by their county of residence.
+	// Yet another anomaly in a primary ballot.
+	private static final List<String> namesOfLocalContestsExceptions = List.of(
+			"SCHOOL DIRECTOR OCTORARA REGION",
+			"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION",
+			"SCHOOL DIRECTOR TWIN VALLEY REGION",
+			"SCHOOL DIRECTOR SPRING FORD REGION"
+			);
 	
 	List<Candidate> candidates = new ArrayList<Candidate>();
 	/**
@@ -100,13 +109,17 @@ public class CandidateFactory {
 	/**
 	 * isLocalContest uses the pre-defined list of local contests to determine
 	 * if this contest is a local one.
+	 * 
+	 * Note:
+	 * - there is an exception list. This is due to Voter Services listing the county of the candidate's county.
+	 *   This happens when a school district spans two counties (e.g. Atglen spans Chester and Lancaster county.
 	 * @param contestName office name.
 	 * @return true => yes
 	 */
 	private boolean isLocalContest(String contestName) {
 		boolean local = false;
 		contestName = normalizeContestName(contestName);
-		local = contestNameMatch(contestName, namesOfLocalContests);
+		local = contestNameMatch(contestName, namesOfLocalContests) && !contestNameExceptionMatch(contestName, namesOfLocalContestsExceptions) ;
 		return local;
 	}
 	/**
@@ -141,6 +154,24 @@ public class CandidateFactory {
 		boolean match = false;
 		for (String prefix: prefixNames) {
 			if (normalName.startsWith(prefix)) {
+				match = true;
+				break;
+			}
+		}
+		return match;
+	}
+	/**
+	 * contestNameExceptionMatch determines if the contest name belongs to one
+	 * of the names in the exception list.
+	 * 
+	 * @param normalName normalized contest name.
+	 * @param exceptionNames list of exception names.
+	 * @return
+	 */
+	private boolean contestNameExceptionMatch(String normalName, List<String> exceptionNames) {
+		boolean match = false;
+		for (String excep: exceptionNames) {
+			if (normalName.startsWith(excep)) {
 				match = true;
 				break;
 			}
