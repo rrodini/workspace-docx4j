@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotutils.Utils;
 /**
  * SpecimenMuniExtractor "rips" the specimen text and 
  * generates MuniTextExtractor objects.
@@ -51,19 +52,24 @@ public class SpecimenMuniExtractor {
 	 */
 	List<String> extractMuniNames() {
 		List<String> muniNames = new ArrayList<>();
+logger.debug(String.format("muniNameRegex: %s%n", SpecimenMuniMarkers.getMuniNamePattern().pattern().toString()));
 		Pattern pattern = SpecimenMuniMarkers.getMuniNamePattern();
 		Matcher m = pattern.matcher(specimenText);
 		if (!m.find()) {
-			String msg = String.format("no match for municipal names. Bad regex? %s", pattern.pattern());
-			logger.error(msg);
+			String msg = String.format("no matches for municipal names. Bad regex? %s", pattern.pattern());
+			Utils.logFatalError(msg);
 		} else {
 			try {
 				muniNames = m.results()
-						//              id               name
-						.map(mr -> mr.group(1) + " " + mr.group(2))
+						// CHESTER 1=>id               2=>name
+						//.map(mr -> mr.group(1) + " " + mr.group(2))
+						// BUCKS   2=>id               1=name
+						.map(mr -> mr.group(2) + "_" + mr.group(1).substring(0, mr.group(1).length()-1))
 						.distinct()
-						// avoid embedded spaces
-						.map( name -> name.replace(" ", "_"))
+						// CHESTER avoid embedded spaces
+						//.map( name -> name.replace(" ", "_"))
+						// BUCKS avoid embedded tabs
+						.map( name -> name.replace("\t", "_"))
 						.collect(toList());
 				
 			} catch (Exception e) {
@@ -88,15 +94,34 @@ public class SpecimenMuniExtractor {
 	 */
 	List<MuniTextExtractor> extract() {
 		List<String> muniNames = extractMuniNames();
-		logger.info(String.format("SpecimenMuniExtractor: there are %d%n municipalities", muniNames.size()));
-		String [] muniStringExtracts = specimenText.split(SpecimenMuniMarkers.getMuniNamePattern().pattern(), 0);
-		int repeat = SpecimenMuniMarkers.getRepeatCount();
-		// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
-		for (int i = 0; i < muniNames.size(); i++) {
-			int j = (i + 1) * repeat;
-			// log below
-			muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j]));
-		}
+		logger.info(String.format("SpecimenMuniExtractor: there are %d municipalities", muniNames.size()));
+//logger.debug(String.format("muniNameRegex: %s%n", SpecimenMuniMarkers.getMuniNamePattern().pattern().toString()));
+//		String [] muniStringExtracts = specimenText.split(SpecimenMuniMarkers.getMuniNamePattern().pattern().toString(), 0);
+		Pattern muniNamePattern = SpecimenMuniMarkers.getMuniNamePattern();
+		String [] muniStringExtracts = muniNamePattern.split(specimenText, 0);
+//logger.debug(String.format("muniStringExtracts.length=%d%n", muniStringExtracts.length));
+//for (int i=0; i <muniStringExtracts.length; i++) {
+//	logger.debug(String.format("extract[%d]: %s%n",i, muniStringExtracts[i]));
+//}
+
+// Chester Co. below
+//		int repeat = SpecimenMuniMarkers.getRepeatCount();
+//		// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
+//		for (int i = 0; i < muniNames.size(); i++) {
+//			int j = (i + 1) * repeat;
+//			// log below
+//			muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j]));
+//		}
+// Bucks Co. below
+				//int repeat = SpecimenMuniMarkers.getRepeatCount();
+				int j = 0;
+				// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
+				for (int i = 0; i < muniNames.size(); i++) {
+					j = j + 1;
+					//logger.debug(String.format("i=%d j=%d%n", i, j));	
+					// log below
+					muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j] + muniStringExtracts[j + 1]));
+				}
 		return muniExtracts;
 	}
 

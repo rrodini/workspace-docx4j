@@ -48,7 +48,10 @@ public class MuniContestsExtractor {
 	private String muniName;	// Name of municipality
 	private String muniContestsText;  // All of the municipal text where contests can be found
 	private MuniContestNames muniContestNames;  // use list to maintain order of contests
-	private final String WRITE_IN = "Write-in\n";
+	// CHESTER
+	//private final String WRITE_IN = "Write-in\n";
+	// BUCKS
+	private final String WRITE_IN = "Write-In\n";
 	/**
 	 * constructor
 	 * 

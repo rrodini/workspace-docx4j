@@ -27,7 +27,10 @@ import static com.rodini.ballotgen.ElectionType.*;
 public class ContestFactory {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ContestFactory.class);
-	private final String CONTEST_END = "Write-in";
+	// CHESTER
+	//private final String CONTEST_END = "Write-in";
+	// BUCKS
+	private final String CONTEST_END = "Write-In";
 	private final String CONTEST_NAME = "%contest name%";
 	private final String ballotText;	// text of the entire ballot
 	private final ElectionType elecType; // GENERAL or PRIMARY
@@ -44,10 +47,13 @@ public class ContestFactory {
 		this.elecType = type;
 		this.endorsedParty = endorsedParty;
 		contestFormats = new HashMap<>();
+		// TODO: "\n" or "\\n"  ?
 		String [] formats = formatsText.split("\\n");
 		// Note: trailing / removed for all except last by split().
 		int index=1;
+		logger.trace("contextFormats by key:");		
 		for (String f: formats) {
+			logger.trace(String.format("key: %d format: %s%n", index, f));
 			contestFormats.put(Integer.toString(index), f);
 			index++;
 		}
@@ -103,7 +109,7 @@ public class ContestFactory {
 		Matcher m = pattern.matcher(contestText);
 		Contest contest = Contest.GENERIC_CONTEST;
 		if (!m.find()) {
-			String msg = String.format("no match for contest name: %s and format: %s%n"
+			String msg = String.format("no match for contest name: %s and format: %s"
 										,contestName, format);
 			logger.error(msg);
 		} else {
@@ -111,19 +117,24 @@ public class ContestFactory {
 			try {
 				// "term" is optional
 				String term = getMatchGroup(m, "term");
+//	   if (format.equals("1")) { System.out.println("term: " + term); }
 				String instructions = getMatchGroup(m, "instructions");
+//	   if (format.equals("1")) { System.out.println("instructions: " + instructions); }
 				String candidatesText = getMatchGroup(m, "candidates");
-				
+//	   if (format.equals("1")) { System.out.println("candidatesText: " + candidatesText); }
 				CandidateFactory cf = new CandidateFactory(contestName, candidatesText, elecType, endorsedParty);
 				List<Candidate> candidates = cf.getCandidates();
 				contest = new Contest(contestName, term, instructions, candidates);
 			} catch (Exception e) {
+//	   if (format.equals("1")) { System.out.println("exception: " + e.getMessage()); }
 				String msg = e.getMessage();
 				logger.error(msg);
 			}
 		}
 		if (contest == Contest.GENERIC_CONTEST) {
-			System.out.printf("COULD NOT GENERATE CONTEST FOR: %s%n", contestName);
+			String msg = String.format("COULD NOT GENERATE CONTEST FOR: %s", contestName);
+			System.out.println(msg);
+			logger.error(msg);
 		}
 		return contest;
 	}
@@ -137,14 +148,13 @@ public class ContestFactory {
 	 */
 	/* private */
 	String getMatchGroup(Matcher m, String groupName) {
-		logger.debug(String.format("match: %s groupName: %s%n", m.group(), groupName));
 		String value = "";
 		try {
 			value = m.group(groupName);
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			if (msg.contains("<term>")) {
-				// this is expected for some formats (regexs).
+				// this is expected for some formats (regexes).
 				logger.info(msg);
 			} else {
 				logger.error(msg);

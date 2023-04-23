@@ -31,6 +31,8 @@ public class CandidateFactory {
 	// NOTES: 
 	// 1. Unique prefixes of these contest names will do.
 	// 2. Formatting such are line breaks (e.g.\n) should be removed by the caller
+	
+// CHESTER / BUCKS move this lists to text file
 	private static final List<String> namesOfTicketContests = List.of(
 			"GOVERNOR AND LIEUTENANT GOVERNOR",
 			"PRESIDENT AND VICE-PRESIDENT"
@@ -50,14 +52,14 @@ public class CandidateFactory {
 			"TAX COLLECTOR",
 			"DISTRICT SUPERVISOR"
 			);
-	// School districts below have boundaries that extend beyond Chester County.
+	// School district regions below have boundaries that extend beyond Chester County.
 	// This results in the candidate name being followed by their county of residence.
 	// Yet another anomaly in a primary ballot.
 	private static final List<String> namesOfLocalContestsExceptions = List.of(
-			"SCHOOL DIRECTOR OCTORARA REGION",
-			"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION",
-			"SCHOOL DIRECTOR TWIN VALLEY REGION",
-			"SCHOOL DIRECTOR SPRING FORD REGION"
+			"SCHOOL DIRECTOR OCTORARA REGION 1",
+			"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION C",
+			"SCHOOL DIRECTOR TWIN VALLEY REGION 2",
+			"SCHOOL DIRECTOR SPRING FORD REGION 3"
 			);
 	
 	List<Candidate> candidates = new ArrayList<Candidate>();
