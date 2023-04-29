@@ -32,6 +32,6 @@ echo "copying ballotzipper binary"
 cp "${BALLOTZIPPER_FOLDER}/target/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
 
 echo "copying tabreplacer binary"
-cp "${TABREPLACER_FOLDER}/target/tabreplacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" tabreplacer/
+cp "${TABREPLACER_FOLDER}/target/tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" tabreplacer/
 
 echo "DONE."
