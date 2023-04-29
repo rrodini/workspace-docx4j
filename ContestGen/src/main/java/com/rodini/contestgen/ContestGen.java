@@ -32,6 +32,10 @@ import com.rodini.ballotutils.Utils;
  * args[0] path Voter Services specimen text file.
  * args[1] path to directory for generated municipal level "NNN_XYZ_contests.txt" files.
  * 
+ * ENV variables:
+ * BALLOTGEN_VERSION version # of Ballot Gen Software (e.g. "1.4.0")
+ * BALLOTGEN_COUNTY  county for Ballot Gen (e.g. "chester")
+ * 
  * @author Bob Rodini
  *
  */
@@ -39,10 +43,13 @@ public class ContestGen {
 	
 	static final Logger logger = LoggerFactory.getLogger(ContestGen.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
+	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	static final String PROPS_FILE = "contestgen.properties";
 	static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTS_FILE = "_contests.txt";
 
+	static String COUNTY;		// chester vs. bucks
+	static String WRITE_IN; 	// Write-in vs. Write-In
 	static Environment env;		// TEST vs. PRODUCTION
 	static String specimenText; // text of the Voter Services specimen.
 	static String outPath;		// path to output directory
@@ -52,13 +59,17 @@ public class ContestGen {
 	
 	
 	/** 
-	 * main entry point for program.
+	 * main entry point for program. Check for necessary ENV variables.
 	 * @param args CLI arguments
 	 */
 	public static void main(String[] args){
 		Utils.setLoggingLevel("com.rodini.contestgen");
-		String version = System.getenv(ENV_BALLOTGEN_VERSION);
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of ContestGen app. Version: %s", version);
+		System.out.println(startMsg);
+		logger.info(startMsg);
+		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		startMsg = String.format("Contests for: %s Co.", COUNTY);
 		System.out.println(startMsg);
 		logger.info(startMsg);
 		
@@ -110,7 +121,9 @@ public class ContestGen {
 			String msg0 = String.format("path to Voter Services specimen text   : %s", args[0]);
 			String msg1 = String.format("path to directory for generate contests: %s", args[1]);
 			System.out.println(msg0);
+			logger.info(msg0);
 			System.out.println(msg1);
+			logger.info(msg1);
 		}
 		// check args[0] is present and is a TXT file
 		String specimenFilePath = args[0];
@@ -136,6 +149,8 @@ public class ContestGen {
 		props = Utils.loadProperties(propsFilePath);
 		String envStr = props.getProperty("environment");
 		env = Environment.valueOf(envStr);
+		WRITE_IN = props.getProperty(COUNTY + ".write.in");		
+		logger.info(String.format("WRITE_IN: %s%n", WRITE_IN));		
 		// initialize marker classes
 		initMarkers(propsFilePath);
 	}

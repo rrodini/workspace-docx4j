@@ -66,10 +66,10 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 		Properties props = new Properties();
 		try (FileInputStream resourceStream = new FileInputStream(resourcePath);) {
 			props.load(resourceStream);
+			logger.info("properties file loaded from: " + resourcePath);
 		} catch (Exception e) {
 			logger.error("cannot load properties file: " + resourcePath);
 		}
-		logger.info("properties file loaded from: " + resourcePath);
 		return props;
 	}
 	// get a property value.
@@ -129,9 +129,17 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 			pattern = Pattern.compile(regex, Pattern.MULTILINE);
 		} catch (Exception e) {
 			String msg = String.format("can't compile regex: %s msg: %s%n", regex , e.getMessage());
-			Utils.logFatalError(msg);
+			logFatalError(msg);
 		}
 		return pattern;
 	}
-	
+	// check that an environment variable exists
+	public static String getEnvVariable(String name, boolean necessary) {
+		String value = System.getenv(name);
+		boolean exists = value != null && !value.isBlank();
+		if (necessary && !exists) {
+			logFatalError("Env variable " + name  + " is undefined or blank");
+		}
+		return value;
+	}
 }

@@ -157,7 +157,6 @@ class TestMuniContestsExtractor {
 	    logger = (Logger)LogManager.getLogger(MuniContestsExtractor.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
-	    ContestNameMarkers.initialize("./src/test/java/General-2021.properties");
 	}
 
 	@AfterAll
@@ -168,7 +167,9 @@ class TestMuniContestsExtractor {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-	    //ContestNameMarkers.initialize(false, null);
+	    ContestNameMarkers.initialize("./src/test/java/Chester-General-2021.properties");
+	    ContestGen.COUNTY="Chester";
+	    ContestGen.WRITE_IN="Write-in\n";
 		mce = new MuniContestsExtractor("Atglen", contestsText);
 	}
 
@@ -178,7 +179,8 @@ class TestMuniContestsExtractor {
 	
 	@Test
 	public void testExtract1() {
-	System.out.printf("testExtract1()");
+	System.out.printf("testExtract1:%n");
+	System.out.printf("WRITE_IN: %s%n", ContestGen.WRITE_IN);
 		MuniContestNames muniContestNames = mce.extract();
 		List<ContestName> contestNames = muniContestNames.get();
 		assertEquals(16, contestNames.size());

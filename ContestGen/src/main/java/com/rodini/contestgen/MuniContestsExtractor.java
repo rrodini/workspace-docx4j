@@ -48,10 +48,6 @@ public class MuniContestsExtractor {
 	private String muniName;	// Name of municipality
 	private String muniContestsText;  // All of the municipal text where contests can be found
 	private MuniContestNames muniContestNames;  // use list to maintain order of contests
-	// CHESTER
-	//private final String WRITE_IN = "Write-in\n";
-	// BUCKS
-	private final String WRITE_IN = "Write-In\n";
 	/**
 	 * constructor
 	 * 
@@ -79,7 +75,7 @@ public class MuniContestsExtractor {
 		if (format == -1) {
 			// this error is typical for long referendum questions.
 			int len = contestText.length();
-			logger.error("No format for: " + contestText.substring(0, Math.min(len, 8)));
+			logger.error("No format for: " + contestText);
 			return;
 		}
 		String name = cnm.getContestName();
@@ -94,16 +90,16 @@ public class MuniContestsExtractor {
 	 * @return index past the next "Write-in\n" entries
 	 */
 	int findContestEnd(final int start) {
-		int len = WRITE_IN.length();
-		int end = muniContestsText.indexOf(WRITE_IN, start);
+		int len = ContestGen.WRITE_IN.length();
+		int end = muniContestsText.indexOf(ContestGen.WRITE_IN, start);
 		// there should be at least one "Write-in" line.
 		if (end == -1) {
-			logger.error("Can't find \"" + WRITE_IN.trim() + "\"" );
+			logger.error("Can't find \"" + ContestGen.WRITE_IN.trim() + "\"" );
 			return muniContestsText.length();
 		}
 		// Skip over multiple "Write-in" lines.
 		while ( end + len <= muniContestsText.length() &&
-				muniContestsText.substring(end, end+len).equals(WRITE_IN)) {
+				muniContestsText.substring(end, end+len).equals(ContestGen.WRITE_IN)) {
 			end = end + len;
 		}
 		return end;

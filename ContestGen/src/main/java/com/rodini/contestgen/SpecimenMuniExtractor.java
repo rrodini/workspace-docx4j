@@ -52,7 +52,6 @@ public class SpecimenMuniExtractor {
 	 */
 	List<String> extractMuniNames() {
 		List<String> muniNames = new ArrayList<>();
-logger.debug(String.format("muniNameRegex: %s%n", SpecimenMuniMarkers.getMuniNamePattern().pattern().toString()));
 		Pattern pattern = SpecimenMuniMarkers.getMuniNamePattern();
 		Matcher m = pattern.matcher(specimenText);
 		if (!m.find()) {
@@ -61,15 +60,15 @@ logger.debug(String.format("muniNameRegex: %s%n", SpecimenMuniMarkers.getMuniNam
 		} else {
 			try {
 				muniNames = m.results()
-						// CHESTER 1=>id               2=>name
-						//.map(mr -> mr.group(1) + " " + mr.group(2))
-						// BUCKS   2=>id               1=name
-						.map(mr -> mr.group(2) + "_" + mr.group(1).substring(0, mr.group(1).length()-1))
+						.map(ContestGen.COUNTY.equals("chester")?
+								// CHESTER 1=>id               2=>name
+								mr -> mr.group(1) + " " + mr.group(2)
+						     :
+						    	// BUCKS   2=>id               1=name
+						        mr -> mr.group(2) + " " + mr.group(1))
 						.distinct()
-						// CHESTER avoid embedded spaces
-						//.map( name -> name.replace(" ", "_"))
-						// BUCKS avoid embedded tabs
-						.map( name -> name.replace("\t", "_"))
+						// avoid embedded spaces
+						.map( name -> name.replace(" ", "_"))
 						.collect(toList());
 				
 			} catch (Exception e) {
@@ -104,24 +103,25 @@ logger.debug(String.format("muniNameRegex: %s%n", SpecimenMuniMarkers.getMuniNam
 //	logger.debug(String.format("extract[%d]: %s%n",i, muniStringExtracts[i]));
 //}
 
-// Chester Co. below
-//		int repeat = SpecimenMuniMarkers.getRepeatCount();
-//		// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
-//		for (int i = 0; i < muniNames.size(); i++) {
-//			int j = (i + 1) * repeat;
-//			// log below
-//			muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j]));
-//		}
-// Bucks Co. below
-				//int repeat = SpecimenMuniMarkers.getRepeatCount();
-				int j = 0;
-				// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
-				for (int i = 0; i < muniNames.size(); i++) {
-					j = j + 1;
-					//logger.debug(String.format("i=%d j=%d%n", i, j));	
-					// log below
-					muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j] + muniStringExtracts[j + 1]));
-				}
+		if (ContestGen.COUNTY.equals("chester")) {
+			// structure of Chester Co. ballot below
+			int repeat = SpecimenMuniMarkers.getRepeatCount();
+			// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
+			for (int i = 0; i < muniNames.size(); i++) {
+				int j = (i + 1) * repeat;
+				muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j]));
+			}
+		} else if (ContestGen.COUNTY.equals("bucks")) {
+			// structure of Bucks Co. ballot below
+			//int repeat = SpecimenMuniMarkers.getRepeatCount();
+			int j = 0;
+			// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
+			for (int i = 0; i < muniNames.size(); i++) {
+				j++;
+				muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j] + muniStringExtracts[j + 1]));
+				j++;
+			}
+		}
 		return muniExtracts;
 	}
 

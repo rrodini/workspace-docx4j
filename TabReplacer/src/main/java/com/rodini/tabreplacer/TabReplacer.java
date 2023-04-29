@@ -20,6 +20,10 @@ import com.rodini.ballotutils.Utils;
  * CLI arguments:
  * args[0] - path to single text file.
  *
+ * ENV variables:
+ * BALLOTGEN_VERSION version # of Ballot Gen Software (e.g. "1.4.0")
+ * BALLOTGEN_COUNTY  county for Ballot Gen (e.g. "chester")
+ *
  * @author Bob Rodini
  *
  */
@@ -27,10 +31,12 @@ public class TabReplacer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TabReplacer.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
+	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	static final String PROPS_FILE = "tabreplacer.properties";
 	static Properties props;
 	static final String RESOURCE_PATH = "./resources/";
-	static final String CONTESTGEN_RESOURCE_PATH = "../contestgen/resources/";
+	static final String TABREPLACER_RESOURCE_PATH = "../tabreplacer/resources/";
+	static String COUNTY;		// chester vs. bucks
 	static String txtFilePath;
 	
 	// prevent instances
@@ -40,8 +46,12 @@ public class TabReplacer {
 	public static void main(String[] args) {
 		// Get the logging level from JVM parameter on command line.
 		Utils.setLoggingLevel("com.rodini.tabreplacer");
-		String version = System.getenv(ENV_BALLOTGEN_VERSION);
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of TabReplacer app. Version: %s", version);
+		System.out.println(startMsg);
+		logger.info(startMsg);
+		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		startMsg = String.format("Contests for: %s Co.", COUNTY);
 		System.out.println(startMsg);
 		logger.info(startMsg);
 		initialize(args);
@@ -61,7 +71,7 @@ public class TabReplacer {
 		// check the # of command line args
 		if (args.length < 1) {
 			Utils.logFatalError("initialize: missing command line argument:\n" +
-					"args[0]: path to directory w/ PDF and text files");
+					"args[0]: path to text file");
 		} else {
 			String msg0 = String.format("path to text file: %s", args[0]);
 			System.out.println(msg0);
@@ -78,7 +88,6 @@ public class TabReplacer {
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
 		// get tabreplacer properties (if any)
 		props = Utils.loadProperties(propsFilePath);
-		logger.info("initialize: properties file loaded: " + propsFilePath);
 	}
 	
 	

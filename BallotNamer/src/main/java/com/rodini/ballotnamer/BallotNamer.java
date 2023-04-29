@@ -2,18 +2,11 @@ package com.rodini.ballotnamer;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apache.logging.log4j.Level.DEBUG;
-import static org.apache.logging.log4j.Level.ERROR;
-import static org.apache.logging.log4j.Level.INFO;
-import static org.apache.logging.log4j.Level.TRACE;
-import static org.apache.logging.log4j.Level.WARN;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +18,8 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.rodini.ballotutils.Utils;
 
 /**
  * BallotNamer is the program that runs after the Voter Services master sample ballot
@@ -38,6 +33,9 @@ import org.slf4j.LoggerFactory;
  * CLI arguments: 
  * arg[0] path to directory w/ PDF and text files
  * 
+ * ENV variables:
+ * BALLOTGEN_VERSION version # of Ballot Gen Software (e.g. "1.4.0")
+ * BALLOTGEN_COUNTY  county for Ballot Gen (e.g. "chester")
  * 
  * @author Bob Rodini
  *
@@ -46,8 +44,9 @@ public class BallotNamer {
 	
 	static final Logger logger = LoggerFactory.getLogger(BallotNamer.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
+	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
+	static String COUNTY;
 	static String dirPath; // path to directory w/ pdf and text files
-//	static String outPath; // path to output directory
 	static final String PROPS_FILE = "ballotnamer.properties";
 	static Properties props;
 	static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
@@ -58,7 +57,6 @@ public class BallotNamer {
 	static final String JVM_LOG_LEVEL = "log.level";
 	static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTGEN_RESOURCE_PATH = "../contestgen/resources/";
-//	static final String PRE_CONTESTS_FILE = "pre-contests.txt";
 	static Map<String, List<String>> preContests = new TreeMap<String, List<String>>();
 	static final String FILE_SUFFIX = "_VS";	// suffix for renamed files
 	static ENVIRONMENT env;
@@ -98,54 +96,18 @@ public class BallotNamer {
 			logFatalError("initialize: can't access this directory" + dirPath);
 		}
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
-		// get ballotname properties
-		props = getPropsFromFile(propsFilePath);
+		// get ballotnamer properties
+		props = Utils.loadProperties(propsFilePath);
 		logger.info("initialize: properties file loaded: " + propsFilePath);
 		// get contestgen properties
 		propsFilePath = CONTESTGEN_RESOURCE_PATH + CONTESTGEN_PROPS_FILE;
-		contestGenProps = getPropsFromFile(propsFilePath);
+		contestGenProps = Utils.loadProperties(propsFilePath);
 		logger.info("initialize: properties file loaded: " + propsFilePath);
 		// build compile matching pattern
 		fileBallotPattern = getFileBallotPattern();
 		String envStr = props.getProperty("environment");
 		env = ENVIRONMENT.valueOf(envStr);	
 	}
-	/**
-	 * setLoggingLevel sets the logging level to the value of the
-	 * JVM parameter "log.level".  Default is ERROR
-	 */
-	public static void setLoggingLevel() {
-		Map<String, org.apache.logging.log4j.Level> logLevels = Map.of(
-				"ERROR", ERROR,
-				"WARN", WARN,
-				"INFO", INFO,
-				"DEBUG", DEBUG,
-				"TRACE", TRACE
-				);
-		// get logging level from JVM argument
-		String level = System.getProperty(JVM_LOG_LEVEL, "ERROR").toUpperCase();
-		org.apache.logging.log4j.Level log4jLevel = logLevels.get(level);
-		if (log4jLevel == null) {
-			log4jLevel = ERROR;
-		}
-		org.apache.logging.log4j.core.config.Configurator.setLevel("com.rodini.ballotnamer",log4jLevel);
-	}
-	/**
-	 * Get the program properties.
-	 * @param filePath to properties file.
-	 * @return Properties object.
-	 */
-	static Properties getPropsFromFile(String filePath) {
-		Properties props = new Properties();
-		try (FileInputStream resourceStream = new FileInputStream(filePath);) {
-			props.load(resourceStream);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logFatalError("getPropsFromFile: cannot load properties file: " + filePath);
-		}
-		return props;
-	}
-	
     /**
      * getFileBallotPattern gets the format (regex) associated with the municipality ballot
      * name, manipulates it a little and transforms it into a Pattern object.
@@ -157,23 +119,14 @@ public class BallotNamer {
      */
 	/* private */ 
 	static Pattern getFileBallotPattern() {
-//		String startRegex = props.getProperty("ballot.heading.format");
-		String startRegex = contestGenProps.getProperty("ballotnamer.ballot.heading.format");
+		String startRegex = contestGenProps.getProperty(COUNTY + ".ballotnamer.ballot.heading.format");
 		logger.debug(String.format("getFileBallotPattern: startRegex: %s", startRegex));
 		Pattern compiledRegex = null;
 		if (startRegex == null) {
-			String msg = "property \"ballotnamer.ballot.heading.format\" cannot be found: ";
+			String msg = String.format("property \"$s.ballotnamer.ballot.heading.format\" cannot be found: ", COUNTY);
 			logFatalError(msg);
 		}
-		String endRegex = startRegex.replace(GENERIC_NAME, contestGenProps.getProperty("ballotnamer.ballot.title"));
-		if (endRegex.startsWith("/")) {
-			// strip off leading "/"
-			endRegex = endRegex.substring(1);
-		}
-		if (endRegex.endsWith("/")) {
-			// strip off trailing "/"
-			endRegex = endRegex.substring(0, endRegex.length() - 1);
-		}
+		String endRegex = startRegex.replace(GENERIC_NAME, contestGenProps.getProperty(COUNTY + ".ballotnamer.ballot.title"));
 		logger.debug(String.format("getFileBallotPattern: endRegex: %s", endRegex));
 		try {
 			compiledRegex = Pattern.compile(endRegex, Pattern.MULTILINE);
@@ -190,11 +143,16 @@ public class BallotNamer {
 	 * @param args CLI arguments
 	 */
 	public static void main(String[] args) {
-		setLoggingLevel();
-		String version = System.getenv(ENV_BALLOTGEN_VERSION);
+		Utils.setLoggingLevel("com.rodini.ballotnamer");
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of BallotNamer app. Version: %s", version);
 		System.out.println(startMsg);
 		logger.info(startMsg);
+		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		startMsg = String.format("Contests for: %s Co.", COUNTY);
+		System.out.println(startMsg);
+		logger.info(startMsg);
+
 		initialize(args);
         processFiles();
  		logger.info("End of BallotNamer app.");
@@ -328,40 +286,6 @@ public class BallotNamer {
  		String fileText = fileLines.stream().collect(joining("\n"));
 		logger.debug(String.format("first 100 characters of fileText: %n", fileText.substring(0, Math.min(fileText.length(), 100))));
  		return fileText;
-	}
-	/**
-	 * getBallotContests tries to extract the contests from the text of the file.
-	 * This is hard.  First, there is no marker for the first contest (so it will be missed).
-	 * Second, some contests are spread over two lines.  There is no way of knowing this in advance.
-	 * @param ballotFileName
-	 * @param fileText
-	 */
-	static void getBallotContests(String ballotFileName, String fileText) {
-		// parse the municipality name
-		String contestTitle = "";
-		Matcher m = ballotContestPattern.matcher(fileText);
-		if (!m.find()) {
-			String msg = String.format("parseFile: no match for any contests in: %s", ballotFileName);
-			logFatalError(msg);
-		} else {
-			List<String> contestTitles = new ArrayList<>();
-			// must give index or 1st match is lost to if test.
-			int i = 0;
-			while (m.find(i)) {
-				try {
-					i++;
-					contestTitle = m.group("contest");
-					if (!contestTitle.startsWith("Typ:")) {
-						contestTitles.add(contestTitle);						
-					}
-				} catch (Exception e) {
-					String msg = e.getMessage();
-					logFatalError(msg);
-				}
-			}
-			preContests.put(ballotFileName, contestTitles);
-
-		}
 	}
 	
 }

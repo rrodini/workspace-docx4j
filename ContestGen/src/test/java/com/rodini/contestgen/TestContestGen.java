@@ -36,6 +36,7 @@ class TestContestGen {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		ContestGen.COUNTY="chester";
 	}
 
 	@AfterEach
@@ -80,7 +81,7 @@ class TestContestGen {
 	@ExpectSystemExit
 	void testInitializeArg1IsBad1() {
 		String [] args = {
-				"./src/test/java/General-2021.txt",
+				"./src/test/java/Chester-General-2021.txt",
 				"./non-existent-folder"
 		};
 		String expected = "command line arg[1] is not a folder";
@@ -91,7 +92,7 @@ class TestContestGen {
 	@Test
 	void testInitializeArgsGood() {
 		String [] args = {
-				"./src/test/java/General-2021.txt",
+				"./src/test/java/Chester-General-2021.txt",
 				"./contests"
 		};
 		String expected = "command line arg[1] is not a folder";

@@ -54,14 +54,16 @@ public class Initialize {
 	        static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
 //	Property names - must match names within ballotgen.properties
 	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
-	private static final String PROP_WORD_TEMPLATE_DEFAULT = "word.template.default";
-	private static final String PROP_CONTEST_FORMAT_PREFIX = "contest.format";
+	private static final String PROP_WORD_TEMPLATE_DEFAULT = ".word.template.default";
+	private static final String PROP_CONTEST_FORMAT_PREFIX = ".contest.format";
 	private static final String CONTEST_FILE_LEVEL = "contest.file.level";
 	        static final String COMMON_CONTESTS_FILE = "common_contests.txt";
-	private static final String PRECINCT_TO_ZONE_FILE = "precinct.to.zone.file";
-	private static final String ENDORSEMENTS_FILE = "endorsements.file";
-	private static final String WRITE_IN_DISPLAY = "write.in.display";
-	private static final String COlUMN_BREAK_CONTEST_COUNT = "column.break.contest.count";
+	private static final String PRECINCT_TO_ZONE_FILE = ".precinct.to.zone.file";
+	private static final String ENDORSEMENTS_FILE = ".endorsements.file";
+	private static final String WRITE_IN_DISPLAY = ".write.in.display";
+	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
+	        static       String COUNTY;
+	        static       String WRITE_IN;
 	
 
 	/**
@@ -76,11 +78,11 @@ public class Initialize {
 		// check for 2 command args
 		if (args.length < 2) {
 			Utils.logFatalError("missing CLI arguments:\n" +
-					"args[0]: path to single ballot text file or directory containing such.\n" +
-					"args[1]: path to directory for generated municipal level \"NNN_XYZ_contests.txt\" files.");
+					"args[0]: path to directory for generated municipal level \"NNN_XYZ_contests.docx\" files.\n" + 
+					"args[1]: path to directory municipal level \"NNN_XYZ_contests.docx\" files.");
 		} else {
-			String msg0 = String.format("input dir:      : %s", args[0]);
-			String msg1 = String.format("contest file/dir: %s", args[1]);
+			String msg0 = String.format("output  dir: %s", args[0]);
+			String msg1 = String.format("contest dir: %s", args[1]);
 			System.out.println(msg0);
 			System.out.println(msg1);
 			logger.info(msg0);
@@ -90,7 +92,7 @@ public class Initialize {
 		processBallotFiles(ballotFilePath);
 		ballotContestsPath = args[1];
 		processBallotContests(ballotContestsPath);
-		msWordTemplateFile = RESOURCE_PATH + Utils.getPropValue(ballotGenProps, PROP_WORD_TEMPLATE_DEFAULT);
+		msWordTemplateFile = RESOURCE_PATH + Utils.getPropValue(ballotGenProps, COUNTY + PROP_WORD_TEMPLATE_DEFAULT);
 		logger.info("msWordTemplateFile: " + msWordTemplateFile);
 	}
 	/**
@@ -174,7 +176,9 @@ public class Initialize {
 	 * expects.
 	 */
 	static void validateFormatsText() {
-		List<String> formatLines = Utils.getPropOrderedValues(contestGenProps, "ballotgen.contest.format");
+		// This is a good place to read the Write-in string value.
+		WRITE_IN = Utils.getPropValue(contestGenProps, COUNTY + ".write.in");
+		List<String> formatLines = Utils.getPropOrderedValues(contestGenProps, COUNTY + ".ballotgen.contest.format");
 		formatsText = formatLines.stream()
 				.collect(joining("\n"));
 		logger.info(String.format("formatsText:%n%s%n", formatsText));
@@ -189,9 +193,9 @@ public class Initialize {
 		do {
 			// Don't know how many there will be
 			String key = Integer.toString(count);
-			String propName = PROP_CONTEST_FORMAT_PREFIX + "." + key;
+			String propName =  COUNTY + PROP_CONTEST_FORMAT_PREFIX + "." + key;
 			format = Utils.getPropValue(contestGenProps, propName);
-			logger.info(String.format("contestgen.contest.format.%d: %s", count, format));
+			logger.info(String.format("%s.%d: %s", propName, count, format));
 			if (format != null) {
 				count++;				
 			}
@@ -216,14 +220,14 @@ public class Initialize {
 	 * validatePrecinctZoneFile validates the existence of the zones to precincts file.
 	 */
 	static void validatePrecinctZoneFile() {
-		String precinctZoneFile = Utils.getPropValue(ballotGenProps, PRECINCT_TO_ZONE_FILE);
-		logger.info(String.format("%s: %s", PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+		String precinctZoneFile = Utils.getPropValue(ballotGenProps, COUNTY + PRECINCT_TO_ZONE_FILE);
+		logger.info(String.format("%s: %s", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 		String precinctZoneCSVText = "";
 		if (!Utils.checkFileExists(precinctZoneFile)) {
-			logger.info(String.format("%s does not exist: %s ", PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+			logger.info(String.format("%s does not exist: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 			logger.info("Cannot endorse at the zone/precinct level.");
 		} else {
-			logger.info(String.format("%s: %s ", PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+			logger.info(String.format("%s: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 			precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
 		}
 		GenMuniMap.processCSVText(precinctZoneCSVText);
@@ -233,14 +237,14 @@ public class Initialize {
 	 * validateEndorsementsFile validates the existence of the endorsements file.
 	 */
 	static void validateEndorsementsFile() {
-		String endorsementsFile = Utils.getPropValue(ballotGenProps, ENDORSEMENTS_FILE);
-		logger.info(String.format("%s: %s", ENDORSEMENTS_FILE, endorsementsFile));
+		String endorsementsFile = Utils.getPropValue(ballotGenProps, COUNTY + ENDORSEMENTS_FILE);
+		logger.info(String.format("%s: %s", COUNTY + ENDORSEMENTS_FILE, endorsementsFile));
 		String endorsementsCSVText = "";
 		if (!Utils.checkFileExists(endorsementsFile)) {
-			logger.info(String.format("%s does not exist: %s ", ENDORSEMENTS_FILE, endorsementsFile));
+			logger.info(String.format("%s does not exist: %s ", COUNTY + ENDORSEMENTS_FILE, endorsementsFile));
 			logger.info("Can only endorse at the party level in general elections.");
 		} else {
-			logger.info(String.format("%s: %s ", ENDORSEMENTS_FILE, endorsementsFile));
+			logger.info(String.format("%s: %s ", COUNTY + ENDORSEMENTS_FILE, endorsementsFile));
 			endorsementsCSVText = Utils.readTextFile(endorsementsFile);
 		}
 		EndorsementFactory.processCSVText(endorsementsCSVText);
@@ -250,18 +254,18 @@ public class Initialize {
 	 * validateWriteInDisplay reads/displays the WRITE_IN_DISPLAY property value.
 	 */
 	static void validateWriteInDisplay() {
-		String value = ballotGenProps.getProperty(WRITE_IN_DISPLAY);
+		String value = ballotGenProps.getProperty(COUNTY + WRITE_IN_DISPLAY);
 		if (value == null) {
 			value = "false";
 		}
 		writeInDisplay = Boolean.parseBoolean(value);
-		logger.info(String.format("%s: %s", WRITE_IN_DISPLAY, value));
+		logger.info(String.format("%s: %s", COUNTY + WRITE_IN_DISPLAY, value));
 	}
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
 	 */
 	static void validateColumnBreakContestCount() {
-		String value = ballotGenProps.getProperty(COlUMN_BREAK_CONTEST_COUNT);
+		String value = ballotGenProps.getProperty(COUNTY + COlUMN_BREAK_CONTEST_COUNT);
 		if (value == null) {
 			// default is contest # 999, so no harm done.
 			return;
@@ -278,11 +282,11 @@ public class Initialize {
 			try {
 				val = Integer.parseInt(strVal);
 			} catch (NumberFormatException e) {
-				logger.error(String.format("bad %s property: %s", COlUMN_BREAK_CONTEST_COUNT, value));
+				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 				return;
 			}
 			if (val < preVal) {
-				logger.error(String.format("bad %s property: %s", COlUMN_BREAK_CONTEST_COUNT, value));
+				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 				return;
 			}
 			columnBreaks[i++] = val;
@@ -290,7 +294,7 @@ public class Initialize {
 		}
 		// sentinel value
 		columnBreaks[i] = 999;
-		logger.info(String.format("%s: %s", COlUMN_BREAK_CONTEST_COUNT, value));
+		logger.info(String.format("%s: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 	}
 	/**
 	 * start begins the initialization process.

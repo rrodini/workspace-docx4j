@@ -15,9 +15,13 @@ import com.rodini.ballotutils.Utils;
  * level contest(s) files (e.g. Atglen_contests.txt) or common_contests.txt).
  * 
  * CLI arguments:
- * args[0] - path to single ballot text file or directory containing such.
- * args[1] - path to directory for generated municipal level "NNN_XYZ_contests.txt" files.
+ * args[0] - path to directory for generated municipal level DOCX files (e.g "NNN_XYZ_contests.docx").
+ * args[1] - path to directory with contests TXT files (e.g. "NNN_XYZ_contests.txt").
  *
+ * ENV variables:
+ * BALLOTGEN_VERSION version # of Ballot Gen Software (e.g. "1.4.0")
+ * BALLOTGEN_COUNTY  county for Ballot Gen (e.g. "chester")
+ * 
  * @author Bob Rodini
  *
  */
@@ -25,13 +29,19 @@ public class BallotGen {
 	
 	private static final Logger logger = LoggerFactory.getLogger(BallotGen.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
+	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	
 	public static void main(String[] args){
 		// Get the logging level from JVM parameter on command line.
 		Utils.setLoggingLevel("com.rodini.ballotgen");
-		String version = System.getenv(ENV_BALLOTGEN_VERSION);
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of BallotGen app. Version: %s", version);
 		System.out.println(startMsg);
+		logger.info(startMsg);
+		Initialize.COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		startMsg = String.format("Ballots for: %s Co.", Initialize.COUNTY);
+		System.out.println(startMsg);
+		logger.info(startMsg);
 		logger.info(startMsg);
 		Initialize.start(args);
 		// TODO: use a loop here if ballotFiles size > 1

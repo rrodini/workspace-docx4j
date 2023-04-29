@@ -1,13 +1,12 @@
 #!/bin/bash
 #
 # fullballotgen.sh is the script that drives the generation of
-# municipal sample ballot docx files (approx. 232). See
-# BallotGen Super User Guide.docx for usage.
+# municipal sample ballot docx files (approx. 232).
 #
 
-VOTER_SERVICES_SPECIMEN="General-2022.pdf"
+VOTER_SERVICES_SPECIMEN="BUCKS_TWO_PRECINCTS.pdf"
 VOTER_SERVICES_PAGES_PER_BALLOT=2
-PRECINCTS_ZONES_CSV="./precincts-zones.csv"
+PRECINCTS_ZONES_CSV="../2023-precincts-zones.csv"
 JVM_LOG4J_LEVEL="-Dlog.level=DEBUG -XX:+ShowCodeDetailsInExceptionMessages"
 JVM_LOG4J_CONFIG="-Dlog4j.configurationFile=./resources/log4j-file-config.xml"
 
@@ -21,7 +20,7 @@ fi
 ## ATTENTION - Voter Services has a flaw in the patterns within General-2021.txt. 
 ##             This flaw must be fixed by  manually!
 ## extract text from voter service's PDF file.
-#printf '%s \n' "Extracting text from ${VOTER_SERVICES_SPECIMEN}"
+printf '%s \n' "Extracting text from ${VOTER_SERVICES_SPECIMEN}"
 #java -jar ./PDFBOX/pdfbox-app-2.0.25.jar ExtractText "${VOTER_SERVICES_SPECIMEN}"
 
 # run ContestGen to populate the contests directory.

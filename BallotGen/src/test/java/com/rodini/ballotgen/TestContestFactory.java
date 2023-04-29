@@ -187,13 +187,23 @@ class TestContestFactory {
 	@BeforeEach
 	void setUp() throws Exception {
 	    mockedAppender.messages.clear();
-		ballotGenProps = Utils.loadProperties(Initialize.RESOURCE_PATH + Initialize.PROPS_FILE);
-		contestGenProps = Utils.loadProperties(Initialize.CONTESTGEN_RESOURCE_PATH + Initialize.CONTESTGEN_PROPS_FILE);
-		//Initialize.validateFormatsText();
-		List<String> formatLines = Utils.getPropOrderedValues(contestGenProps, "ballotgen.contest.format");
+		Initialize.ballotGenProps = Utils.loadProperties(Initialize.RESOURCE_PATH + Initialize.PROPS_FILE);
+//if (ballotGenProps == null) {
+//	System.out.println("ballotGenProps == null");
+//	System.exit(0);
+//}
+		Initialize.contestGenProps = Utils.loadProperties(Initialize.CONTESTGEN_RESOURCE_PATH + Initialize.CONTESTGEN_PROPS_FILE);
+//if (contestGenProps == null) {
+//	System.out.println("contestGenProps == null");
+//	System.exit(0);
+//}
+		Initialize.COUNTY = "chester";
+		Initialize.validateFormatsText();
+		List<String> formatLines = Utils.getPropOrderedValues(Initialize.contestGenProps, Initialize.COUNTY + ".ballotgen.contest.format");
 		formatsText = formatLines.stream()
 				.collect(joining("\n"));
-		cf = new ContestFactory(ballotTextGeneral, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+		BallotFactory bf = new BallotFactory(ballotTextGeneral);
+		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 	}
 
 	@AfterEach
@@ -233,7 +243,8 @@ class TestContestFactory {
 	}
 	@Test
 	void testFindContestText1() {
-		cf = new ContestFactory(ballotTextPrimary, formatsText, ElectionType.PRIMARY, Party.DEMOCRATIC);
+		BallotFactory bf = new BallotFactory(ballotTextPrimary);
+		cf = new ContestFactory(bf, formatsText, ElectionType.PRIMARY, Party.DEMOCRATIC);
 		String contestName = "DEMOCRATIC STATE COMMITTEE";
 		String expected = 
 			"DEMOCRATIC STATE COMMITTEE\n" +
@@ -292,7 +303,8 @@ class TestContestFactory {
 	}
 	@Test
 	void testFindContestTextError2() {
-		cf = new ContestFactory(ballotTextBad, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+		BallotFactory bf = new BallotFactory(ballotTextBad);
+		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		String contestName = "Justice of the Supreme Court";
 		String expected = "can't find this contest end text for: " + contestName;
 		String text = cf.findContestText(contestName);
@@ -336,7 +348,8 @@ class TestContestFactory {
  		// This value must be built dynamically.  Don't know why.
  		String contestName = elements2[0].concat("\n").concat(elements2[1]);
  		assertEquals(ballotTextGeneral, ballotFileText);
-		cf = new ContestFactory(ballotFileText, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+		BallotFactory bf = new BallotFactory(ballotFileText);
+		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		contestText = cf.findContestText(contestName);
 		assertEquals(expected, contestText);
 	}
@@ -367,7 +380,8 @@ class TestContestFactory {
 	void testGetContestPattern2() {
 		// first section of regex should not compile.
 		String formatsText = "/^@#(\\($%^\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$/";
-		cf = new ContestFactory(ballotTextGeneral, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+		BallotFactory bf = new BallotFactory(ballotTextGeneral);
+		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		String contestName = "Judge of the\nCourt of Common Pleas";
 		String expected = "can't compile regex";
 		cf.getContestPattern(contestName,"1");

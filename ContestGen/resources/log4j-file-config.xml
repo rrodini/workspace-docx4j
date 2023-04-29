@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" name="ContestGen" packages="">
   <Appenders>
-    <File name="ContestGen" fileName="/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.3.0/logs/contestgen.log">
+    <File name="ContestGen" fileName="/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.4.0/logs/contestgen.log">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
   </Appenders>

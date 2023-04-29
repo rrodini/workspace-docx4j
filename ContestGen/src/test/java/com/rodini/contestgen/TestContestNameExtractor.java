@@ -103,8 +103,8 @@ class TestContestNameExtractor {
 	    logger = (Logger)LogManager.getLogger(ContestNameExtractor.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
-//	    ContestNameMarkers.initialize(false, null);
-		ContestNameMarkers.initialize("./src/test/java/General-2021.properties");
+	    ContestGen.COUNTY = "chester";
+		ContestNameMarkers.initialize("./src/test/java/Chester-General-2021.properties");
 	}
 
 	@AfterAll

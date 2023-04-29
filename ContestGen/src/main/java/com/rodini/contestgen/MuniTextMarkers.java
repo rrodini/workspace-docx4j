@@ -3,6 +3,9 @@ package com.rodini.contestgen;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rodini.ballotutils.Utils;
 
 /**
@@ -17,6 +20,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class MuniTextMarkers {
+	static final Logger logger = LoggerFactory.getLogger(MuniTextMarkers.class);
 	private static int pageCount;
 	private static String page1Regex;
 	private static String page2Regex;
@@ -27,10 +31,11 @@ public class MuniTextMarkers {
 		// use resource data
 		Properties props;
 		props = Utils.loadProperties(resourceFilePath);
-		pageCount = Integer.parseInt(Utils.getPropValue(props, "muniTextPageCount"));
-		page1Regex = Utils.getPropValue(props, "muniTextPage1Regex");
-		page2Regex = Utils.getPropValue(props, "muniTextPage2Regex");
-//System.out.printf("page2Regex: %s%n", page2Regex);
+		pageCount = Integer.parseInt(Utils.getPropValue(props, ContestGen.COUNTY + ".muniTextPageCount"));
+		page1Regex = Utils.getPropValue(props, ContestGen.COUNTY + ".muniTextPage1Regex");
+		logger.debug("page1Regex: ", page1Regex);
+		page2Regex = Utils.getPropValue(props, ContestGen.COUNTY + ".muniTextPage2Regex");
+		logger.debug("page2Regex: ", page2Regex);	
 		page1Pattern = Utils.compileRegex(page1Regex);
 		page2Pattern = Utils.compileRegex(page2Regex);
 	}

@@ -58,8 +58,8 @@ public class MuniTextExtractor {
 			}
 		}
 		// necessary due to anomolies in VS ballot construction.
-		if (!text.endsWith("Write-in\n")) {
-			text = text + "Write-in\n";
+		if (!text.endsWith(ContestGen.WRITE_IN)) {
+			text = text + ContestGen.WRITE_IN;
 		}
 		return text;
 	}

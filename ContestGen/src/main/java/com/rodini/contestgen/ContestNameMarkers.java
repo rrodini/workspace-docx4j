@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rodini.ballotutils.Utils;
 
 /**
@@ -11,12 +14,7 @@ import com.rodini.ballotutils.Utils;
  * ContestNameMarkers - 
  */
 public class ContestNameMarkers {
-	// use during testing
-	private static final String [] testContestNameFormats = {
-			"^(?<name>(.*\n){1,3})(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
-			"^(?<name>(.*\n){1,3})(?<term>^(\\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
-			"^(?<name>(.*\n){1,3})(?<region>^Region [A-Z].*)\n(?<term>^(\\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$",
-	};
+	static final Logger logger = LoggerFactory.getLogger(ContestNameMarkers.class);
 	// test or resource values
 	private static String [] contestNameFormats;
 	// compiled patterns
@@ -25,11 +23,11 @@ public class ContestNameMarkers {
 	public static void initialize(String resourceFilePath) {
 		// read formats from resource file
 		Properties props = Utils.loadProperties(resourceFilePath);
-		List<String> formatList = Utils.getPropOrderedValues(props, "contest.format");
+		List<String> formatList = Utils.getPropOrderedValues(props, ContestGen.COUNTY + ".contest.format");
 		contestNameFormats = new String[formatList.size()];
 		for (int i = 0; i < formatList.size(); i++) {
 			contestNameFormats[i] = (String) formatList.get(i);
-			//System.out.printf("resource: %s%n", contestNameFormats[i]);		
+			logger.debug(String.format("format.%d: %s%n", i, contestNameFormats[i]));		
 		}		
 		contestNamePatterns = new Pattern[contestNameFormats.length];		
 		for (int i = 0; i < contestNameFormats.length; i++) {

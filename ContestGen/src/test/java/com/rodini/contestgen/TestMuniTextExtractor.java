@@ -50,7 +50,8 @@ class TestMuniTextExtractor {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		MuniTextMarkers.initialize("./src/test/java/General-2021.properties");
+		ContestGen.COUNTY = "chester";
+		MuniTextMarkers.initialize("./src/test/java/Chester-General-2021.properties");
 		pageCount = MuniTextMarkers.getPageCount();
 	}
 

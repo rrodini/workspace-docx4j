@@ -18,9 +18,16 @@ public class SpecimenMuniMarkers {
 	public static void initialize(String resourceFilePath) {
 		Properties props;
 		props = Utils.loadProperties(resourceFilePath);
-		repeatCount = Integer.parseInt(Utils.getPropValue(props, "muniNameRepeatCount"));
-		muniNameRegex = Utils.getPropValue(props, "muniNameRegex");
-		logger.info(String.format("muniNameRegex: %s%n", muniNameRegex));
+		repeatCount = 1;
+		String repeatCountStr = "";
+		try {
+			repeatCountStr = Utils.getPropValue(props, ContestGen.COUNTY + ".muniNameRepeatCount");
+			repeatCount = Integer.parseInt(repeatCountStr);
+		} catch (NumberFormatException e) {
+			logger.error(String.format("cannot convert to int: %s%n", repeatCountStr));
+		}
+		muniNameRegex = Utils.getPropValue(props, ContestGen.COUNTY + ".muniNameRegex");
+		logger.debug(String.format("muniNameRegex: %s%n", muniNameRegex));
 		muniNamePattern = Utils.compileRegex(muniNameRegex);
 	}
 	/**

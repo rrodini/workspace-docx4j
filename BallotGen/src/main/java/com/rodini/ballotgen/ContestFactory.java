@@ -1,6 +1,5 @@
 package com.rodini.ballotgen;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +8,6 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.rodini.ballotutils.Utils;
-import static com.rodini.ballotgen.ElectionType.*;
 
 /**
  * ContestFactory has methods that find ballot text relating
@@ -30,20 +26,25 @@ public class ContestFactory {
 	// CHESTER
 	//private final String CONTEST_END = "Write-in";
 	// BUCKS
-	private final String CONTEST_END = "Write-In";
+	private final String CONTEST_END = Initialize.WRITE_IN.trim();
 	private final String CONTEST_NAME = "%contest name%";
+	private final BallotFactory ballotFactory;
 	private final String ballotText;	// text of the entire ballot
 	private final ElectionType elecType; // GENERAL or PRIMARY
 	private final Party endorsedParty;
 	// (key, entry) example:  "1", "/^%contest name%\n(?<instruction>.*)\n(?<candidates>((.*\n){2})*)^Write-in$/"
 	private final Map<String, String> contestFormats;
+	// contestNameIndexes handles a special case when the contest name is duplicated on a ballot
+	// Example: Auditor - 4 year term, Auditor - 6 year term
+	// (key, entry) example:  "Auditor", 0
 	/**
 	 * ContestFactory receives two key parameters for its methods.
 	 * @param ballotText text of the entire ballot for municipality.
 	 * @param formatsText strings of key,value pairs for parsing contest text.
 	 */
-	ContestFactory(String ballotText, String formatsText, ElectionType type, Party endorsedParty) {
-		this.ballotText = ballotText;
+	ContestFactory(BallotFactory bf, String formatsText, ElectionType type, Party endorsedParty) {
+		this.ballotFactory = bf;
+		this.ballotText = bf.getBallotText();
 		this.elecType = type;
 		this.endorsedParty = endorsedParty;
 		contestFormats = new HashMap<>();
@@ -80,7 +81,7 @@ public class ContestFactory {
      */
 	public String findContestText(String contestName) {
 		String contestText = "";
-		int start = ballotText.indexOf(contestName);
+		int start = ballotText.indexOf(contestName, ballotFactory.getStartIndex(contestName));
 		if (start == -1) {
 			String msg = "can't find this contestName: " + contestName;
 			logger.error(msg);
@@ -92,7 +93,9 @@ public class ContestFactory {
 			logger.error(msg);
 			return contestText;
 		}
-		return ballotText.substring(start, end + CONTEST_END.length());
+		contestText = ballotText.substring(start, end + CONTEST_END.length());
+		ballotFactory.setEndIndex(contestName, end + CONTEST_END.length());
+		return contestText;
 	}
     /**
      * parseContestText takes the text "found" by findContestText and
@@ -117,16 +120,12 @@ public class ContestFactory {
 			try {
 				// "term" is optional
 				String term = getMatchGroup(m, "term");
-//	   if (format.equals("1")) { System.out.println("term: " + term); }
 				String instructions = getMatchGroup(m, "instructions");
-//	   if (format.equals("1")) { System.out.println("instructions: " + instructions); }
 				String candidatesText = getMatchGroup(m, "candidates");
-//	   if (format.equals("1")) { System.out.println("candidatesText: " + candidatesText); }
 				CandidateFactory cf = new CandidateFactory(contestName, candidatesText, elecType, endorsedParty);
 				List<Candidate> candidates = cf.getCandidates();
 				contest = new Contest(contestName, term, instructions, candidates);
 			} catch (Exception e) {
-//	   if (format.equals("1")) { System.out.println("exception: " + e.getMessage()); }
 				String msg = e.getMessage();
 				logger.error(msg);
 			}
@@ -197,77 +196,4 @@ public class ContestFactory {
 		}
 		return compiledRegex;
 	}
-//	/**
-//	 * getNumCandidateLines is a kludge to compensate for the fact that
-//	 * 95% of the time when candidates are listed the pattern is:
-//	 * name
-//	 * party / residence
-//	 * and 5% of the time it is"
-//	 * name
-//	 * @param format index of regex used for contest group
-//	 * @return 1 or 2.
-//	 */
-//	int getNumCandidateLines(String format) {
-//		int numLines = 0;
-//		String startRegex = contestFormats.get(format);
-//		if (startRegex.contains("{1}")) {
-//			numLines = 1;
-//		} else if (startRegex.contains("{2}")) {
-//			numLines = 2;
-//		}
-//		return numLines;
-//	}
-//	/** createCandidates takes lines of candidate name/party pairs
-//	 * and converts them to Candidate objects.
-//	 * @param candidatesText lines of candidate name/party pairs
-//	 * @return Candidate list
-//	 */
-//	/* private */ 
-//	List<Candidate> createCandidates(String candidatesText, int numLines) {
-//		// format for general:  "Name1"
-//		//                      "Party1"
-//		//                      "Name2"
-//		//                      "Party2"
-//		//                      etc.
-//		// format for primary:  "Name1"
-//		//                      "Residence1"
-//		//                      "Name2"
-//		//                      "Residence2"
-//		//                      etc.
-//		// format for primary
-//		// local races:         "Name1"
-//		//                      "Name2"
-//		//                      etc.
-//		logger.info(String.format("candidatesText: %s", candidatesText));
-//		List<Candidate> candidates = new ArrayList<>();
-//		if (candidatesText.isBlank()) {
-//			return candidates;
-//		}
-//		final String [] elements = candidatesText.split("\\n");
-//		for (int i = 0; i < elements.length; i = i+numLines) {
-//			String display1 = "";
-//			String display2 = "";
-//			if (i < elements.length) {
-//				display1 = elements[i];
-//			}
-//			if (numLines == 2 && i + 1 < elements.length) {
-//				// display2 may be a candidate name in primary!
-//				display2 = elements[i+1];
-//			}
-//			if (elecType == GENERAL) {
-//				Party party = Party.toEnum(display2);
-//				// if party is unrecognized just use the text from Voter Services
-//				if (party == null) {
-//					candidates.add(new GeneralCandidate(display1, party, display2));
-//				} else {
-//					candidates.add(new GeneralCandidate(display1, party, party.toString()));
-//				}
-//			} else if (elecType == PRIMARY) {
-//				candidates.add(new PrimaryCandidate(display1, endorsedParty, display2));
-//			} else {
-//				Utils.logFatalError("unknown election type.  Can't create candidate.");
-//			}
-//		}	
-//		return candidates;
-//	}
 }

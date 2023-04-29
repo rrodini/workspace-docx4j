@@ -72,7 +72,7 @@ public class GenDocxBallot {
 	private String ballotName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
 	private String precinctNo; // precinct No. - first three digits of ballotName
 	private static final String FILE_SUFFIX = "_VS";
-	private String ballotText; // text of ballotTextFile
+//	private String ballotText; // text of ballotTextFile
 	private String fileOutputPath; // generated DOCX file
 	private String formatsText;   // formats (regexes) read from properties
 	private EndorsementProcessor endorsementProcessor;
@@ -238,7 +238,8 @@ public class GenDocxBallot {
 	 */
 	/* private */ 
 	void initReadBallotText() {
-		ballotText = Utils.readTextFile(ballotTextFilePath);
+		// Perform file existence check here.
+		String ballotText = Utils.readTextFile(ballotTextFilePath);
 	}
 	/**
 	 * initStyles checks that the expected StyleIds (just strings) exist
@@ -424,6 +425,7 @@ public class GenDocxBallot {
 		// contestsParagraphs is the list of all of the contest paragraphs.
 		List<P> contestsParagraphs = new ArrayList<>();		
 		String[] contestLines = contestsText.split("\n");
+		BallotFactory ballotFactory = new BallotFactory(Utils.readTextFile(ballotTextFilePath));
 		int i = 0;
 		int j = 0;
 		for (String line: contestLines) {
@@ -431,7 +433,7 @@ public class GenDocxBallot {
 			String contestName = elements[0];
 			contestName = Contest.processContestName(contestName);
 			String contestFormat = elements[1];
-			List<P> contestParagraphs = genContest(contestName, contestFormat);
+			List<P> contestParagraphs = genContest(ballotFactory, contestName, contestFormat);
 			// Insert column break after contest.
 			if (i+1 == Initialize.columnBreaks[j]) {
 				P columnBreakParagraph = genColumnBreakParagraph();
@@ -447,15 +449,16 @@ public class GenDocxBallot {
 	 * genContest generates a particular contest group. This consists 
 	 * of the contest name, contest instructions, candidates, etc.
 	 *  
+	 * @param bf ballotFactory object
 	 * @param name e.g. "Justice of the Supreme Court"
 	 * @param format number # that references "contest.format.#"
 	 */
 	/* private */
-	List<P> genContest(String name, String format) {
+	List<P> genContest(BallotFactory bf, String name, String format) {
 		logger.debug(String.format("generating contest name: %s format: %s%n", name, format));
 		List<P> contestParagraphs = new ArrayList<>();
 		MainDocumentPart mdp = docx.getMainDocumentPart();
-		ContestFactory cf = new ContestFactory(ballotText, formatsText, Initialize.elecType, Initialize.endorsedParty);
+		ContestFactory cf = new ContestFactory(bf, formatsText, Initialize.elecType, Initialize.endorsedParty);
 		String contestText = cf.findContestText(name);
 		if (!contestText.isBlank()) {
 			Contest contest = cf.parseContestText(name, contestText, format);

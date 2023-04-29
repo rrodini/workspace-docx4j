@@ -178,6 +178,21 @@ class TestUtils {
 				Exception.class,
 				() -> { Utils.compileRegex(badRegex);});
 	}
-	
-	
+	@Test
+	void testEnvVariable1() {
+		// expect HOME variable to always exist
+		assertTrue(null != Utils.getEnvVariable("HOME", true));
+	}
+	@Test
+	@ExpectSystemExit
+	void testEnvVariable2() {
+		// expect DOES_NOT_EXIST variable to never exist
+		Utils.getEnvVariable("DOES_NOT_EXIST", true);
+	}
+	@Test
+	void testEnvVariable3() {
+		// don't expect OPTIONAL variable to always exist
+		assertTrue(null== Utils.getEnvVariable("OPTIONAL", false));
+	}
+
 }
