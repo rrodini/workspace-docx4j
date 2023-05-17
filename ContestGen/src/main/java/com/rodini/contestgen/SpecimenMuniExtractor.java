@@ -39,7 +39,6 @@ public class SpecimenMuniExtractor {
 	 */
 	SpecimenMuniExtractor(String specimenText) {
 		this.specimenText = specimenText;
-		//TODO: logger.info specimenText
 		muniExtracts = new ArrayList<MuniTextExtractor>();
 	}
 	/**

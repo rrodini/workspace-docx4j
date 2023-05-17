@@ -64,6 +64,8 @@ public class Initialize {
 	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
 	        static       String COUNTY;
 	        static       String WRITE_IN;
+	        static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
+			static       String PAGE_BREAK_WORDING;
 	
 
 	/**
@@ -296,6 +298,15 @@ public class Initialize {
 		columnBreaks[i] = 999;
 		logger.info(String.format("%s: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 	}
+	
+	static void validatePageBreak() {
+		String value = ballotGenProps.getProperty("page.break.wording");
+		if (value == null) {
+			value = "Page Break";
+		}
+		PAGE_BREAK_WORDING = value;
+		logger.info(String.format("%s: %s", "PAGE_BREAK_WORDING", value));
+	}
 	/**
 	 * start begins the initialization process.
 	 * @param args CLI arguments
@@ -320,6 +331,7 @@ public class Initialize {
 				candidateEndorsements, precinctToZoneMap);
 		validateWriteInDisplay();
 		validateColumnBreakContestCount();
+		validatePageBreak();
 	}
 	
 	

@@ -21,8 +21,8 @@ import com.rodini.ballotutils.Utils;
 public class MuniTextExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(MuniTextExtractor.class);
 	
-	private final String muniName;
-	private final String muniText;
+	private final String muniName;  // e.g. 640_TREDYFFRIN_W-3
+	private final String muniText;  // ballot text for 640_TREDYFFRIN_W-3
 	/**
 	 * constructor
 	 * @param muniName name of municipality.
@@ -74,7 +74,7 @@ public class MuniTextExtractor {
 		if (MuniTextMarkers.getPageCount() == 2) {
 			page2Text = extractPageText(MuniTextMarkers.getPage2Pattern());
 		}
-		return new MuniContestsExtractor(muniName, page1Text + page2Text);
+		return new MuniContestsExtractor(muniName, page1Text, page2Text);
 	}
 	/**
 	 * getMuniName returns the municipality name.

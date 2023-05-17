@@ -29,7 +29,6 @@ class TestMuniTextExtractor {
 	private static MockedAppender mockedAppender;
 	private static Logger logger;
 
-	private MuniTextMarkers mtm;
 	private int pageCount; // 1 => contests on page 1 only
 
 	@BeforeAll
@@ -84,19 +83,22 @@ class TestMuniTextExtractor {
 				};
 		MuniTextExtractor mte = new MuniTextExtractor("050 Atglen", muniRawText);
 		MuniContestsExtractor mce = mte.extract();
-		String contestsText = mce.getMuniContestsText();
+		String page1Text = mce.getMuniPage1Text();
+		String page2Text = mce.getMuniPage2Text();
 		
+//		System.out.println("\ntestMuniExtract1()");
 //		System.out.println();
-//		System.out.println(contestsText);
+//		System.out.println(page1Text);
 //		System.out.println();
-		
+//		System.out.println("");
+
 		// assert existence of first and last contest on page 1.
-		assertTrue(contestsText.indexOf(page1ContestName[0]) >= 0);
-		assertTrue(contestsText.indexOf(page1ContestName[1]) >= 0);
+		assertTrue(page1Text.indexOf(page1ContestName[0]) >= 0);
+		assertTrue(page1Text.indexOf(page1ContestName[1]) >= 0);
 		if (pageCount == 2) {
 			// assert existence of first and last contest on page 2.
-			assertTrue(contestsText.indexOf(page2ContestName[0]) >= 0);
-			assertTrue(contestsText.indexOf(page2ContestName[1]) >= 0);
+			assertTrue(page2Text.indexOf(page2ContestName[0]) >= 0);
+			assertTrue(page2Text.indexOf(page2ContestName[1]) >= 0);
 		}
 	}
 	@Test
@@ -113,14 +115,15 @@ class TestMuniTextExtractor {
 		MuniTextExtractor mte = new MuniTextExtractor("010 Avondale", muniRawText);
 		mte.extract();
 		MuniContestsExtractor mce = mte.extract();
-		String contestsText = mce.getMuniContestsText();
+		String page1Text = mce.getMuniPage1Text();
+		String page2Text = mce.getMuniPage2Text();
 		// assert existence of first and last contest on page 1.
-		assertTrue(contestsText.indexOf(page1ContestName[0]) >= 0);
-		assertTrue(contestsText.indexOf(page1ContestName[1]) >= 0);
+		assertTrue(page1Text.indexOf(page1ContestName[0]) >= 0);
+		assertTrue(page1Text.indexOf(page1ContestName[1]) >= 0);
 		if (pageCount == 2) {
 		// assert existence of first and last contest on page 2.
-			assertTrue(contestsText.indexOf(page2ContestName[0]) >= 0);
-			assertTrue(contestsText.indexOf(page2ContestName[1]) >= 0);
+			assertTrue(page2Text.indexOf(page2ContestName[0]) >= 0);
+			assertTrue(page2Text.indexOf(page2ContestName[1]) >= 0);
 		}
 	}
 	@Test

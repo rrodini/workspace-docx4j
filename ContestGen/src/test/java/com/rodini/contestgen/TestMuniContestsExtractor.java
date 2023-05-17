@@ -150,8 +150,6 @@ class TestMuniContestsExtractor {
 	 */
 	@BeforeAll
 	static void setupClass() {
-		Pattern [] testContestNamePatterns; 
-
 	    mockedAppender = new MockedAppender();
 	    mockedAppender.start();
 	    logger = (Logger)LogManager.getLogger(MuniContestsExtractor.class);
@@ -170,7 +168,7 @@ class TestMuniContestsExtractor {
 	    ContestNameMarkers.initialize("./src/test/java/Chester-General-2021.properties");
 	    ContestGen.COUNTY="Chester";
 	    ContestGen.WRITE_IN="Write-in\n";
-		mce = new MuniContestsExtractor("Atglen", contestsText);
+		mce = new MuniContestsExtractor("Atglen", contestsText, "");
 	}
 
 	@AfterEach

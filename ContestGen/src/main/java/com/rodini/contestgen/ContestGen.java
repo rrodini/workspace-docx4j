@@ -47,6 +47,7 @@ public class ContestGen {
 	static final String PROPS_FILE = "contestgen.properties";
 	static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTS_FILE = "_contests.txt";
+	static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
 
 	static String COUNTY;		// chester vs. bucks
 	static String WRITE_IN; 	// Write-in vs. Write-In

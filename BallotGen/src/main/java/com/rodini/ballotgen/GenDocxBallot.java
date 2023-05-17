@@ -433,8 +433,10 @@ public class GenDocxBallot {
 			String contestName = elements[0];
 			contestName = Contest.processContestName(contestName);
 			String contestFormat = elements[1];
-			List<P> contestParagraphs = genContest(ballotFactory, contestName, contestFormat);
-			// Insert column break after contest.
+			List<P> contestParagraphs = contestName.equals(Initialize.PAGE_BREAK)?
+					  genPageBreak(docx.getMainDocumentPart())
+					: genContest(ballotFactory, contestName, contestFormat);
+			// Insert column break after contest?
 			if (i+1 == Initialize.columnBreaks[j]) {
 				P columnBreakParagraph = genColumnBreakParagraph();
 				contestParagraphs.add(columnBreakParagraph);
@@ -473,6 +475,7 @@ public class GenDocxBallot {
 	 * genContestParagraphs generates the paragraphs of a contest group
 	 * @param mdp MainDocumentPart from DOCX4J API.
 	 * @param contest contest group
+	 * @return list of new paragraphs.
 	 */
 	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {
 		List<P> contestParagraphs = new ArrayList<>();
@@ -537,6 +540,25 @@ public class GenDocxBallot {
 		// last paragraph
 		contestParagraphs.add(newParagraph);  // Paragraph separator
 		return contestParagraphs;
+	}
+	/**
+	 * genPageBreak generates the pseudo contest name "PAGE BREAK" using
+	 * the wording in the property PAGE_BREAK_WORDING (e.g. "See other side of ballot")
+	 * @param mdp MainDocumentPart from DOCX4J API.
+	 * @return list of new paragraphs.
+	 */
+	List<P> genPageBreak(MainDocumentPart mdp) {
+		logger.info("generating page break");
+		List<P> pageBreakParagraphs = new ArrayList<>();
+		P newParagraph;
+		// first paragraph
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
+		pageBreakParagraphs.add(newParagraph);
+		// Draw a border line as a separator
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+		// last paragraph
+		pageBreakParagraphs.add(newParagraph);  // Paragraph separator
+		return pageBreakParagraphs;
 	}
 	/** 
 	 * genColumnBreakParagraph generates a column break object tree.
