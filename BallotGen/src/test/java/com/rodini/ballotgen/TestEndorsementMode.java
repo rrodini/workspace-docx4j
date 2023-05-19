@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TestEndorsementType {
+class TestEndorsementMode {
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -18,16 +18,16 @@ class TestEndorsementType {
 
 	@Test
 	void testEnum() {
-		for (EndorsementType type: EndorsementType.values()) {
-			switch (type) {
-		case STATE:
-			assertEquals("STATE", type.toString());
+		for (EndorsementMode mode: EndorsementMode.values()) {
+			switch (mode) {
+		case ENDORSED:
+			assertEquals("ENDORSED", mode.toString());
 			break;
-		case COUNTY:
-			assertEquals("COUNTY", type.toString());
+		case UNENDORSED:
+			assertEquals("UNENDORSED", mode.toString());
 			break;
-		case ZONE:
-			assertEquals("ZONE", type.toString());
+		case ANTIENDORSED:
+			assertEquals("ANTIENDORSED", mode.toString());
 			break;
 			}
 		}

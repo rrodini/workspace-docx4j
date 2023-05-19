@@ -1,6 +1,7 @@
 package com.rodini.ballotgen;
 
-import static com.rodini.ballotgen.EndorsementType.*;
+import static com.rodini.ballotgen.EndorsementMode.*;
+import static com.rodini.ballotgen.EndorsementScope.*;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
@@ -22,8 +23,11 @@ public class EndorsementFactory {
 	private static final Logger logger = LoggerFactory.getLogger(EndorsementFactory.class);
 
 	static Map <String, List<Endorsement>> candidateEndorsements = new HashMap<>();
-	// Get the names of endorser as a String.
-	static final Set<String> endorserNames = Arrays.stream(EndorsementType.values())
+	// Get the names of endorseMode as a String
+	static final Set<String> endorseModeNames = Arrays.stream(EndorsementMode.values())
+			.map(e -> e.toString()).collect(toSet());
+	// Get the names of endorseScope as a String.
+	static final Set<String> endorseScopeNames = Arrays.stream(EndorsementScope.values())
 			.map(e -> e.toString()).collect(toSet());
 	
 	// Process the zone number. It must be numeric.
@@ -37,10 +41,10 @@ public class EndorsementFactory {
 		return val;
 	}
 	// Process a valid line to an Endorsement object.
-	static void processLine(String name,EndorsementType type, int zoneNo) {
-		Endorsement e = new Endorsement(name, type, zoneNo);
+	static void processLine(String name, EndorsementMode mode, EndorsementScope type, int zoneNo) {
+		Endorsement e = new Endorsement(name, mode, type, zoneNo);
 		// Eliminate case-sensitivity here!
-		// Retrieval must upper-case names!
+		// Retrieval must use upper-case names!
 		name = name.toUpperCase();
 		List<Endorsement> endorsements = candidateEndorsements.get(name);
 		if (endorsements == null) {
@@ -51,17 +55,18 @@ public class EndorsementFactory {
 	}
 	// Process and validate data from single CSV line.
 	static void processData(int lineNo, String[] fields) {
-		if (fields.length < 2) {
-			logger.error(String.format("CSV line #%d fewer than 2 fields", lineNo));
+		if (fields.length < 3) {
+			logger.error(String.format("CSV line #%d has fewer than 3 fields", lineNo));
 			return;
 		}
-		if (fields.length > 3) {
-			logger.error(String.format("CSV line #%d more than 3 fields", lineNo));
+		if (fields.length > 4) {
+			logger.error(String.format("CSV line #%d has more than 4 fields", lineNo));
 			return;
 		}
 		// Defaults
 		String name = "";
-		EndorsementType type = ZONE;
+		EndorsementMode mode = UNENDORSED;
+		EndorsementScope scope = ZONE;
 		int zoneNo = 0;
 		for (int i = 0; i < fields.length; i++) {
 			switch (i) {
@@ -74,25 +79,34 @@ public class EndorsementFactory {
 				}
 				break;
 			case 1:
-				// EndorsementType - STATE, COUNTY, ZONE
-				String endorser = fields[1].trim().toUpperCase();
-				if (endorser.isBlank() || !endorserNames.contains(endorser)) {
-					logger.error(String.format("CSV line #%d endorsement type %s has error", lineNo, endorser));
+				// EndorsementMode - ENDORSED, UNENDORSED, ANTIENDORSED
+				String endorseMode = fields[1].trim().toUpperCase();
+				if (endorseMode.isBlank() || !endorseModeNames.contains(endorseMode)) {
+					logger.error(String.format("CSV line #%d endorsement mode %s has error", lineNo, endorseMode));
 					return;
 				}
-				type = EndorsementType.valueOf(endorser);
-				if (type == ZONE && fields.length < 3) {
+				mode = EndorsementMode.valueOf(endorseMode);
+				break;
+			case 2:
+				// EndorsementScope - STATE, COUNTY, ZONE
+				String endorseScope = fields[2].trim().toUpperCase();
+				if (endorseScope.isBlank() || !endorseScopeNames.contains(endorseScope)) {
+					logger.error(String.format("CSV line #%d endorsement scope %s has error", lineNo, endorseScope));
+					return;
+				}
+				scope = EndorsementScope.valueOf(endorseScope);
+				if (scope == ZONE && fields.length < 4) {
 					logger.error(String.format("CSV line #%d zone # missing", lineNo));
 					return;
 				}
-				if ((type == STATE || type == COUNTY) && fields.length > 2) {
+				if ((scope == STATE || scope == COUNTY) && fields.length > 3) {
 					logger.error(String.format("CSV line #%d has too many fields", lineNo));
 					return;
 				}
 				break;
-			case 2:
+			case 3:
 				// zone #
-				String zoneStr = fields[2].trim();
+				String zoneStr = fields[3].trim();
 				if (zoneStr.isBlank()  ) {
 					logger.error(String.format("CSV line #%d zone # is blank", lineNo));
 					return;
@@ -101,7 +115,7 @@ public class EndorsementFactory {
 				break;
 			}
 		}
-		processLine(name, type, zoneNo);
+		processLine(name, mode, scope, zoneNo);
 	}
 	// Process the input CSV text.
 	public static void processCSVText(String csvText) {

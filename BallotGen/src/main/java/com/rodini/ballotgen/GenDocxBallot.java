@@ -2,6 +2,7 @@ package com.rodini.ballotgen;
 
 import static com.rodini.ballotgen.ContestFileLevel.COMMON;
 import static com.rodini.ballotgen.ContestFileLevel.MUNICIPAL;
+import static com.rodini.ballotgen.EndorsementMode.*;
 import static java.util.stream.Collectors.joining;
 
 import java.io.File;
@@ -91,8 +92,9 @@ public class GenDocxBallot {
 	private static String STYLEID_CANDIDATE_NAME = "CandidateName";
 	private static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
 	private static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
-	private static String STYLEID_NONENDORSED_CANDIDATE_NAME = "NonEndorsedCandidateName";
-	private static String STYLEID_NONENDORSED_CANDIDATE_PARTY = "NonEndorsedCandidateParty";
+	private static String STYLEID_ENDORSED_CANDIDATE_PARTY = "EndorsedCandidateParty";
+	private static String STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "AntiEndorsedCandidateName";
+	private static String STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY = "AntiEndorsedCandidateParty";
 	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	private static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
 	// These are unicode characters (also Segoe UI Symbol font)
@@ -273,13 +275,17 @@ public class GenDocxBallot {
 			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_NAME);
 			STYLEID_ENDORSED_CANDIDATE_NAME = "Normal";
 		}
-		if (!templateIdStyles.contains(STYLEID_NONENDORSED_CANDIDATE_NAME)) {
-			logger.error("dotx template missing this styleId: " + STYLEID_NONENDORSED_CANDIDATE_NAME);
-			STYLEID_NONENDORSED_CANDIDATE_NAME = "Normal";
+		if (!templateIdStyles.contains(STYLEID_ENDORSED_CANDIDATE_PARTY)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_PARTY);
+			STYLEID_ENDORSED_CANDIDATE_PARTY = "Normal";
 		}
-		if (!templateIdStyles.contains(STYLEID_NONENDORSED_CANDIDATE_PARTY)) {
-			logger.error("dotx template missing this styleId: " + STYLEID_NONENDORSED_CANDIDATE_PARTY);
-			STYLEID_NONENDORSED_CANDIDATE_PARTY = "Normal";
+		if (!templateIdStyles.contains(STYLEID_ANTI_ENDORSED_CANDIDATE_NAME)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_ANTI_ENDORSED_CANDIDATE_NAME);
+			STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY);
+			STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY = "Normal";
 		}
 		if (!templateIdStyles.contains(STYLEID_BOTTOM_BORDER)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_BOTTOM_BORDER);
@@ -472,74 +478,140 @@ public class GenDocxBallot {
 		return contestParagraphs;
 	}
 	/**
-	 * genContestParagraphs generates the paragraphs of a contest group
+	 * genContestParagraphs generates the paragraphs of a contest.
+	 * 
 	 * @param mdp MainDocumentPart from DOCX4J API.
 	 * @param contest contest group
 	 * @return list of new paragraphs.
 	 */
-	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {
+	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {	
 		List<P> contestParagraphs = new ArrayList<>();
+		// contest header: name, term, and instructions
+		List<P> headParagraphs = genContestHeader(mdp, contest);
+		contestParagraphs.addAll(headParagraphs);	
+		// list of candidates (including write-ins)	
+		List<P> candParagraphs = genContestCandidates(mdp, contest);
+		contestParagraphs.addAll(candParagraphs);
+		return contestParagraphs;
+	}
+	/**
+	 * genContestHeader generates and formats the contest name, term, and instructions.
+	 * 
+	 * @param mdp MainDocumentPart from DOCX4J API.
+	 * @param contest Contest object.
+	 * @return list of contest header paragraphs.
+	 */
+	List<P> genContestHeader(MainDocumentPart mdp, Contest contest) {
 		P newParagraph;
-		// first paragraph
+		List<P> headParagraphs = new ArrayList<>();
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, contest.getName());
-		contestParagraphs.add(newParagraph);
+		headParagraphs.add(newParagraph);
 		if (!contest.getTerm().isEmpty()) {
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getTerm());
-			contestParagraphs.add(newParagraph);
+			headParagraphs.add(newParagraph);
 		}
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getInstructions());
-		contestParagraphs.add(newParagraph);
+		headParagraphs.add(newParagraph);
 		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
-		contestParagraphs.add(newParagraph);
+		headParagraphs.add(newParagraph);
+		return headParagraphs;
+	}
+	/**
+	 * genContestCandidates generates and formats the list of candidates for the contest.
+	 * This is complex because each candidate may be endorsed, unendorsed, or anti-endorsed.
+	 * Also, there may be write-in candidates for the contest.
+	 * 
+	 * @param mdp MainDocumentPart from DOCX4J API.
+	 * @param contest Contest object.
+	 * @return list of candidate paragraphs.
+	 */
+	List<P> genContestCandidates(MainDocumentPart mdp, Contest contest) {
+		String contestName = contest.getName();
 		List<Candidate> cands = contest.getCandidates();
-		// Endorsements here. See the classes Endorsement, EndorsementFactory, EndorsementProcessor
+		List<P> candsParagraphs = new ArrayList<>();
+		P newParagraph;
 		for (Candidate cand: cands) {
-			// Candidate objects are created for each ballot which makes them no good
-			// for counting endorsements.  That's why endorsedCandidates variable is used.
-			String oval = "";
-			String candName = cand.getName();
-			boolean endorsed = endorsementProcessor.isEndorsed(candName, contest.getName(), cand.getParty(), precinctNo);
-			if (endorsed) {
-				endorsedCandidates.merge(candName.toUpperCase(), 1, (prev, inc) -> prev + inc);
-			}
-			oval = endorsed? blackEllipse : whiteEllipse;
-			String partyOrResidence = "";
-			boolean bottomOfTicket = false;
-			if (Initialize.elecType == ElectionType.GENERAL) {
-				partyOrResidence = ((GeneralCandidate) cand).getTextBeneathName();
-				bottomOfTicket = ((GeneralCandidate) cand).getBottomOfTicket();
-				if (bottomOfTicket) {
-					oval = "   ";  // Need 3 spaces for 2nd name on ticket
-				}
-			} else {
-				// PRIMARY
-				partyOrResidence = ((PrimaryCandidate) cand).getResidence();
-			}
-			if (endorsed) {
-				newParagraph = mdp.createStyledParagraphOfText(STYLEID_ENDORSED_CANDIDATE_NAME, oval + " " + candName);
-			} else {
-				newParagraph = mdp.createStyledParagraphOfText(STYLEID_NONENDORSED_CANDIDATE_NAME, oval + " " + candName);
-			}
-			contestParagraphs.add(newParagraph);
-			if (endorsed) {
-				newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, partyOrResidence);
-			} else {
-				newParagraph = mdp.createStyledParagraphOfText(STYLEID_NONENDORSED_CANDIDATE_PARTY, partyOrResidence);
-			}
-			contestParagraphs.add(newParagraph);
+			candsParagraphs.addAll(genContestCandidate(mdp, contestName, cand));	
 		}
 		// Display (or not) a write-in line
 		if (Initialize.writeInDisplay) {
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, whiteEllipse + "   " + "_".repeat(16));
-			contestParagraphs.add(newParagraph);
+			candsParagraphs.add(newParagraph);
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
-			contestParagraphs.add(newParagraph);
+			candsParagraphs.add(newParagraph);
 		}
 		// Draw a border line as a separator
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
-		// last paragraph
-		contestParagraphs.add(newParagraph);  // Paragraph separator
-		return contestParagraphs;
+		candsParagraphs.add(newParagraph);
+		return candsParagraphs;
+	}
+	/**
+	 * genContestCandidate generates and formats a single candidate.
+	 * This is tricky because the candidate may be endorsed, unendorsed, or anti-endorsed.
+	 * Notes:
+	 * - Endorsements are processed here. See the classes Endorsement, EndorsementFactory, EndorsementProcessor.
+	 * 
+	 * @param mdp MainDocumentPart from DOCX4J API.
+	 * @param contestName contest name.
+	 * @param cand Candidate object.
+	 * @return
+	 */
+	List<P> genContestCandidate(MainDocumentPart mdp, String contestName, Candidate cand) {
+		List<P> candParagraphs = new ArrayList<>();
+		P newParagraph = null;
+		String oval = "";
+		String candName = cand.getName();
+		EndorsementMode mode = endorsementProcessor.getEndorsementMode(candName, contestName, cand.getParty(), precinctNo);
+		if (mode == ENDORSED) {
+			endorsedCandidates.merge(candName.toUpperCase(), 1, (prev, inc) -> prev + inc);
+		}
+		oval = mode == ENDORSED ? blackEllipse : whiteEllipse;
+		String partyOrResidence = "";
+		boolean bottomOfTicket = false;
+		if (Initialize.elecType == ElectionType.GENERAL) {
+			partyOrResidence = ((GeneralCandidate) cand).getTextBeneathName();
+			bottomOfTicket = ((GeneralCandidate) cand).getBottomOfTicket();
+			if (bottomOfTicket) {
+				oval = "   ";  // Need 3 spaces for 2nd name on ticket
+			}
+		} else {
+			// PRIMARY
+			partyOrResidence = ((PrimaryCandidate) cand).getResidence();
+		}
+		// paragraph for candidate name
+		newParagraph = genParagraphByEndorsementMode(mdp, oval + " " + candName, true, mode);
+		candParagraphs.add(newParagraph);
+		// paragraph for candidate party
+		newParagraph = genParagraphByEndorsementMode(mdp, partyOrResidence, false, mode);
+		candParagraphs.add(newParagraph);
+		return candParagraphs;
+	}
+	/** 
+	 * genParagraphByEndorsementMode generates a styled candidate line based on endorsement mode.
+	 * @param mdp MainDocumentPart from DOCX4J API.
+	 * @param text candidate name or line below name.
+	 * @param mode EndorsementMode value.
+	 * @return
+	 */
+	P genParagraphByEndorsementMode(MainDocumentPart mdp, String text, boolean textIsName, EndorsementMode mode) {
+		P newParagraph;
+		String style = "";
+		switch (mode) {
+		case ENDORSED:
+			style = textIsName? STYLEID_ENDORSED_CANDIDATE_NAME : STYLEID_ENDORSED_CANDIDATE_PARTY;
+			newParagraph = mdp.createStyledParagraphOfText(style, text);
+			break;
+		case UNENDORSED:
+			style = textIsName? STYLEID_CANDIDATE_NAME : STYLEID_CANDIDATE_PARTY;
+			newParagraph = mdp.createStyledParagraphOfText(style, text);
+			break;
+		default:
+		/* case ANTIENDORSED: */
+			style = textIsName? STYLEID_ANTI_ENDORSED_CANDIDATE_NAME : STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY;
+			newParagraph = mdp.createStyledParagraphOfText(style, text);
+			break;
+		}
+		return newParagraph;
 	}
 	/**
 	 * genPageBreak generates the pseudo contest name "PAGE BREAK" using

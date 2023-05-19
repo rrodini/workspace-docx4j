@@ -12,7 +12,8 @@ class TestEndorsement {
 	@BeforeEach
 	void setUp() throws Exception {
 		end = new Endorsement("Robert A Rodini",
-				EndorsementType.ZONE, 13);
+				EndorsementMode.ENDORSED,
+				EndorsementScope.ZONE, 13);
 	}
 
 	@AfterEach
@@ -29,8 +30,12 @@ class TestEndorsement {
 		
 	}
 	@Test
-	void testGetType() {
-		assertTrue(EndorsementType.ZONE == end.getType());
+	void testGetMode() {
+		assertTrue(EndorsementMode.ENDORSED == end.getMode());
+	}
+	@Test
+	void testGetScope() {
+		assertTrue(EndorsementScope.ZONE == end.getScope());
 	}
 	@Test
 	void testGetZoneNo() {
@@ -38,7 +43,7 @@ class TestEndorsement {
 	}
 	@Test 
 	void testToString() {
-		String expected = "Endorsement: Robert A Rodini, ZONE, 13";
+		String expected = "Endorsement: Robert A Rodini, ENDORSED, ZONE, 13";
 		assertEquals(expected, end.toString());
 	}
 	

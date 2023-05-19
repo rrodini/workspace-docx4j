@@ -1,6 +1,6 @@
 package com.rodini.ballotgen;
 /**
- * There are three kinds of endorsement:
+ * There are three scopes of endorsement:
  * State, County (CCDC), Zone.
  * 
  * Note: Assumption is that State dominates County, County dominates Zone.
@@ -9,7 +9,7 @@ package com.rodini.ballotgen;
  * @author Bob Rodini
  *
  */
-public enum EndorsementType {
+public enum EndorsementScope {
 	ZONE,	// 0
 	COUNTY,	// 1
 	STATE;	// 2

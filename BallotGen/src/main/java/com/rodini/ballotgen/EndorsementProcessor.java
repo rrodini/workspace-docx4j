@@ -1,6 +1,10 @@
 package com.rodini.ballotgen;
 /**
  * EndorsementProcessor processes the endorsements for a candidate.
+ * A candidate can be explicitly ENDORSED, UNENDORSED, or ANTIENDORSED.
+ * Each of these "modes" result in explicit styling of the candidates name
+ * on the sample ballot. Note that ANTIENDORSED is the default and is rarely
+ * used in the endorsements CSV file.
  * 
  * Endorsements are quite different between Primary and General elections.
  * In a primary election, a candidate can be endorsed at any of these levels:
@@ -10,15 +14,14 @@ package com.rodini.ballotgen;
  * Primary endorsements are the results of endorsement conventions. A candidate
  * must be endorsed at some level in order to get the darkened circle next
  * to his / her name.
- * Note: A single endorsement file is used to assign endorsements.
  * 
  * In a general election, a candidate is endorse by their party (e.g. Democratic).
  * Note: See the "endorsed.party" property that is part of the program's properties file.
  * 
  * There is still some ambiguity regarding certain offices where the candidate
  * is allowed to cross-file.  The ballot party label here will be Democratic/Republican.
- * In this case an endorsement file is used so that only Democrats who cross-file
- * are endorsed.
+ * In this case an endorsement file is used so that only Democrats and not
+ * Republicans who cross-file are endorsed.
  * 
  * @author Bob Rodini
  *
@@ -33,7 +36,8 @@ import org.slf4j.LoggerFactory;
 import com.rodini.zoneprocessor.GenMuniMap;
 import com.rodini.zoneprocessor.Zone;
 import static com.rodini.ballotgen.ElectionType.*;
-import static com.rodini.ballotgen.EndorsementType.*;
+import static com.rodini.ballotgen.EndorsementMode.*;
+import static com.rodini.ballotgen.EndorsementScope.*;
 
 public class EndorsementProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(EndorsementProcessor.class);
@@ -53,9 +57,10 @@ public class EndorsementProcessor {
  * EndorsementProcessor processes the data needed into the data structures
  * needed to perform endorsements.
  * 
- * @param elecType Primary or General
- * @param endorsementsCSVText text of endorsements.csv
- * @param precinctZoneCSVText text of precinct-zones.csv
+ * @param elecType Primary or General.
+ * @param endorsedParty party that receives default endorsements.
+ * @param candidateEndorsements list of endorsements for candidate.
+ * @param precinctToZone precinct to zone map.
  */
 	public EndorsementProcessor(ElectionType elecType, Party endorsedParty,
 			Map<String,List<Endorsement>> candidateEndorsements,
@@ -65,6 +70,7 @@ public class EndorsementProcessor {
 		EndorsementProcessor.elecType = elecType;
 		EndorsementProcessor.endorsedParty = endorsedParty;
 	}
+	// constructor for testing only
 	public EndorsementProcessor(ElectionType elecType, Party endorsedParty,
 			String endorsementsCSVText, String precinctZoneCSVText) {
 		// process the endorsementsText (CSV lines) into entries of candidateEndorsers
@@ -77,50 +83,71 @@ public class EndorsementProcessor {
 		EndorsementProcessor.endorsedParty = endorsedParty;
 	}
 	/**
-	 * isEnsorsed determines if the candidate on the muniNo (precinct) ballot should be endorsed
+	 * getEndorsementMode determines if the candidate on the muniNo (precinct) ballot should be endorsed.
 	 * See the general rules for endorsement in the class documentation.
 	 * 
 	 * @param candidateName name of candidate on ballot (Spelling is exact, but not case-sensitive).
 	 * @param contestName name of office candidate is seeking (NOT PRESENTLY USED).
 	 * @param candidateParty candidate's party on ballot.
 	 * @param muniNo precinct # of ballot on which candidate appears.
+	 * @return EndorsementMode value.
+	 */
+	public EndorsementMode getEndorsementMode(String candidateName, String contestName, Party candidateParty, String muniNoStr) {
+		// Set the default value.
+		EndorsementMode mode = ANTIENDORSED;
+		if (elecType == GENERAL) {
+			mode = getEndorsementModeForGeneral(candidateName, contestName, candidateParty, muniNoStr);
+		} else {
+			mode = getEndorsmentModeByEndorsement(candidateName, contestName, muniNoStr);
+		}
+		return mode;
+	}
+	/**
+	 * getCandidateEndorsements return the list of candidates with 
 	 * @return
 	 */
-	public boolean isEndorsed(String candidateName, String contestName, Party candidateParty, String muniNoStr) {
-		boolean endorsed = false;
-		if (elecType == GENERAL) {
-			endorsed = isEndorsedForGeneral(candidateName, contestName, candidateParty, muniNoStr);
-		} else {
-			endorsed = isEndorsedByEndorsement(candidateName, contestName, muniNoStr);
-		}
-		return endorsed;
-	}
-	
 	public Map<String,List<Endorsement>> getCandidateEndorsements() {
 		return candidateEndorsements;
 	}
-	
-	private boolean isEndorsedForGeneral(String candidateName, String contestName, Party candidateParty, String muniNoStr) {
-		boolean endorsed = false;
+	/**
+	 * getEndorsementModeForGeneral return the endorsement mode for candidate in a General election.
+	 * 
+	 * @param candidateName candidate name.
+	 * @param contestName contest name.
+	 * @param candidateParty candidate's party.
+	 * @param muniNoStr precinct with contest.
+	 * @return EndorsementMode value.
+	 */
+	private EndorsementMode getEndorsementModeForGeneral(String candidateName, String contestName, Party candidateParty, String muniNoStr) {
+		// Set the default value.
+		EndorsementMode mode = ANTIENDORSED;
 		if (candidateParty == endorsedParty) {
-			endorsed = true;
+			mode = ENDORSED;
 			logger.info(String.format("endorsed by favored party: %s%n", candidateName));
 		} else {
-			endorsed = isEndorsedByEndorsement(candidateName, contestName, muniNoStr);
+			mode = getEndorsmentModeByEndorsement(candidateName, contestName, muniNoStr);
 		}
-		return endorsed;
+		return mode;
 	}
-
-	private boolean isEndorsedByEndorsement(String candidateName,String contestName, String muniNoStr) {
-		boolean endorsed = false;
+	/**
+	 * getEndorsementModeByEndorsement return the endorsement mode for candidate based on explicit endorsement.
+	 * 
+	 * @param candidateName candidate name.
+	 * @param contestName contest name.
+	 * @param muniNoStr precinct with contest.
+	 * @return EndorsementMode value.
+	 */
+	private EndorsementMode getEndorsmentModeByEndorsement(String candidateName,String contestName, String muniNoStr) {
+		// Set the default value.
+		EndorsementMode mode = ANTIENDORSED;
 		// Attention: key is upper case to avoid case-sensitivity;
 		candidateName = candidateName.toUpperCase();
 		List<Endorsement> endorsements = candidateEndorsements.get(candidateName);
 		if (endorsements != null) {
 			for (Endorsement end: endorsements) {
-				EndorsementType type = end.getType();
-				if (type == STATE || type == COUNTY) {
-					endorsed = true;
+				EndorsementScope scope = end.getScope();
+				if (scope == STATE || scope == COUNTY) {
+					mode = end.getMode();
 					break;
 				} else { // type == ZONE
 					int zoneNo = end.getZoneNo();
@@ -128,16 +155,17 @@ public class EndorsementProcessor {
 					Zone zone = precinctToZone.get(muniNoStr);
 					// Did the zone endorse this candidate?
 					if (zoneNo == Integer.parseInt(zone.getZoneNo())) {
-						endorsed = true;
+						mode = end.getMode();
 						break;
 					}
 				}
 			}
 		}
-		if (endorsed) {
-			logger.info(String.format("endorsed by endorsement: %s%n", candidateName));
+		if (mode == ENDORSED || mode == UNENDORSED) {
+			// Don't log the ANTIENDORSED candidates since that clutters the log file.
+			logger.info(String.format("%s has endorsement mode: %s", candidateName, mode.toString()));
 		}
-		return endorsed;
+		return mode;
 	}
 
 }

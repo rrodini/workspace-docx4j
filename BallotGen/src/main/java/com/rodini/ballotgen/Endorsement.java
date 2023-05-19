@@ -1,12 +1,13 @@
 package com.rodini.ballotgen;
 
-import static com.rodini.ballotgen.EndorsementType.ZONE;
+import static com.rodini.ballotgen.EndorsementScope.ZONE;
+import static com.rodini.ballotgen.EndorsementMode.UNENDORSED;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Endorser is a simple class. It represents the entity that is endorsing
+ * Endorsement is a simple class. It represents a line of the endorsement CSV file.
  * a candidate.
  * 
  * @author Bob Rodini
@@ -15,35 +16,45 @@ public class Endorsement {
 	private static final Logger logger = LoggerFactory.getLogger(Endorsement.class);
 
 	String name;	// Endorsed candidate name
-	EndorsementType type;	// Level of endorsement
-	int zoneNo; 	// for type == ZONE, otherwise 0
+	EndorsementMode mode;	// Mode of endorsement
+	EndorsementScope scope;	// Scope of endorsement
+	int zoneNo; 	// for scope == ZONE, otherwise 0
 	
-	public Endorsement (String name, EndorsementType type, int zoneNo) {
-		logger.debug(String.format("Creating Endorsement %s, %s, %d", name, type.toString(), zoneNo));
+	public Endorsement (String name, EndorsementMode mode, EndorsementScope scope, int zoneNo) {
 		if (name == null) {
 			logger.error("Candidate name cannot be null");
 			name = "Donald Duck";
 		}
-		if (type == null) {
-			logger.error("Endorsement type cannot be null");
-			type  = ZONE;
+		if (mode == null) {
+			logger.error("Endorsement mode cannot be null");
+			mode  = UNENDORSED;
+		}
+		if (scope == null) {
+			logger.error("Endorsement scope cannot be null");
+			scope  = ZONE;
 			zoneNo = 0;
 		}
-		if (type == ZONE && zoneNo < 0) {
+		if (scope == ZONE && zoneNo < 0) {
 			logger.error("Zone # cannot be < 0");
 			zoneNo = 0;
 		}
 		this.name = name;
-		this.type = type;
+		this.mode = mode;
+		this.scope = scope;
 		this.zoneNo = zoneNo;
+		logger.debug(String.format("Creating Endorsement %s, %s, %s, %d", name, mode.toString(), scope.toString(), zoneNo));
 	}
 	// getter
 	public String getName() {
 		return name;
 	}
 	// getter
-	public EndorsementType getType() {
-		return type;
+	public EndorsementMode getMode() {
+		return mode;
+	}
+	// getter
+	public EndorsementScope getScope() {
+		return scope;
 	}
 	// getter
 	public int getZoneNo() {
@@ -54,10 +65,11 @@ public class Endorsement {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Endorsement: ");
 		sb.append(name + ", ");
-		if (type == ZONE) {
-			sb.append(type.toString() + ", " + Integer.toString(zoneNo));
+		sb.append(mode.toString() + ", ");
+		if (scope == ZONE) {
+			sb.append(scope.toString() + ", " + Integer.toString(zoneNo));
 		} else {
-			sb.append(type.toString());
+			sb.append(scope.toString());
 		}
 		return sb.toString();
 	}
