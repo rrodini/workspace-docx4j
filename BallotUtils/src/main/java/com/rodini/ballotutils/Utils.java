@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utils class contains common utility methods across all ballot
- * generation programs.  Subject to constants additions due to refactoring.
+ * generation programs.  Subject to additions due to refactoring of workspace code.
  * 
  * @author Bob Rodini
  *
@@ -32,6 +32,8 @@ public class Utils {
 
 	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 	static final String JVM_LOG_LEVEL = "log.level";
+	static final int ZONE_STR_LEN = 2; 		// Normalized zoneNo is two digits
+	static final int MUNI_STR_LEN = 3;	// Normalized muniNo is three digits
 	
 	/** 
 	 * Log a fatal error and stop program.
@@ -40,7 +42,7 @@ public class Utils {
 	public static void logFatalError(String msg) {
 		System.out.println(msg);
 		logger.error(msg);
-		System.exit(1);	// non-zero exit code == fatal error
+		System.exit(1);	// non-zero exit code means fatal error
 	}
 	// just for log4j
 	public static void setLoggingLevel(String loggerName) {
@@ -142,4 +144,26 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 		}
 		return value;
 	}
+	
+	// Normalize an int to a string with leading zeros.
+	// Errors are considered fatal since zoneNo/zoneStr
+	// and muniNo/muniStr are treated as keys throughout the code.
+	public static String normalizeNo(int no, int maxlen) {
+		String str = Integer.toString(no);
+		int strlen = str.length();
+		if (strlen > maxlen) {
+			logFatalError(String.format("can't normalize no: $d since it exceeds max length: %d", no, maxlen));
+		}
+		String zeros = "0".repeat(maxlen);
+		return zeros.substring(0, maxlen - str.length()) + str;
+	}
+	// zoneNos are always 2 digits
+	public static String normalizeZoneNo(int zoneNo) {
+		return normalizeNo(zoneNo, ZONE_STR_LEN);
+	}
+	// muniNos are always 3 digits
+	public static String normalizeMuniNo(int muniNo) {
+		return normalizeNo(muniNo, MUNI_STR_LEN);
+	}
+
 }

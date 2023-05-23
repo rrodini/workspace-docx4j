@@ -14,7 +14,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
- * EndorsementFactory processes the endorsementsCSVTest into Endorsement objects.
+ * EndorsementFactory processes the endorsementsCSVText into Endorsement objects.
  * It is the only class that knows the format of the CSV file (endorsements.csv).
  * 
  * @author Bob Rodini
@@ -36,7 +36,7 @@ public class EndorsementFactory {
 		try {
 			val = Integer.parseInt(numStr);
 		} catch (NumberFormatException e) {
-			logger.error(String.format("CSV line #%d zone number error. See: ", lineNo, numStr));
+			logger.error(String.format("CSV line #%d zone number expected but got: %s", lineNo, numStr));
 		}	
 		return val;
 	}
@@ -120,6 +120,10 @@ public class EndorsementFactory {
 	// Process the input CSV text.
 	public static void processCSVText(String csvText) {
 		logger.debug("Processing endorsments CSV text");
+		if (csvText.isBlank()) {
+			// there may not be an endorsement file.
+			return;
+		}
 		String[] csvLines = csvText.split("\n");
 		// No header, so start at 0
 		for (int i = 0; i < csvLines.length; i++) {

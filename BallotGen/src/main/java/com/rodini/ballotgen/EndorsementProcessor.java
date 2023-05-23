@@ -44,17 +44,17 @@ public class EndorsementProcessor {
 
 	// Candidate name (key) List of Endorsements (value)
 	// SAMANTHA JOUIN       End1, End2, ...
-	private static Map<String,List<Endorsement>> candidateEndorsements;
+	private Map<String,List<Endorsement>> candidateEndorsements;
 	
 	// Precinct No (key)     Zone (value)
-	// 020                   7         Zone # (String here)
+	// 020                   07        Zone # (String here)
 	//                       Bradford  Zone name
-	private static Map<String, Zone> precinctToZone;
-	private static ElectionType elecType;
-	private static Party endorsedParty;
+	private Map<String, Zone> precinctToZone;
+	private ElectionType elecType;
+	private Party endorsedParty;
 /**
  * 
- * EndorsementProcessor processes the data needed into the data structures
+ * EndorsementProcessor processes the endorsements file data into data structures
  * needed to perform endorsements.
  * 
  * @param elecType Primary or General.
@@ -65,10 +65,10 @@ public class EndorsementProcessor {
 	public EndorsementProcessor(ElectionType elecType, Party endorsedParty,
 			Map<String,List<Endorsement>> candidateEndorsements,
 			Map<String, Zone> precinctToZone) {
-		EndorsementProcessor.candidateEndorsements = candidateEndorsements;
-		EndorsementProcessor.precinctToZone = precinctToZone;
-		EndorsementProcessor.elecType = elecType;
-		EndorsementProcessor.endorsedParty = endorsedParty;
+		this.candidateEndorsements = candidateEndorsements;
+		this.precinctToZone = precinctToZone;
+		this.elecType = elecType;
+		this.endorsedParty = endorsedParty;
 	}
 	// constructor for testing only
 	public EndorsementProcessor(ElectionType elecType, Party endorsedParty,
@@ -79,8 +79,8 @@ public class EndorsementProcessor {
 		// tell ZoneProcessor to process the zoneText (CSV lines) into the muniNoToZone map.
 		GenMuniMap.processCSVText(precinctZoneCSVText);
 		precinctToZone = GenMuniMap.getMuniNoMap();
-		EndorsementProcessor.elecType = elecType;
-		EndorsementProcessor.endorsedParty = endorsedParty;
+		this.elecType = elecType;
+		this.endorsedParty = endorsedParty;
 	}
 	/**
 	 * getEndorsementMode determines if the candidate on the muniNo (precinct) ballot should be endorsed.

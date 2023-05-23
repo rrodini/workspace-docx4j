@@ -51,7 +51,8 @@ public class BallotGen {
 					ballotFile,
 					Initialize.contestLevel,
 					Initialize.formatsText,
-					Initialize.endorsementProcessor);					
+					Initialize.endorsementProcessor,
+					Initialize.writeinProcessor);								
 			gdb.generate();
 		}
 		terminate();

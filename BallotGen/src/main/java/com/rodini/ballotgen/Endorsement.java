@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 public class Endorsement {
 	private static final Logger logger = LoggerFactory.getLogger(Endorsement.class);
 
-	String name;	// Endorsed candidate name
-	EndorsementMode mode;	// Mode of endorsement
-	EndorsementScope scope;	// Scope of endorsement
-	int zoneNo; 	// for scope == ZONE, otherwise 0
+	private final String name;	// Endorsed candidate name
+	private final EndorsementMode mode;	// Mode of endorsement
+	private final EndorsementScope scope;	// Scope of endorsement
+	private final int zoneNo; 	// for scope == ZONE, otherwise 0
 	
 	public Endorsement (String name, EndorsementMode mode, EndorsementScope scope, int zoneNo) {
 		if (name == null) {

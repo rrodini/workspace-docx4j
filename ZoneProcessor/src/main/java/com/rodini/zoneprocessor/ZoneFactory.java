@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ZoneFactory {
 	static final Logger logger = LoggerFactory.getLogger(ZoneFactory.class);
-	// key: zone no  value: zone object
-	private static Map<String, Zone> zoneMap = new TreeMap<>();
+	//             key: zoneNo  value: Zone object
+	private static Map<String,  Zone> zoneMap = new TreeMap<>();
 	
 	public static Zone findOrCreate(String zoneNo, String zoneName) {
 		Zone zone = null;

@@ -28,6 +28,7 @@ public class GenMuniMap {
 	//                       muniFiles(020), muniFiles(021), ...
 	private static final Map<String, Zone> muniNoMap = new TreeMap<>();
 	
+	
 	// Disable constructor
 	private GenMuniMap() {
 	}
@@ -108,6 +109,14 @@ public class GenMuniMap {
 			String [] fields = csvLine.split(",");
 			processData(i+1,fields);
 		}
+	}
+	// zoneOwnsPrecinct is needed for semantic checks in other programs.
+	public static boolean zoneOwnsPrecinct(String zoneNo, String precinctNo) {
+		Zone zone = muniNoMap.get(precinctNo);
+		if (zone == null) {
+			return false;
+		}
+		return zone.getZoneNo().equals(zoneNo);
 	}
 	// Return the map to clients.
 	public static Map<String, Zone> getMuniNoMap() {

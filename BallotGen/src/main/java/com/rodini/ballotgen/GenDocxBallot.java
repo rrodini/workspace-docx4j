@@ -77,6 +77,7 @@ public class GenDocxBallot {
 	private String fileOutputPath; // generated DOCX file
 	private String formatsText;   // formats (regexes) read from properties
 	private EndorsementProcessor endorsementProcessor;
+	private WriteinProcessor writeinProcessor;
 	//          Candidate Candidate
 	//          Name      Object
 	public  static Map<String,   Integer> endorsedCandidates = new TreeMap<>();
@@ -95,6 +96,7 @@ public class GenDocxBallot {
 	private static String STYLEID_ENDORSED_CANDIDATE_PARTY = "EndorsedCandidateParty";
 	private static String STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "AntiEndorsedCandidateName";
 	private static String STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY = "AntiEndorsedCandidateParty";
+	private static String STYLEID_WRITE_IN_CANDIDATE_NAME = "WriteInCandidateName";
 	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	private static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
 	// These are unicode characters (also Segoe UI Symbol font)
@@ -108,12 +110,13 @@ public class GenDocxBallot {
 	 * @param formatsText formats (regexes) to use.
 	 */
 	public GenDocxBallot(String dotxPath, String textFilePath, ContestFileLevel contestLevel,
-			String formatsText, EndorsementProcessor ep) {
+			String formatsText, EndorsementProcessor ep, WriteinProcessor wp) {
 		this.dotxPath = dotxPath;
 		this.ballotTextFilePath = textFilePath;
 		this.contestLevel = contestLevel;
 		this.formatsText = formatsText;
 		this.endorsementProcessor = ep;
+		this.writeinProcessor = wp;
 	}
 	/**
 	 * generate generates the contents of the docx file.
@@ -283,9 +286,9 @@ public class GenDocxBallot {
 			logger.error("dotx template missing this styleId: " + STYLEID_ANTI_ENDORSED_CANDIDATE_NAME);
 			STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "Normal";
 		}
-		if (!templateIdStyles.contains(STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY)) {
-			logger.error("dotx template missing this styleId: " + STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY);
-			STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY = "Normal";
+		if (!templateIdStyles.contains(STYLEID_WRITE_IN_CANDIDATE_NAME)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_WRITE_IN_CANDIDATE_NAME);
+			STYLEID_WRITE_IN_CANDIDATE_NAME = "Normal";
 		}
 		if (!templateIdStyles.contains(STYLEID_BOTTOM_BORDER)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_BOTTOM_BORDER);
@@ -533,13 +536,8 @@ public class GenDocxBallot {
 		for (Candidate cand: cands) {
 			candsParagraphs.addAll(genContestCandidate(mdp, contestName, cand));	
 		}
-		// Display (or not) a write-in line
-		if (Initialize.writeInDisplay) {
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, whiteEllipse + "   " + "_".repeat(16));
-			candsParagraphs.add(newParagraph);
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
-			candsParagraphs.add(newParagraph);
-		}
+		// generate Write-in candidates (if any)
+		candsParagraphs.addAll(genWriteins(mdp, contest));
 		// Draw a border line as a separator
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
 		candsParagraphs.add(newParagraph);
@@ -591,7 +589,7 @@ public class GenDocxBallot {
 	 * @param mdp MainDocumentPart from DOCX4J API.
 	 * @param text candidate name or line below name.
 	 * @param mode EndorsementMode value.
-	 * @return
+	 * @return list of paragraphs.
 	 */
 	P genParagraphByEndorsementMode(MainDocumentPart mdp, String text, boolean textIsName, EndorsementMode mode) {
 		P newParagraph;
@@ -613,6 +611,58 @@ public class GenDocxBallot {
 		}
 		return newParagraph;
 	}
+	/**
+	 * genWriteins generate the list of Write-ins name.
+	 * Notes: In most cases this will be a blank line.
+	 * 
+	 * @param mdp MainDocumentPart from DOCX4J API.
+	 * @param contest object.
+	 * @return list of paragraphs.
+	 */
+	List<P> genWriteins(MainDocumentPart mdp, Contest contest) {
+		List<P> writeinParagraphs = new ArrayList<>();
+		P newParagraph;
+		// list of write-in names.
+		List<String> names = new ArrayList<>();
+		if (writeinProcessor.precinctHasWriteins(precinctNo)) {
+			// Important: map \n to a space for match!
+			String contestName = contest.getName().replace("\n", " ");
+			names = writeinProcessor.findCandidatesForContest(precinctNo, contestName);
+		}
+		if (names.size() > 0) {
+			for (String name: names) {
+				writeinParagraphs.addAll(genWriteinCandidate(mdp, name));
+			}
+		} else {
+			// Display a blank write-in line
+		//	if (Initialize.writeInDisplay) {
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, whiteEllipse + "   " + "_".repeat(16));
+			writeinParagraphs.add(newParagraph);
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
+			writeinParagraphs.add(newParagraph);
+		//	}
+		}
+		return writeinParagraphs;
+	}
+	/**
+	 * Generate the styled paragraph for a write-in candidate.
+	 * @param name of write-in candidate
+	 * @return list of paragraphs
+	 */
+	List<P> genWriteinCandidate(MainDocumentPart mdp, String name) {
+		List<P> candParagraphs = new ArrayList<>();
+		P newParagraph = null;
+		String oval =  blackEllipse;
+		String text = oval + " " + name;
+		// TODO: underline just the name, not the oval
+		// Explore Word style type CHARACTER or LINKED
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_WRITE_IN_CANDIDATE_NAME, text);
+		candParagraphs.add(newParagraph);
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
+		candParagraphs.add(newParagraph);
+		return candParagraphs;
+	}
+	
 	/**
 	 * genPageBreak generates the pseudo contest name "PAGE BREAK" using
 	 * the wording in the property PAGE_BREAK_WORDING (e.g. "See other side of ballot")

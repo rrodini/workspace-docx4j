@@ -42,7 +42,9 @@ public class Initialize {
 	public static Properties contestGenProps;
 	private static Map<String, Zone> precinctToZoneMap;
 	        static Map<String, List<Endorsement>> candidateEndorsements;
+	        static Map <String,List<Writein>> precinctWriteins;
 	public static EndorsementProcessor endorsementProcessor;
+	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
 	public static int [] columnBreaks = {999};
 	
@@ -60,6 +62,7 @@ public class Initialize {
 	        static final String COMMON_CONTESTS_FILE = "common_contests.txt";
 	private static final String PRECINCT_TO_ZONE_FILE = ".precinct.to.zone.file";
 	private static final String ENDORSEMENTS_FILE = ".endorsements.file";
+	private static final String WRITEINS_FILE = ".write.ins.file";
 	private static final String WRITE_IN_DISPLAY = ".write.in.display";
 	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
 	        static       String COUNTY;
@@ -253,6 +256,25 @@ public class Initialize {
 		candidateEndorsements = EndorsementFactory.getCandidateEndorsements();
 	}
 	/**
+	 * validateWriteinsFile validates the existence of the Write-ins file.
+	 */
+	static void validateWriteinsFile() {
+		String writeinsFile = Utils.getPropValue(ballotGenProps, COUNTY + WRITEINS_FILE);
+		logger.info(String.format("%s: %s", COUNTY + WRITEINS_FILE, writeinsFile));
+		String writeinsCSVText = "";
+		if (!Utils.checkFileExists(writeinsFile)) {
+			logger.info(String.format("%s does not exist: %s ", COUNTY + WRITEINS_FILE, writeinsFile));
+		} else {
+			logger.info(String.format("%s: %s ", COUNTY + WRITEINS_FILE, writeinsFile));
+			writeinsCSVText = Utils.readTextFile(writeinsFile);
+		}
+		// must set this map BEFORE processing CSV file.
+		WriteinFactory.setPrecinctToZones(precinctToZoneMap);
+		WriteinFactory.processCSVText(writeinsCSVText);
+		precinctWriteins = WriteinFactory.getPrecinctWriteins();
+	}
+
+	/**
 	 * validateWriteInDisplay reads/displays the WRITE_IN_DISPLAY property value.
 	 */
 	static void validateWriteInDisplay() {
@@ -326,9 +348,12 @@ public class Initialize {
 		validateContestFormats();
 		validatePrecinctZoneFile();
 		validateEndorsementsFile();
+		validateWriteinsFile();
 		// create the endorsement processor
 		endorsementProcessor  = new EndorsementProcessor(elecType, endorsedParty,
 				candidateEndorsements, precinctToZoneMap);
+		// create the write-in processor
+		writeinProcessor = new WriteinProcessor(precinctWriteins);
 		validateWriteInDisplay();
 		validateColumnBreakContestCount();
 		validatePageBreak();
