@@ -84,6 +84,9 @@ public class GenDocxBallot {
 	// Placeholders are predefined strings that may be embedded in the template file
 	// so they can be located programmatically by this program.
 	private static final String PLACEHOLDER_CONTESTS = "Contests";
+	private static final String PLACEHOLDER_PRECINCT_NO = "Precinct#";
+	private static final String PLACEHOLDER_PRECINCT_NAME = "PrecinctName";
+	private static final String PLACEHOLDER_PRECINCT_NO_NAME = "Precinct#Name";
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
 	// so when the template is loaded the existence of the styles is checked.
@@ -128,7 +131,7 @@ public class GenDocxBallot {
 	 * 3. CCDC info with graphics,
 	 * 
 	 * In version 1.3 of BallotGen the Contests and Candidates are inserted
-	 * between 2. and 3. above.
+	 * between 2. and 3. above by use of "placeholder."
 	 */
 	public void generate() {
 		// validate all inputs.
@@ -140,14 +143,14 @@ public class GenDocxBallot {
 		// Body
 		// generate the contests on the ballot as DOCX4J paragraphs.
 		List<P> insertParagraphs = genContests();
-		P placeholder = findContestsPlaceholder();
+		P contestsPlace = findContestsPlaceholder(PLACEHOLDER_CONTESTS);
 		MainDocumentPart mdp = docx.getMainDocumentPart();
 		List<Object> contentList = mdp.getContent();
-		int removeIndex = contentList.indexOf(placeholder);
+		int removeIndex = contentList.indexOf(contestsPlace);
 		// Insert new paragraphs
 		contentList.addAll(removeIndex, insertParagraphs);
 		// Remove the placeholder paragraph
-		contentList.remove(placeholder);
+		contentList.remove(contestsPlace);
 		// Footer
 		genFooter(getFooterContents(), ballotName.replace("_", " "));
 		// shutdown cleanly
@@ -334,8 +337,8 @@ public class GenDocxBallot {
 	/* private */
 	List<Object> getFooterContents() {
 		FooterPart footerPart = docx.getDocumentModel().getSections().get(0).getHeaderFooterPolicy().getDefaultFooter();
-		List<Object> headerContents = footerPart.getContent();
-		return headerContents;
+		List<Object> footerContents = footerPart.getContent();
+		return footerContents;
 	}
 	/** 
 	 * genHeader updates the default header with the headerText.
@@ -730,8 +733,8 @@ public class GenDocxBallot {
 	 * 
 	 * @return P paragraph which is the placeholder.
 	 */
-	P findContestsPlaceholder() {
-		P placeholder = null;
+	P findContestsPlaceholder(String placeHolder) {
+		P placeParagraph = null;
 		MainDocumentPart mdp = docx.getMainDocumentPart();
 		Finder pFinder = new Finder(P.class);
 		new TraversalUtil (mdp, pFinder);
@@ -742,14 +745,14 @@ public class GenDocxBallot {
 			List<Object> texts = textFinder.results;
 			for (Object text: texts) {
 				Text content = (Text) text;
-				if (content.getValue().equals(PLACEHOLDER_CONTESTS)) {
+				if (content.getValue().equals(placeHolder)) {
 					logger.info("found Contests placeholder.");
-					placeholder = (P) p;
+					placeParagraph = (P) p;
 					break;
 				}
 			}
 		}
-		return placeholder;
+		return placeParagraph;
 	}
 
 }
