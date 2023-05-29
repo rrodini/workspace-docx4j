@@ -28,7 +28,7 @@ public class ContestFactory {
 	// BUCKS
 	private final String CONTEST_END = Initialize.WRITE_IN.trim();
 	private final String CONTEST_NAME = "%contest name%";
-	private final BallotFactory ballotFactory;
+	private final ContestNameCounter ballotFactory;
 	private final String ballotText;	// text of the entire ballot
 	private final ElectionType elecType; // GENERAL or PRIMARY
 	private final Party endorsedParty;
@@ -42,7 +42,7 @@ public class ContestFactory {
 	 * @param ballotText text of the entire ballot for municipality.
 	 * @param formatsText strings of key,value pairs for parsing contest text.
 	 */
-	ContestFactory(BallotFactory bf, String formatsText, ElectionType type, Party endorsedParty) {
+	ContestFactory(ContestNameCounter bf, String formatsText, ElectionType type, Party endorsedParty) {
 		this.ballotFactory = bf;
 		this.ballotText = bf.getBallotText();
 		this.elecType = type;

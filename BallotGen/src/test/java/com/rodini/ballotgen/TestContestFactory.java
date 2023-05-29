@@ -202,7 +202,7 @@ class TestContestFactory {
 		List<String> formatLines = Utils.getPropOrderedValues(Initialize.contestGenProps, Initialize.COUNTY + ".ballotgen.contest.format");
 		formatsText = formatLines.stream()
 				.collect(joining("\n"));
-		BallotFactory bf = new BallotFactory(ballotTextGeneral);
+		ContestNameCounter bf = new ContestNameCounter(ballotTextGeneral);
 		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 	}
 
@@ -243,7 +243,7 @@ class TestContestFactory {
 	}
 	@Test
 	void testFindContestText1() {
-		BallotFactory bf = new BallotFactory(ballotTextPrimary);
+		ContestNameCounter bf = new ContestNameCounter(ballotTextPrimary);
 		cf = new ContestFactory(bf, formatsText, ElectionType.PRIMARY, Party.DEMOCRATIC);
 		String contestName = "DEMOCRATIC STATE COMMITTEE";
 		String expected = 
@@ -303,7 +303,7 @@ class TestContestFactory {
 	}
 	@Test
 	void testFindContestTextError2() {
-		BallotFactory bf = new BallotFactory(ballotTextBad);
+		ContestNameCounter bf = new ContestNameCounter(ballotTextBad);
 		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		String contestName = "Justice of the Supreme Court";
 		String expected = "can't find this contest end text for: " + contestName;
@@ -348,7 +348,7 @@ class TestContestFactory {
  		// This value must be built dynamically.  Don't know why.
  		String contestName = elements2[0].concat("\n").concat(elements2[1]);
  		assertEquals(ballotTextGeneral, ballotFileText);
-		BallotFactory bf = new BallotFactory(ballotFileText);
+		ContestNameCounter bf = new ContestNameCounter(ballotFileText);
 		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		contestText = cf.findContestText(contestName);
 		assertEquals(expected, contestText);
@@ -380,7 +380,7 @@ class TestContestFactory {
 	void testGetContestPattern2() {
 		// first section of regex should not compile.
 		String formatsText = "/^@#(\\($%^\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$/";
-		BallotFactory bf = new BallotFactory(ballotTextGeneral);
+		ContestNameCounter bf = new ContestNameCounter(ballotTextGeneral);
 		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		String contestName = "Judge of the\nCourt of Common Pleas";
 		String expected = "can't compile regex";

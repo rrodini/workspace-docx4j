@@ -7,25 +7,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * BallotFactory is a pseudo-container for the contests on a 
- * municipality's ballot. It was retrofitted into the object
+ * ContestNameCounter is a pseudo-container for the contests on a 
+ * municipality's ballot. It was retro-fitted into the object
  * model to accommodate a ballot that lists the same contest
  * name twice e.g. AUDITOR - 4 year term vs. AUDITOR - 6 year term.
+ * 
+ * To fix this problem, we must maintain a counter for how many
+ * times a contestName has appeared within the ballot tex.
  * 
  * @author Bob Rodini
  *
  */
 
 
-public class BallotFactory {
-	private static final Logger logger = LoggerFactory.getLogger(BallotFactory.class);
+public class ContestNameCounter {
+	private static final Logger logger = LoggerFactory.getLogger(ContestNameCounter.class);
 	
 	private final String ballotText;
 	// (key, entry) example:  "Auditor", 0
 	private final Map<String, Integer> contestNameIndexes;
 	
 
-	public BallotFactory(String ballotText) {
+	public ContestNameCounter(String ballotText) {
 		this.ballotText = ballotText;
 		contestNameIndexes = new HashMap<> ();
 	}

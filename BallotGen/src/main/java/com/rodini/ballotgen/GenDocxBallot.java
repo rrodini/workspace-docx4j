@@ -70,8 +70,9 @@ public class GenDocxBallot {
 	private String contestsText; // text of contests on this ballot
 	// local variables
 	private WordprocessingMLPackage docx;  // document under construction
-	private String ballotName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
-	private String precinctNo; // precinct No. - first three digits of ballotName
+	private String precinctNoName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
+	private String precinctName; // e.g. "Atglen" or "East_Whiteland_4"
+	private String precinctNo; // e.g. "005" or "750"
 	private static final String FILE_SUFFIX = "_VS";
 //	private String ballotText; // text of ballotTextFile
 	private String fileOutputPath; // generated DOCX file
@@ -152,7 +153,7 @@ public class GenDocxBallot {
 		// Remove the placeholder paragraph
 		contentList.remove(contestsPlace);
 		// Footer
-		genFooter(getFooterContents(), ballotName.replace("_", " "));
+		genFooter(getFooterContents(), precinctNoName.replace("_", " "));
 		// shutdown cleanly
 		terminate();
 		logger.info("end new docx file");
@@ -183,20 +184,21 @@ public class GenDocxBallot {
 		pathName = pathName.substring(0, lastSeparator);
 		logger.info(String.format("pathName: %s fileName: %s", pathName, fileName));
 		String[] fileElements = fileName.split("\\.");
-		ballotName = fileElements[0];
+		precinctNoName = fileElements[0];
 		// if suffix was added, then remove it.
-		if (ballotName.endsWith(FILE_SUFFIX)) {
-			ballotName = ballotName.substring(0, ballotName.length() - FILE_SUFFIX.length());
+		if (precinctNoName.endsWith(FILE_SUFFIX)) {
+			precinctNoName = precinctNoName.substring(0, precinctNoName.length() - FILE_SUFFIX.length());
 		}
-		precinctNo = ballotName.substring(0, 3);
+		precinctNo = precinctNoName.substring(0, 3);
+		precinctName = precinctName.substring(3);
 		try {
-			int number = Integer.parseInt(precinctNo);
+			Integer.parseInt(precinctNo);
 		} catch (NumberFormatException e) {
-			logger.error("Ballot Name doesn't start with precinct No. See: " + ballotName);
+			logger.error("Ballot Name doesn't start with precinct No. See: " + precinctNoName);
 			precinctNo = "000";
 		}
-		fileOutputPath = pathName + File.separator + ballotName + ".docx";
-		System.out.printf("Generating %s%n", ballotName + ".docx");
+		fileOutputPath = pathName + File.separator + precinctNoName + ".docx";
+		System.out.printf("Generating %s%n", precinctNoName + ".docx");
 		logger.info(String.format("fileOutputPath: %s", fileOutputPath));
 		WordprocessingMLPackage dotx = null;
 		try {
@@ -206,7 +208,6 @@ public class GenDocxBallot {
 			docx.attachTemplate(dotxPath);
 			// sample shows a save (with no changes) back to the .dotx file
 			// this should be unnecessary unless it loses a system file handle
-			// TODO: investigate loss of file handles.
 			dotx.save(dotxFile);
 		} catch (Docx4JException e) {
 			Utils.logFatalError("critical DOCX4J load/clone/attach operation failed.");
@@ -220,7 +221,7 @@ public class GenDocxBallot {
 		if (contestLevel == COMMON) {
 			contestsPath = contestsPath + Initialize.COMMON_CONTESTS_FILE;
 		} else if (contestLevel == MUNICIPAL) {
-			contestsPath = contestsPath + ballotName + "_contests.txt";
+			contestsPath = contestsPath + precinctNoName + "_contests.txt";
 		} else {
 			Utils.logFatalError("contest file level not recognized. See: " + contestLevel.toString());
 		}
@@ -437,7 +438,7 @@ public class GenDocxBallot {
 		// contestsParagraphs is the list of all of the contest paragraphs.
 		List<P> contestsParagraphs = new ArrayList<>();		
 		String[] contestLines = contestsText.split("\n");
-		BallotFactory ballotFactory = new BallotFactory(Utils.readTextFile(ballotTextFilePath));
+		ContestNameCounter ballotFactory = new ContestNameCounter(Utils.readTextFile(ballotTextFilePath));
 		int i = 0;
 		int j = 0;
 		for (String line: contestLines) {
@@ -468,7 +469,7 @@ public class GenDocxBallot {
 	 * @param format number # that references "contest.format.#"
 	 */
 	/* private */
-	List<P> genContest(BallotFactory bf, String name, String format) {
+	List<P> genContest(ContestNameCounter bf, String name, String format) {
 		logger.debug(String.format("generating contest name: %s format: %s%n", name, format));
 		List<P> contestParagraphs = new ArrayList<>();
 		MainDocumentPart mdp = docx.getMainDocumentPart();
