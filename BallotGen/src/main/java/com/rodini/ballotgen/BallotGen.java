@@ -8,6 +8,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotgen.common.Initialize;
+import com.rodini.ballotgen.endorsement.Endorsement;
 import com.rodini.ballotutils.Utils;
 /**
  * BallotGen is the program that generated the municipal level .docx (Word) files.

@@ -1,8 +1,8 @@
 package com.rodini.ballotgen;
 
-import static com.rodini.ballotgen.ContestFileLevel.COMMON;
-import static com.rodini.ballotgen.ContestFileLevel.MUNICIPAL;
-import static com.rodini.ballotgen.EndorsementMode.*;
+import static com.rodini.ballotgen.contest.ContestFileLevel.COMMON;
+import static com.rodini.ballotgen.contest.ContestFileLevel.MUNICIPAL;
+import static com.rodini.ballotgen.endorsement.EndorsementMode.*;
 import static java.util.stream.Collectors.joining;
 
 import java.io.File;
@@ -36,6 +36,18 @@ import org.docx4j.wml.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.rodini.ballotgen.common.ElectionType;
+import com.rodini.ballotgen.common.Initialize;
+import com.rodini.ballotgen.contest.Candidate;
+import com.rodini.ballotgen.contest.Contest;
+import com.rodini.ballotgen.contest.ContestFactory;
+import com.rodini.ballotgen.contest.ContestFileLevel;
+import com.rodini.ballotgen.contest.ContestNameCounter;
+import com.rodini.ballotgen.contest.GeneralCandidate;
+import com.rodini.ballotgen.contest.PrimaryCandidate;
+import com.rodini.ballotgen.endorsement.EndorsementMode;
+import com.rodini.ballotgen.endorsement.EndorsementProcessor;
+import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
 
 import jakarta.xml.bind.JAXBElement;
