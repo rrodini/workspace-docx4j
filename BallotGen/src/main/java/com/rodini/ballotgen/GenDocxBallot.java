@@ -29,6 +29,8 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Br;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
+import org.docx4j.wml.PPr;
+import org.docx4j.wml.PPrBase;
 import org.docx4j.wml.R;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
@@ -47,6 +49,8 @@ import com.rodini.ballotgen.contest.GeneralCandidate;
 import com.rodini.ballotgen.contest.PrimaryCandidate;
 import com.rodini.ballotgen.endorsement.EndorsementMode;
 import com.rodini.ballotgen.endorsement.EndorsementProcessor;
+import com.rodini.ballotgen.placeholder.PlaceholderProcessor;
+import com.rodini.ballotgen.placeholder.Placeholder;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
 
@@ -96,10 +100,13 @@ public class GenDocxBallot {
 	public  static Map<String,   Integer> endorsedCandidates = new TreeMap<>();
 	// Placeholders are predefined strings that may be embedded in the template file
 	// so they can be located programmatically by this program.
-	private static final String PLACEHOLDER_CONTESTS = "Contests";
-	private static final String PLACEHOLDER_PRECINCT_NO = "Precinct#";
-	private static final String PLACEHOLDER_PRECINCT_NAME = "PrecinctName";
-	private static final String PLACEHOLDER_PRECINCT_NO_NAME = "Precinct#Name";
+	public static final String PLACEHOLDER_CONTESTS = "Contests";
+	public static final String PLACEHOLDER_PRECINCT_NO = "PrecinctNo";
+	public static final String PLACEHOLDER_PRECINCT_NAME = "PrecinctName";
+	public static final String PLACEHOLDER_PRECINCT_NO_NAME = "PrecinctNoName";
+	public static final String PLACEHOLDER_ZONE_NO_CHUNK = "ZoneNo.chunk";	
+	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME, PLACEHOLDER_ZONE_NO_CHUNK);
+	private static PlaceholderProcessor phProcessor;
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
 	// so when the template is loaded the existence of the styles is checked.
@@ -143,29 +150,18 @@ public class GenDocxBallot {
 	 * 2. CCDC voter instructions and candidate info.
 	 * 3. CCDC info with graphics,
 	 * 
-	 * In version 1.3 of BallotGen the Contests and Candidates are inserted
-	 * between 2. and 3. above by use of "placeholder."
+	 * In version 1.4.1 of BallotGen the Contests and Candidates are inserted
+	 * between 2. and 3. by use of "placeholder".
 	 */
 	public void generate() {
 		// validate all inputs.
 		logger.info("start new docx file");
 		initialize();
-		// Header
-		// If next line is commented out, then template header is used.
-		// genHeader(getHeaderContents(), "New Header");
-		// Body
-		// generate the contests on the ballot as DOCX4J paragraphs.
-		List<P> insertParagraphs = genContests();
-		P contestsPlace = findContestsPlaceholder(PLACEHOLDER_CONTESTS);
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-		List<Object> contentList = mdp.getContent();
-		int removeIndex = contentList.indexOf(contestsPlace);
-		// Insert new paragraphs
-		contentList.addAll(removeIndex, insertParagraphs);
-		// Remove the placeholder paragraph
-		contentList.remove(contestsPlace);
-		// Footer
-		genFooter(getFooterContents(), precinctNoName.replace("_", " "));
+		phProcessor = new PlaceholderProcessor(docx, placeholderNames);
+		// below relies completely of placeholder functionality.
+		genHeader();
+		genBody();
+		genFooter();
 		// shutdown cleanly
 		terminate();
 		logger.info("end new docx file");
@@ -202,7 +198,7 @@ public class GenDocxBallot {
 			precinctNoName = precinctNoName.substring(0, precinctNoName.length() - FILE_SUFFIX.length());
 		}
 		precinctNo = precinctNoName.substring(0, 3);
-		precinctName = precinctName.substring(3);
+		precinctName = precinctNoName.substring(3);
 		try {
 			Integer.parseInt(precinctNo);
 		} catch (NumberFormatException e) {
@@ -334,71 +330,92 @@ public class GenDocxBallot {
 		}
 	}
 	/**
-	 * getHeaderContents gets a reference to the docx header part.
-	 * @return
+	 * isPlaceholderNameMatch determines if there is a name match.
+	 * 
+	 * @param ph Placeholder object.mdp
+	 * @param name placeholder name.
+	 * @return true => match between the placeholder name and name.
 	 */
-	/* private */
-	List<Object> getHeaderContents() {
-		HeaderPart headerPart = docx.getDocumentModel().getSections().get(0).getHeaderFooterPolicy().getDefaultHeader();
-		List<Object> headerContents = headerPart.getContent();
-		return headerContents;
+	static boolean isPlaceholderNameMatch(Placeholder ph, String name) {
+		return ph.getName().equals(name);
 	}
 	/**
-	 * getFooterContents gets a reference to the docx footer part.
-	 * @return
+	 * genHeader generates all values for placeholders in the Header part.
 	 */
-	/* private */
-	List<Object> getFooterContents() {
-		FooterPart footerPart = docx.getDocumentModel().getSections().get(0).getHeaderFooterPolicy().getDefaultFooter();
-		List<Object> footerContents = footerPart.getContent();
-		return footerContents;
+	void genHeader() {
+		for (Placeholder ph: phProcessor.getHeaderPlaceholders()) {
+			for (String name: placeholderNames) {
+				if (isPlaceholderNameMatch(ph, name)) {
+					P paragraph = genPlaceholderValue(name, ph, "Header", docx.getMainDocumentPart());
+					phProcessor.replaceContent(ph, List.of(paragraph));
+				}
+			}
+		}
 	}
-	/** 
-	 * genHeader updates the default header with the headerText.
-	 * Code was generated by DOCX4J Word Add-in.
-	 * @param headerContents reference to docx4j part.
-	 * @param headerText new header text.
+	/**
+	 * genFooter generates all values for placeholders in the Footer part.
 	 */
-	/* private */
-	void genHeader(List<Object> headerContents, String headerText) {
-		logger.debug("generating header for document");
-		org.docx4j.wml.ObjectFactory wmlObjectFactory = new org.docx4j.wml.ObjectFactory();
-		// Create object for p
-		P p = wmlObjectFactory.createP();
-		// Create object for r
-		R r = wmlObjectFactory.createR();
-		p.getContent().add(r);
-		// Create object for t (wrapped in JAXBElement)
-		Text text = wmlObjectFactory.createText();
-		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(text);
-		r.getContent().add(textWrapped);
-		text.setValue(headerText);
-		// Line below replaces what was in the dotx templatel
-		headerContents.set(0, p);
+	void genFooter() {
+		for (Placeholder ph: phProcessor.getFooterPlaceholders()) {
+			for (String name: placeholderNames) {
+				if (isPlaceholderNameMatch(ph, name)) {
+					P paragraph = genPlaceholderValue(name, ph, "Footer", docx.getMainDocumentPart());
+					phProcessor.replaceContent(ph, List.of(paragraph));
+				}
+			}
+		}
 	}
-	/** 
-	 * genFooter updates the default footer with the footerText.
-	 * Code was generated by DOCX4J Word Add-in.
-	 * @param footerContents reference to docx4j part.
-	 * @param footText new header text.
+	/**
+	 * genBody generates all values for placeholders in the main Body part.
+	 * Note:  The main body MUST have a "Contests" placeholder.
 	 */
-	/* private */
-	void genFooter(List<Object> footerContents, String footText) {
-		logger.debug("generating footer for document");
-		org.docx4j.wml.ObjectFactory wmlObjectFactory = new org.docx4j.wml.ObjectFactory();
-		// Create object for p
-		P p = wmlObjectFactory.createP();
-		// Create object for r
-		R r = wmlObjectFactory.createR();
-		p.getContent().add(r);
-		// Create object for t (wrapped in JAXBElement)
-		Text text = wmlObjectFactory.createText();
-		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(text);
-		r.getContent().add(textWrapped);
-		text.setValue(footText);
-		// Line below replaces what was in the dotx template.
-		footerContents.set(0, p);
+	void genBody() {
+		for (Placeholder ph: phProcessor.getBodyPlaceholders()) {
+			for (String name: placeholderNames) {
+				if (isPlaceholderNameMatch(ph, name)) {
+					if (name.equals(PLACEHOLDER_CONTESTS)) {
+						phProcessor.replaceContent(ph, genContests());
+					} else {
+						P paragraph = genPlaceholderValue(name, ph, "Normal", docx.getMainDocumentPart());
+						phProcessor.replaceContent(ph, List.of(paragraph));
+					}
+				}
+			}
+		}
 	}
+	/**
+	 * genPlaceholderValue generates a paragraph that represents a simple placeholder value.
+	 * The value is known at the time the ballot for the precinct is generated.
+	 * 
+	 * @param name of placeholder
+	 * @param ph a "found" placeholder.  Need to get paragraph (P) reference.
+	 * @param style default MS Word style.
+	 * @param mdp MainDocumentPart.
+	 * @return single styled paragraph.
+	 */
+	P genPlaceholderValue(String name, Placeholder ph, String style, MainDocumentPart mdp) {
+		P paragraph = null;
+		switch (name) {
+		case PLACEHOLDER_PRECINCT_NO:
+			paragraph = genStyledParagraph(precinctNo, ph.getReplaceParagraph(), style, mdp);
+			break;
+		case PLACEHOLDER_PRECINCT_NAME:
+			paragraph = genStyledParagraph(precinctName, ph.getReplaceParagraph(), style, mdp);
+			break;
+		case PLACEHOLDER_PRECINCT_NO_NAME:
+			paragraph = genStyledParagraph(precinctNoName.replace("_", " "), ph.getReplaceParagraph(), style, mdp);
+			logger.error("REPLACING Precinct#Name with " + precinctNoName );
+			break;
+		case PLACEHOLDER_CONTESTS:
+			System.out.println("Cannot generate \"Contests\" content here");
+			break;
+		case PLACEHOLDER_ZONE_NO_CHUNK:
+			System.out.println("\"Zone#.chunk\" is TBD");
+			break;
+		}	
+		return paragraph;
+	}
+
 	/**
 	 * genWmlChunk demonstrates the technique of generating
 	 * a big chunk of content using Word, then exporting the .xml
@@ -720,52 +737,29 @@ public class GenDocxBallot {
         return p;
 	}
 	/**
-	 * Finder is a DOCX utility method for finding types of parts within a Word document.
-	 * Note that it is a call back function which the Traversal utility calls when it
-	 * finds an part of the specific type, and that the results are accessed as a member
-	 * variable.
-	 */
-	static class Finder extends CallbackImpl {
-		Class<?> typeToFind;
-		public List<Object> results = new ArrayList<Object>();
-		Finder (Class<?> typeToFind) {
-			this.typeToFind = typeToFind;
-		}
-		@Override
-		public List<Object> apply(Object obj) {
-			if (obj.getClass().equals(typeToFind)) {
-				results.add(obj);
-			}
-			return null;
-		}
-	}
-	/**
-	 * findContestsPlaceholder traverses the paragraphs of the DOCX4J parts list
-	 * looking for the paragraph that contains the PLACEHOLDER_CONTESTS text.
-	 * This acts as the insertion point for the paragraphs to be generated.
+	 * genStyledParagraph generates a single paragraph containing the text.
 	 * 
-	 * @return P paragraph which is the placeholder.
+	 * @param text of paragraph.
+	 * @param oldParagraph placeholder paragraph (P).
+	 * @param defaultStyle style to use is oldParagraph has no style.
+	 * @param mdp MainDocumentPart.
+	 * @return new paragraph.
 	 */
-	P findContestsPlaceholder(String placeHolder) {
-		P placeParagraph = null;
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-		Finder pFinder = new Finder(P.class);
-		new TraversalUtil (mdp, pFinder);
-		List<Object> paragraphs  = pFinder.results;
-		for (Object p: paragraphs) {
-			Finder textFinder = new Finder(Text.class);
-			new TraversalUtil (p, textFinder);
-			List<Object> texts = textFinder.results;
-			for (Object text: texts) {
-				Text content = (Text) text;
-				if (content.getValue().equals(placeHolder)) {
-					logger.info("found Contests placeholder.");
-					placeParagraph = (P) p;
-					break;
-				}
-			}
+	P genStyledParagraph(String text, P oldParagraph, String defaultStyle, MainDocumentPart mdp) {		
+		PPr pPr = oldParagraph.getPPr();
+		String style = defaultStyle;
+		if (pPr != null) {
+		    PPrBase.PStyle pStyle = pPr.getPStyle();
+		    if (pStyle != null) {
+		        style = pStyle.getVal();
+		    } else {
+				System.out.println("pStyle value is null - Normal style used.");
+		    }
+		} else {
+			System.out.println("pPr value is null - Normal style used.");
 		}
-		return placeParagraph;
+		P newParagraph = mdp.createStyledParagraphOfText(style, text);
+		return newParagraph;
 	}
 
 }
