@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.rodini.ballotutils.Utils;
 
 /** 
- * GenMuniMap class generates the muniNoMap structure and also generates zone objects 
+ * ZoneProcessor class generates the precinctZone data structure and also generates zone objects 
  * in the process. This map will later be aligned with the DocxNoMap.
  * 
  * Note: User of this module must read the zone CSV file and then call 
@@ -19,8 +19,8 @@ import com.rodini.ballotutils.Utils;
  * @author Bob Rodini
  *
  */
-public class GenMuniMap {
-	static final Logger logger = LoggerFactory.getLogger(GenMuniMap.class);
+public class ZoneProcessor {
+	static final Logger logger = LoggerFactory.getLogger(ZoneProcessor.class);
 
 	// Municipality No (key) Zone (value)
 	// 020                   7
@@ -30,22 +30,14 @@ public class GenMuniMap {
 	
 	
 	// Disable constructor
-	private GenMuniMap() {
-	}
-	// Precinct No must be 3 characters.
-	static String normalPrecinctNo(String precinctNo) {
-		String normalPrecinctNo = "00".substring(0, 3 - precinctNo.length()) + precinctNo;
-		return normalPrecinctNo;
-	}
-	// Zone No must be 2 characters.
-	static String normalZoneNo(String zoneNo) {
-		String normalZoneNo = "0".substring(0, 2 - zoneNo.length()) + zoneNo;
-		return normalZoneNo;
+	private ZoneProcessor() {
 	}
 	// Process valid data from single CSV line.
 	static void processLine(String precinctNo, String precinctName, String zoneNo, String zoneName) {
-		String normalPrecinctNo = normalPrecinctNo(precinctNo);
-		String normalZoneNo = normalZoneNo(zoneNo);
+		// Precinct No must be 3 characters.
+		String normalPrecinctNo = Utils.normalizeMuniNo(Integer.parseInt(precinctNo));
+		// Zone No must be 2 characters.
+		String normalZoneNo = Utils.normalizeZoneNo(Integer.parseInt(zoneNo));
 		logger.debug(String.format("precinctNo: %s precinctName: %s zoneNo: %s zoneName: %s",
 				normalPrecinctNo, precinctName, normalZoneNo, zoneName));
 //		System.out.printf("precinctNo: %s precinctName: %s zoneNo: %s zoneName: %s%n",
@@ -119,7 +111,7 @@ public class GenMuniMap {
 		return zone.getZoneNo().equals(zoneNo);
 	}
 	// Return the map to clients.
-	public static Map<String, Zone> getMuniNoMap() {
+	public static Map<String, Zone> getPrecinctZoneMap() {
 		return muniNoMap;
 	}
 	// Used only for testing

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.rodini.ballotgen.writein.WriteinFactory;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 
 class TestWriteinProcessor {
@@ -29,7 +29,7 @@ class TestWriteinProcessor {
 	
 	@AfterEach
 	void tearDown() throws Exception {
-		GenMuniMap.clearMuniNoMap();
+		ZoneProcessor.clearMuniNoMap();
 		WriteinFactory.clearPrecinctWriteins();
 	}
 	@Test

@@ -8,7 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 /**
  * WriteinProcessor processes the write-in candidates for a contest.
@@ -45,8 +45,8 @@ public class WriteinProcessor {
 	public WriteinProcessor(String writeinsCSVText, String precinctZoneCSVText) {
 		Map<String, Zone> precinctToZone;
 		// tell ZoneProcessor to process the zoneText (CSV lines) into the muniNoToZone map.
-		GenMuniMap.processCSVText(precinctZoneCSVText);
-		precinctToZone = GenMuniMap.getMuniNoMap();
+		ZoneProcessor.processCSVText(precinctZoneCSVText);
+		precinctToZone = ZoneProcessor.getPrecinctZoneMap();
 		WriteinFactory.setPrecinctToZones(precinctToZone);
 		WriteinFactory.processCSVText(writeinsCSVText);
 		this.precinctWriteins = WriteinFactory.getPrecinctWriteins();

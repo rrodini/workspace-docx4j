@@ -2,6 +2,11 @@ package com.rodini.ballotzipper;
 /**
  * MuniFiles class is a holder for the 3 files expected from the ballot generation process.
  * E.g. 014_Birmingham_1.docx, 014_Birmingham_1_VS.pdf, 014_Birmingham_1_VS.txt
+ * 
+ * Notes:
+ * - workaround for Chester Co. precinct 356 special case (precinct w/ two ballots)
+ *   requires 6 files.
+ * 
  */
 import java.util.List;
 import org.slf4j.Logger;
@@ -18,6 +23,9 @@ public class MuniFiles {
 	private String docxFileName;
 	private String txtFileName;
 	private String pdfFileName;
+	private String docxFileName2;
+	private String txtFileName2;
+	private String pdfFileName2;
 	// Constructor
 	public MuniFiles(List<String> fileNames) {
 		if (fileNames == null) {
@@ -46,23 +54,29 @@ public class MuniFiles {
 			case DOCX:
 				if (haveDocx) {
 					logDuplicateExt(DOCX, fileName);
+					docxFileName2 = fileName;
+				} else {
+					docxFileName = fileName;
+					haveDocx = true;
 				}
-				docxFileName = fileName;
-				haveDocx = true;
 				break;
 			case PDF: 
 				if (havePdf) {
 					logDuplicateExt(PDF, fileName);
+					pdfFileName2 = fileName;
+				} else {
+					pdfFileName = fileName;
+					havePdf = true;
 				}
-				pdfFileName = fileName;
-				havePdf = true;
 				break;
 			case TXT: 
 				if (haveTxt) {
 					logDuplicateExt(TXT, fileName);
+					txtFileName2 = fileName;
+				} else {
+					txtFileName = fileName;
+					haveTxt = true;
 				}
-				txtFileName = fileName;
-				haveTxt = true;
 				break;
 			default:
 				logger.error("bad extension for file: " + fileName);
@@ -93,4 +107,17 @@ public class MuniFiles {
 	String getTxtFile() {
 		return txtFileName;
 	}
+	// Get second file ending with .docx
+	String getDocxFile2() {
+		return docxFileName2;
+	}
+	// Get second file ending with .pdf
+	String getPdfFile2() {
+		return pdfFileName2;
+	}
+	// Get second file ending with .txt
+	String getTxtFile2() {
+		return txtFileName2;
+	}
+
 }

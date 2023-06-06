@@ -14,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 import com.rodini.zoneprocessor.ZoneFactory;
 /**
@@ -56,7 +56,7 @@ public class GenZipFiles {
 	// Then generate the zip files for each zone.
 	static void genZips() {
 		Map<String, Zone> zoneMap = ZoneFactory.getZones();
-		Map<String, Zone> muniNoMap = GenMuniMap.getMuniNoMap();
+		Map<String, Zone> muniNoMap = ZoneProcessor.getPrecinctZoneMap();
 		Map<String, MuniFiles> docxNoMap = GenDocxMap.getDocxNoMap();
 		Map<Zone, List<MuniFiles>> zoneMuniFiles = new HashMap<>();
 
@@ -69,9 +69,6 @@ public class GenZipFiles {
 				// Transfer the muniFiles to the zone that owns them.
 				Zone zone = muniNoMap.get(muniNo);
 				MuniFiles muniFiles = docxNoMap.get(muniNo);
-				// OLD
-				//zone.addFiles(muniFiles);
-				// NEW
 				List<MuniFiles> currentMuniFiles = zoneMuniFiles.get(zone);
 				if (currentMuniFiles == null) {
 					currentMuniFiles = new ArrayList<MuniFiles>();
@@ -108,6 +105,10 @@ public class GenZipFiles {
 					addToZipOut(zipOut, muniFiles.getDocxFile());
 					addToZipOut(zipOut, muniFiles.getPdfFile());
 					addToZipOut(zipOut, muniFiles.getTxtFile());
+					// precinct 356 workaround
+					addToZipOut(zipOut, muniFiles.getDocxFile2());
+					addToZipOut(zipOut, muniFiles.getPdfFile2());
+					addToZipOut(zipOut, muniFiles.getTxtFile2());
 				}
 				
 			} catch (Exception ex) {

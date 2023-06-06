@@ -14,7 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 import com.rodini.ballotgen.common.MockedAppender;
 import com.rodini.ballotgen.writein.Writein;
@@ -38,8 +38,8 @@ class TestWriteinFactory {
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
 	    // need zone processing
-	    GenMuniMap.processCSVText(Utils.readTextFile("./src/test/java/test-precinct-zone.csv"));
-	    precinctToZoneMap = GenMuniMap.getMuniNoMap();
+	    ZoneProcessor.processCSVText(Utils.readTextFile("./src/test/java/test-precinct-zone.csv"));
+	    precinctToZoneMap = ZoneProcessor.getPrecinctZoneMap();
 	    WriteinFactory.setPrecinctToZones(precinctToZoneMap);
 	}
 
@@ -47,7 +47,7 @@ class TestWriteinFactory {
 	void tearDown() throws Exception {
 		logger.removeAppender(mockedAppender);
 		mockedAppender.stop();
-		GenMuniMap.clearMuniNoMap();
+		ZoneProcessor.clearMuniNoMap();
 		WriteinFactory.clearPrecinctWriteins();
 	}
 	@Test

@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rodini.zoneprocessor.Zone;
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.ballotutils.Utils;
 
 /**
@@ -145,7 +145,7 @@ public class WriteinFactory {
 		String zoneStr = Utils.normalizeZoneNo(zoneNo);
 		for (int i = 0; i < precinctNos.length; i ++) {
 			String precinctStr = Utils.normalizeMuniNo(precinctNos[i]);
-			if (!GenMuniMap.zoneOwnsPrecinct(zoneStr, precinctStr)) {
+			if (!ZoneProcessor.zoneOwnsPrecinct(zoneStr, precinctStr)) {
 				logger.error(String.format("CSV line #%d rejected. Zone %s doesn't own Precinct %s",lineNo, zoneStr, precinctStr));
 			} else {
 				validNos[j++] = precinctNos[i];

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.rodini.ballotutils.Utils;
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.ZoneFactory;
 /**
 /**
@@ -48,7 +48,7 @@ class TestGenZipFiles {
 	void setUp() throws Exception {
 	    mockedAppender.messages.clear();
 		ZoneFactory.clearZones();
-		GenMuniMap.clearMuniNoMap();
+		ZoneProcessor.clearMuniNoMap();
 		GenDocxMap.clearDocxNoMap();
 	}
 
@@ -61,7 +61,7 @@ class TestGenZipFiles {
 		String [] args = {"./src/test/java/test-dir-01.csv", "./src/test/java/test-dir-01", "./src/test/java/test-dir-01"};
 		Initialize.initialize(args);
 		String cvsText = Utils.readTextFile("./src/test/java/test-dir-01.csv");
-		GenMuniMap.processCSVText(cvsText);
+		ZoneProcessor.processCSVText(cvsText);
 		GenDocxMap.processInDir();
 		GenZipFiles.genZips();
 	}
@@ -70,7 +70,7 @@ class TestGenZipFiles {
 		String [] args = {"./src/test/java/test-dir-02.csv", "./src/test/java/test-dir-02", "./src/test/java/test-dir-02"};
 		Initialize.initialize(args);
 		String cvsText = Utils.readTextFile("./src/test/java/test-dir-02.csv");
-		GenMuniMap.processCSVText(cvsText);
+		ZoneProcessor.processCSVText(cvsText);
 		GenDocxMap.processInDir();
 		GenZipFiles.genZips();
 		// ERROR (GenMuniMap) - duplicate precinct no. 010
@@ -83,7 +83,7 @@ class TestGenZipFiles {
 		String [] args = {"./src/test/java/test-dir-03.csv", "./src/test/java/test-dir-03", "./src/test/java/test-dir-03"};
 		Initialize.initialize(args);
 		String cvsText = Utils.readTextFile("./src/test/java/test-dir-03.csv");
-		GenMuniMap.processCSVText(cvsText);
+		ZoneProcessor.processCSVText(cvsText);
 		GenDocxMap.processInDir();
 		GenZipFiles.genZips();
 		// ERROR (GenZipFiles) - CSV precinct 020 lacks DOCX files

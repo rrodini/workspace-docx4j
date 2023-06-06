@@ -24,7 +24,7 @@ import com.rodini.ballotgen.writein.Writein;
 import com.rodini.ballotgen.writein.WriteinFactory;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 /** 
  * Initialize class gets the program ready to generate sample ballots.
@@ -242,8 +242,8 @@ public class Initialize {
 			logger.info(String.format("%s: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 			precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
 		}
-		GenMuniMap.processCSVText(precinctZoneCSVText);
-		precinctToZoneMap = GenMuniMap.getMuniNoMap();
+		ZoneProcessor.processCSVText(precinctZoneCSVText);
+		precinctToZoneMap = ZoneProcessor.getPrecinctZoneMap();
 	}
 	/**
 	 * validateEndorsementsFile validates the existence of the endorsements file.

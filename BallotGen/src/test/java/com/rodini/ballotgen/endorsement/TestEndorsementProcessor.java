@@ -12,7 +12,7 @@ import com.rodini.ballotgen.common.Party;
 import com.rodini.ballotgen.endorsement.EndorsementFactory;
 import com.rodini.ballotgen.endorsement.EndorsementMode;
 import com.rodini.ballotgen.endorsement.EndorsementProcessor;
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 
 class TestEndorsementProcessor {
 //	Taken from 2023 zone realignment spreadsheet
@@ -31,7 +31,7 @@ class TestEndorsementProcessor {
 
 	@AfterEach
 	void tearDown() throws Exception {
-		GenMuniMap.clearMuniNoMap();
+		ZoneProcessor.clearMuniNoMap();
 		EndorsementFactory.clearCandidateEndorsements();
 	}
 	@Test

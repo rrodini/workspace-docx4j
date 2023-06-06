@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Party;
-import com.rodini.zoneprocessor.GenMuniMap;
+import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 
 import static com.rodini.ballotgen.common.ElectionType.*;
@@ -80,8 +80,8 @@ public class EndorsementProcessor {
 		EndorsementFactory.processCSVText(endorsementsCSVText);
 		candidateEndorsements = EndorsementFactory.getCandidateEndorsements();
 		// tell ZoneProcessor to process the zoneText (CSV lines) into the muniNoToZone map.
-		GenMuniMap.processCSVText(precinctZoneCSVText);
-		precinctToZone = GenMuniMap.getMuniNoMap();
+		ZoneProcessor.processCSVText(precinctZoneCSVText);
+		precinctToZone = ZoneProcessor.getPrecinctZoneMap();
 		this.elecType = elecType;
 		this.endorsedParty = endorsedParty;
 	}
