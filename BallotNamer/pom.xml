@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>ballot-namer</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1</version>
 	<name>Ballot Namer</name>
 	<description>Ballot Namer gives names to the files.</description>
 	<build>
@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>com.rodini</groupId>
 			<artifactId>ballot-utils</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

@@ -5,11 +5,11 @@
 #
 # COUNTY determines input/output directories:  chester | bucks
 COUNTY=${BALLOTGEN_COUNTY}
-#VOTER_SERVICES_SPECIMEN="Chester-Primary-Dems-2023.pdf"
-VOTER_SERVICES_SPECIMEN="Bucks-Primary-Dems-2023.pdf"
+VOTER_SERVICES_SPECIMEN="Chester-Primary-Dems-2023.pdf"
+#VOTER_SERVICES_SPECIMEN="Bucks-Primary-Dems-2023.pdf"
 VOTER_SERVICES_PAGES_PER_BALLOT=2
-PRECINCTS_ZONES_CSV="../chester-2023-precincts-zones.csv"
-JVM_LOG4J_LEVEL="-Dlog.level=DEBUG -XX:+ShowCodeDetailsInExceptionMessages"
+PRECINCTS_ZONES_CSV="chester-2023-precincts-zones.csv"
+JVM_LOG4J_LEVEL="-Dlog.level=INFO -XX:+ShowCodeDetailsInExceptionMessages"
 JVM_LOG4J_CONFIG="-Dlog4j.configurationFile=./resources/log4j-file-config.xml"
 
 if [ -n "${BALLOTGEN_VERSION}" ]; then
@@ -64,7 +64,7 @@ cd "./${COUNTY}-output" || exit
 cd .. || exit
 
 # run PDFBOX to get the text extracted from the municipal PDFs.
-# printf '%s\n' "Extracting text from municipal PDFs"
+printf '%s\n' "Extracting text from municipal PDFs"
 # for FILE in ./"${COUNTY}-output"/*; do 
 #   echo "Extracting: $FILE"; 
 #   java -jar ./PDFBOX/pdfbox-app-2.0.25.jar ExtractText $FILE
@@ -86,13 +86,13 @@ cd ..|| exit
 # run BallotGen to generate .docx files for distribution
 printf '%s \n' "Generating municipal docx files"
 cd ballotgen
-java ${JVM_LOG4J_LEVEL} ${JVM_LOG4J_CONFIG} -jar "ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ../${COUNTY}-output ../${COUNTY}-contests
+#java ${JVM_LOG4J_LEVEL} ${JVM_LOG4J_CONFIG} -jar "ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ../${COUNTY}-output ../${COUNTY}-contests
 cd .. || exit
 
 # run BallotZipper to generate .zip files for distribution
 printf '%s \n' "Generating zone .zip files"
 cd ballotzipper || exit
-#java ${JVM_LOG4J_LEVEL} ${JVM_LOG4J_CONFIG} -jar "ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" "${COUNTY}-${PRECINCTS_ZONES_CSV}" ../${COUNTY}-output ../${COUNTY}-zip
+java ${JVM_LOG4J_LEVEL} ${JVM_LOG4J_CONFIG} -jar "ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" "../${PRECINCTS_ZONES_CSV}" ../${COUNTY}-output ../${COUNTY}-zip
 cd .. || exit
 
 echo "DONE."

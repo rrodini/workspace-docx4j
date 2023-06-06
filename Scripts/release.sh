@@ -1,5 +1,5 @@
 #!/bin/bash
-# release.sh creates the folders and moves files for a full release of SampleBallotGen. 
+# release.sh creates the folders and moves files for a new release of SampleBallotGen. 
 #
 # Script must be run in "Sample Ballot Production" folder.
 
@@ -16,7 +16,7 @@ RELEASE_FOLDER="SampleBallotGen-${BALLOTGEN_VERSION}"
 CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
 BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
 BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
-BALLOTZIPPER_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/DOCX4J/workspace-docx4j/BallotZipper
+BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
 TABREPLACER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
 PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBox
 SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
