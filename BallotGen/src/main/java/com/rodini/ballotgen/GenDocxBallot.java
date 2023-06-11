@@ -404,7 +404,6 @@ public class GenDocxBallot {
 			break;
 		case PLACEHOLDER_PRECINCT_NO_NAME:
 			paragraph = genStyledParagraph(precinctNoName.replace("_", " "), ph.getReplaceParagraph(), style, mdp);
-			logger.error("REPLACING Precinct#Name with " + precinctNoName );
 			break;
 		case PLACEHOLDER_CONTESTS:
 			System.out.println("Cannot generate \"Contests\" content here");
