@@ -1,6 +1,8 @@
 package com.rodini.tabreplacer;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.util.stream.Collectors.joining;
+
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +53,7 @@ public class TabReplacer {
 		System.out.println(startMsg);
 		logger.info(startMsg);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
-		startMsg = String.format("Contests for: %s Co.", COUNTY);
+		startMsg = String.format("Tab replacement for: %s Co.", COUNTY);
 		System.out.println(startMsg);
 		logger.info(startMsg);
 		initialize(args);
@@ -59,6 +61,10 @@ public class TabReplacer {
 		// Below is the heart of the program.
 		String txtFileContents = Utils.readTextFile(txtFilePath);
 		String newFileContents = txtFileContents.replaceAll("\t", " ");
+ 		// guarantee a newline before end of file.
+ 		if (!newFileContents.endsWith("\n")) {
+ 			newFileContents = newFileContents + "\n";
+ 		}
 		try (FileWriter newTextFile = new FileWriter(txtFilePath)) {
 			newTextFile.write(newFileContents);
 		} catch (Exception ex) {

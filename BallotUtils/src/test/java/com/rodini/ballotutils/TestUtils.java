@@ -33,7 +33,6 @@ class TestUtils {
 	    mockedAppender.start();
 	    logger = (Logger)LogManager.getLogger(Utils.class);
 	    logger.addAppender(mockedAppender);
-	    logger.setLevel(Level.ERROR);
 	}
 
 	@AfterAll
@@ -44,6 +43,7 @@ class TestUtils {
 
 	@BeforeEach
 	void setUp() throws Exception {
+	    logger.setLevel(Level.ERROR);
 		mockedAppender.messages.clear();
 	}
 
@@ -107,13 +107,14 @@ class TestUtils {
 		assertTrue(muniNameRegex != null);
 	}
 	@Test
-	void testGetBadPropValue() {		
+	void testGetBadPropValue() {
+	    logger.setLevel(Level.INFO);
 		String propsPath = "./src/test/java/test-props1.properties";
 		String expected = "propery value not found for property name: " + "bogusRegex";
 		Properties props = Utils.loadProperties(propsPath);
 		String bogusRegex = Utils.getPropValue(props, "bogusRegex");
 		assertTrue(bogusRegex == null);
-		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+		assertTrue(mockedAppender.messages.get(1).startsWith(expected));
 	}
 	@Test
 	void testGetGoodPropOrderedValues() {

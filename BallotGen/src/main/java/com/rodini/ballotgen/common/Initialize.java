@@ -53,7 +53,8 @@ public class Initialize {
 	public static EndorsementProcessor endorsementProcessor;
 	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
-	public static int [] columnBreaks = {999};
+	public static int [] columnBreaks = {999}; // sentinel value
+	public static int docxGenCount; // counter
 	
 
 //	ATTENTION: Within Eclipse you must put ./resources in the dependencies
@@ -104,7 +105,7 @@ public class Initialize {
 		processBallotFiles(ballotFilePath);
 		ballotContestsPath = args[1];
 		processBallotContests(ballotContestsPath);
-		msWordTemplateFile = RESOURCE_PATH + Utils.getPropValue(ballotGenProps, COUNTY + PROP_WORD_TEMPLATE_DEFAULT);
+		msWordTemplateFile = Utils.getPropValue(ballotGenProps, COUNTY + PROP_WORD_TEMPLATE_DEFAULT);
 		logger.info("msWordTemplateFile: " + msWordTemplateFile);
 	}
 	/**
@@ -153,10 +154,11 @@ public class Initialize {
 		if (!path.isDirectory()) {
 			Utils.logFatalError("invalid args[1] value, ballotContestsPath does not exist: " + ballotContestsPath);
 		}
-		String commonFilePath = ballotContestsPath + File.separator + COMMON_CONTESTS_FILE;
-		if (!Files.exists(Path.of(commonFilePath), NOFOLLOW_LINKS)) {
-			Utils.logFatalError("can't find \"" + COMMON_CONTESTS_FILE + "\" file here: " + commonFilePath);
-		}
+		// 06/13/2023 Dropped support for common_contests.txt
+//		String commonFilePath = ballotContestsPath + File.separator + COMMON_CONTESTS_FILE;
+//		if (!Files.exists(Path.of(commonFilePath), NOFOLLOW_LINKS)) {
+//			Utils.logFatalError("can't find \"" + COMMON_CONTESTS_FILE + "\" file here: " + commonFilePath);
+//		}
 	}
 	/**
 	 * validateElectionType get/display election type.
@@ -285,7 +287,7 @@ public class Initialize {
 	 * validateWriteInDisplay reads/displays the WRITE_IN_DISPLAY property value.
 	 */
 	static void validateWriteInDisplay() {
-		String value = ballotGenProps.getProperty(COUNTY + WRITE_IN_DISPLAY);
+		String value = Utils.getPropValue(ballotGenProps,COUNTY + WRITE_IN_DISPLAY);
 		if (value == null) {
 			value = "false";
 		}
@@ -296,7 +298,7 @@ public class Initialize {
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
 	 */
 	static void validateColumnBreakContestCount() {
-		String value = ballotGenProps.getProperty(COUNTY + COlUMN_BREAK_CONTEST_COUNT);
+		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_COUNT);
 		if (value == null) {
 			// default is contest # 999, so no harm done.
 			return;
@@ -321,7 +323,7 @@ public class Initialize {
 				return;
 			}
 			columnBreaks[i++] = val;
-
+			preVal = val;
 		}
 		// sentinel value
 		columnBreaks[i] = 999;

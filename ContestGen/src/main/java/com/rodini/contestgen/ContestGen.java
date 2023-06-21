@@ -75,8 +75,6 @@ public class ContestGen {
 		logger.info(startMsg);
 		
 		initialize(args);
-		startMsg = String.format("Environment: %s", env.toString());
-		System.out.println(startMsg);
 		logger.info(startMsg);
 		
 		boolean first = true;

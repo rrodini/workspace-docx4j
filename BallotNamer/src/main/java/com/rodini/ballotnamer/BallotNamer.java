@@ -149,7 +149,7 @@ public class BallotNamer {
 		System.out.println(startMsg);
 		logger.info(startMsg);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
-		startMsg = String.format("Contests for: %s Co.", COUNTY);
+		startMsg = String.format("Names for: %s Co.", COUNTY);
 		System.out.println(startMsg);
 		logger.info(startMsg);
 

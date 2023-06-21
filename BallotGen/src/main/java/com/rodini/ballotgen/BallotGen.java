@@ -37,14 +37,13 @@ public class BallotGen {
 		// Get the logging level from JVM parameter on command line.
 		Utils.setLoggingLevel("com.rodini.ballotgen");
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
-		String startMsg = String.format("Start of BallotGen app. Version: %s", version);
-		System.out.println(startMsg);
-		logger.info(startMsg);
+		String msg = String.format("Start of BallotGen app. Version: %s", version);
+		System.out.println(msg);
+		logger.info(msg);
 		Initialize.COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
-		startMsg = String.format("Ballots for: %s Co.", Initialize.COUNTY);
-		System.out.println(startMsg);
-		logger.info(startMsg);
-		logger.info(startMsg);
+		msg = String.format("Ballots for: %s Co.", Initialize.COUNTY);
+		System.out.println(msg);
+		logger.info(msg);
 		Initialize.start(args);
 		// TODO: use a loop here if ballotFiles size > 1
 		for (String ballotFile: Initialize.ballotFiles) {
@@ -58,8 +57,11 @@ public class BallotGen {
 			gdb.generate();
 		}
 		terminate();
-		System.out.printf("End of BallotGen app%n");
-		logger.info("End of BallotGen app");
+		msg = String.format("Generated %d docx files", Initialize.docxGenCount);
+		logger.info(msg);
+		msg = "End of BallotGen app";
+		System.out.println(msg);
+		logger.info(msg);
 	}
 	/**
 	 * Terminate ends the BallotGen with summary information.

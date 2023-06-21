@@ -132,7 +132,7 @@ public class MuniContestsExtractor {
 	public MuniContestNames extract() {
 		// extract from page 1
 		extractContestText(muniPage1Text);
-		if (!muniPage2Text.isEmpty()) {
+		if (!muniPage2Text.isBlank()) {
 			// write page-break
 			extractPageBreak();
 			// extract from page 2

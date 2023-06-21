@@ -97,10 +97,10 @@ public class SpecimenMuniExtractor {
 //		String [] muniStringExtracts = specimenText.split(SpecimenMuniMarkers.getMuniNamePattern().pattern().toString(), 0);
 		Pattern muniNamePattern = SpecimenMuniMarkers.getMuniNamePattern();
 		String [] muniStringExtracts = muniNamePattern.split(specimenText, 0);
-//logger.debug(String.format("muniStringExtracts.length=%d%n", muniStringExtracts.length));
-//for (int i=0; i <muniStringExtracts.length; i++) {
-//	logger.debug(String.format("extract[%d]: %s%n",i, muniStringExtracts[i]));
-//}
+logger.debug(String.format("muniStringExtracts.length=%d%n", muniStringExtracts.length));
+for (int i=0; i <muniStringExtracts.length; i++) {
+	logger.debug(String.format("extract[%d]: %s%n",i, muniStringExtracts[i]));
+}
 
 		if (ContestGen.COUNTY.equals("chester")) {
 			// structure of Chester Co. ballot below

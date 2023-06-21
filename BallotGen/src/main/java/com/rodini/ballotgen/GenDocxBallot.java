@@ -140,6 +140,7 @@ public class GenDocxBallot {
 		this.formatsText = formatsText;
 		this.endorsementProcessor = ep;
 		this.writeinProcessor = wp;
+		Initialize.docxGenCount++;
 	}
 	/**
 	 * generate generates the contents of the docx file.

@@ -52,10 +52,13 @@ public class CandidateFactory {
 			"SCHOOL DIRECTOR",
 			"TOWNSHIP COMMISSIONER",
 			"TOWNSHIP SUPERVISOR",
+			"TOWNSHIP SUPERVISOR AT LARGE",
+			"TOWNSHIP DISTRICT SUPERVISOR",
 			"TAX COLLECTOR",
 			"DISTRICT SUPERVISOR",
 			"COUNCIL",
-			"SUPERVISOR"
+			"SUPERVISOR",
+			"BOROUGH COUNCIL"
 			);
 	// School district regions below have boundaries that extend beyond Chester County.
 	// This results in the candidate name being followed by their county of residence.
