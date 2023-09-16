@@ -6,6 +6,7 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ import com.rodini.ballotutils.Utils;
  *   005_Atglen_contests.txt
  *   010_Avondale_contests.txt
  *   ...
- *   common_contests.txt
+ *   common_contests.txt     <= not currently used 
+ *   Ballot_Summary.txt      <= summary report
  *   
  * CLI arguments: 
  * args[0] path Voter Services specimen text file.
@@ -48,6 +50,7 @@ public class ContestGen {
 	static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTS_FILE = "_contests.txt";
 	static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
+	static final String SUMMARY_FILE_NAME = "Ballot_Summary.txt";
 
 	static String COUNTY;		// chester vs. bucks
 	static String WRITE_IN; 	// Write-in vs. Write-In
@@ -102,7 +105,7 @@ public class ContestGen {
 		// generate common contests.
 		genMuniContestsFile("common", commonContestNames.get());
 		// generate a summary report.
-		genContestsSummary(mcnList);
+		genBallotReport(mcnList);
 		logger.info("End of ContestGen app.");
 		System.out.println("End of ContestGen app.");
 	}
@@ -200,44 +203,61 @@ public class ContestGen {
 		}
 	}
 	/**
-	 * genContestsSummary - generate a summary report and determine how many
+	 * genBallotReport - generate a ballot summary report and determine how many
 	 * unique ballots there are.
+	 * 
+	 * 
 	 */
-	static void genContestsSummary(List<MuniContestNames> mcnList) {
-		String line = "Summary";
-		System.out.println(line);
-		logger.info(line);
-		line = String.format("Precinct count: %s", mcnList.size());
-		System.out.println(line);
-		logger.info(line);
-		// determine how many unique ballots
-		//   ContestsText  Municipalities w/ same ContestsText
-		//       |                 |
-		Map  <String,      List<String>> uniqueBallots = new HashMap<>();
-		for (MuniContestNames mcn: mcnList) {
-			String muniContestsText = mcn.getMuniContestsText();
-			String muniName = mcn.getMuniName();
-			if (!uniqueBallots.containsKey(muniContestsText)) {
-				uniqueBallots.put(muniContestsText, new ArrayList<String>());
-			}
-			List<String> muniNames = uniqueBallots.get(muniContestsText);
-			muniNames.add(muniName);
-		}
-		line = String.format("Unique ballot count: %s", uniqueBallots.keySet().size());
-		System.out.println(line);
-		logger.info(line);
-		line = String.format("Precincts with identical ballots:");
-		System.out.println(line);
-		logger.info(line);
-		Set<String> ballotKeys = uniqueBallots.keySet();
-		int i = 0;
-		for (String ballotKey: ballotKeys) {
-			String muniNameList = String.join(",", uniqueBallots.get(ballotKey));
-			line = String.format("Ballot %2d: %s", i, muniNameList);
+	static void genBallotReport(List<MuniContestNames> mcnList) {
+		// try with resources will close the output file.
+		try (PrintWriter pw = new PrintWriter(new File(outPath + File.separator + SUMMARY_FILE_NAME))) {
+			String line = "Ballot Summary Report";
 			System.out.println(line);
-			logger.info(line);
-			i++;
+			pw.println(line);
+//			logger.info(line);
+			line = String.format("Precinct count: %s", mcnList.size());
+			System.out.println(line);
+			pw.println(line);
+//			logger.info(line);
+			// determine how many unique ballots
+			//   ContestsText  Municipalities w/ same ContestsText
+			//       |                 |
+			Map  <String,      List<String>> uniqueBallots = new HashMap<>();
+			for (MuniContestNames mcn: mcnList) {
+				String muniContestsText = mcn.getMuniContestsText();
+				String muniName = mcn.getMuniName();
+				if (!uniqueBallots.containsKey(muniContestsText)) {
+					uniqueBallots.put(muniContestsText, new ArrayList<String>());
+				}
+				List<String> muniNames = uniqueBallots.get(muniContestsText);
+				muniNames.add(muniName);
+			}
+			line = String.format("Unique ballot count: %s", uniqueBallots.keySet().size());
+			System.out.println(line);
+			pw.println(line);
+//			logger.info(line);
+			line = String.format("Precincts with identical ballots:");
+			System.out.println(line);
+			pw.println(line);
+//			logger.info(line);
+			Set<String> ballotKeys = uniqueBallots.keySet();
+			int i = 0;
+			for (String ballotKey: ballotKeys) {
+				String muniNameList = String.join(",", uniqueBallots.get(ballotKey));
+				line = String.format("Ballot %2d: %s", i, muniNameList);
+				System.out.println(line);
+				pw.println(line);
+//				logger.info(line);
+				i++;
+			}
+			pw.close();
+			
+		} catch (IOException ex) {
+			String msg = String.format("IOException writing ballot summary report: %s", ex.getMessage());			
+			logger.error(msg);
+			System.out.println(msg);
 		}
+		
 	}
 
 }
