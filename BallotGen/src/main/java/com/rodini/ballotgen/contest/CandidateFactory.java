@@ -228,10 +228,11 @@ public class CandidateFactory {
 		int lineCount = lines.length;
 		for (int i = 0; i < lineCount; i=i+2) {
 			Party party = null;
-			String name = lines[i];
+			String name = lines[i].trim();
 			String partyStr = "";
 			if (i+1 < lineCount) {
-				partyStr = lines[i+1];
+				partyStr = lines[i+1].trim();
+//System.out.printf("candidate party: %s length: %d%n",partyStr,partyStr.length());
 				party = Party.toEnum(partyStr);
 				createGeneralCandidate(name, party, partyStr, false);
 			} else {
@@ -250,10 +251,11 @@ public class CandidateFactory {
 		int lineCount = lines.length;
 		for (int i = 0; i < lineCount; i=i+4) {
 			Party party = null;
-			String topName = lines[i];
+			String topName = lines[i].trim();
 			String partyStr = "";
 			if (i+1 < lineCount) {
-				partyStr = lines[i+1];
+				partyStr = lines[i+1].trim();
+//System.out.printf("candidate party: %s length: %d%n",partyStr,partyStr.length());
 				party = Party.toEnum(partyStr);
 				createGeneralCandidate(topName, party, partyStr, false);
 			} else {
@@ -262,13 +264,13 @@ public class CandidateFactory {
 			}
 			String bottomName = "";
 			if (i+2 < lineCount) {
-				bottomName = lines[i+2];	
+				bottomName = lines[i+2].trim();	
 			} else {
 				logger.error(String.format("bottom of ticket candidate name is missing. Top name: %s"), topName);
 				break;
 			}
 			if (i+3 < lineCount) {
-				String textBeneathName = lines[i+3];
+				String textBeneathName = lines[i+3].trim();
 				createGeneralCandidate(bottomName, party, textBeneathName, true);
 			} else {
 				logger.error(String.format("bottom of ticket candidate party is missing. Bottom name: %s"), bottomName);
