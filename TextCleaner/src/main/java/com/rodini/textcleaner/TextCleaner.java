@@ -123,19 +123,25 @@ public class TextCleaner {
 	 * 1. Eliminate blank lines.
 	 * 2. Eliminate lines that are only "0 " or "O "
 	 * 3. Eliminate prefix of "0 " or "O ".
+	 * 4. Eliminate lines that start with "Typ:"
 	 * @param line input line
 	 * @return null or processed line.
 	 */
 	static String processLine(String line) {
 		String newLine = line;
-		boolean startsBadly = line.startsWith("0 ") || line.startsWith("O ");
+		boolean startsBadly = line.startsWith("0 ") || line.startsWith("O ")  || line.startsWith("7 ");
 		if (line.isBlank()) {
 			newLine = null;
 		} else if (startsBadly) {
+			// chop off the first two characters
 			newLine = line.substring(2);
-			if (newLine.isBlank()) {
-				newLine = null;
-			}
+		}
+		if (newLine.endsWith(" ")) {
+			// remove the trailing space
+			newLine = newLine.substring(0, newLine.length()-1);
+		}
+		if (newLine.isBlank() || line.startsWith("Typ:")) {
+			newLine = null;
 		}
 		return newLine;
 	}
