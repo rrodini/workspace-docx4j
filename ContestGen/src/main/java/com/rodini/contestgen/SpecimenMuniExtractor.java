@@ -58,6 +58,10 @@ public class SpecimenMuniExtractor {
 			Utils.logFatalError(msg);
 		} else {
 			try {
+				// After first call to m.find() need to reset the matcher.
+				m.reset();
+				// Now call m.find() again so as not to lose the first find.
+				m.find();
 				muniNames = m.results()
 						.map(ContestGen.COUNTY.equals("chester")?
 								// CHESTER 1=>id               2=>name
@@ -69,7 +73,16 @@ public class SpecimenMuniExtractor {
 						// avoid embedded spaces
 						.map( name -> name.replace(" ", "_"))
 						.collect(toList());
-				
+//				NEW - below was used to find the bug for specimen's that list municipality once.
+//				m.reset();
+//				while (m.find()) {
+//					String id = m.group(1);
+//					String name = m.group(2);
+//					String muniName = id + "_" + name.replace(" ", "_");
+//					if (!muniNames.contains(muniName)) {
+//						muniNames.add(muniName);
+//					}
+//				}
 			} catch (Exception e) {
 				String msg = e.getMessage();
 				logger.error(msg);

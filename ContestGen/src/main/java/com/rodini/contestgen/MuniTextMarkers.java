@@ -33,9 +33,9 @@ public class MuniTextMarkers {
 		props = Utils.loadProperties(resourceFilePath);
 		pageCount = Integer.parseInt(Utils.getPropValue(props, ContestGen.COUNTY + ".muniTextPageCount"));
 		page1Regex = Utils.getPropValue(props, ContestGen.COUNTY + ".muniTextPage1Regex");
-		logger.debug("page1Regex: ", page1Regex);
+		logger.debug(String.format("page1Regex: %s%n", page1Regex));
 		page2Regex = Utils.getPropValue(props, ContestGen.COUNTY + ".muniTextPage2Regex");
-		logger.debug("page2Regex: ", page2Regex);	
+		logger.debug(String.format("page2Regex: %s%n", page2Regex));	
 		page1Pattern = Utils.compileRegex(page1Regex);
 		page2Pattern = Utils.compileRegex(page2Regex);
 	}

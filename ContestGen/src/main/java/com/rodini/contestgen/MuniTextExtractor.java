@@ -40,15 +40,18 @@ public class MuniTextExtractor {
 	 * @param pattern compiled pattern for the page.
 	 * @return
 	 */
-	String extractPageText(Pattern pattern) {
+	String extractPageText(Pattern pattern, int pageNo) {
 		String text = "";
 		Matcher m = pattern.matcher(muniText);
 		if (!m.find()) {
-			String msg = String.format("no match for municipal page. muniName: %s regex: %s",muniName, pattern.pattern());
+			String msg = String.format("no match for municipal page %d. muniName: %s regex: %s", pageNo, muniName, pattern.pattern());
 			logger.error(msg);
 			msg = String.format("muniText: %s%n", muniText);
-			Utils.logFatalError(msg);
-			
+			logger.error(msg);
+			// Previously this condition was FATAL ERROR
+			//Utils.logFatalError(msg);
+			// Now return a recognizable string for later processing.
+			text = String.format("BAD EXTRACT PAGE %d - %s%n", pageNo, muniName);
 		} else {
 			try {
 				text = m.group("page");
@@ -70,9 +73,9 @@ public class MuniTextExtractor {
 	MuniContestsExtractor extract() {
 		String page1Text = "";
 		String page2Text = "";
-		page1Text = extractPageText(MuniTextMarkers.getPage1Pattern());
+		page1Text = extractPageText(MuniTextMarkers.getPage1Pattern(), 1);
 		if (MuniTextMarkers.getPageCount() == 2) {
-			page2Text = extractPageText(MuniTextMarkers.getPage2Pattern());
+			page2Text = extractPageText(MuniTextMarkers.getPage2Pattern(), 2);
 		}
 		return new MuniContestsExtractor(muniName, page1Text, page2Text);
 	}

@@ -76,7 +76,7 @@ public class MuniContestsExtractor {
 		logger.info(String.format("extractContestName: format: %d", format));
 		if (format == -1) {
 			// this error is typical for long referendum questions.
-			logger.error("No format for: " + contestText);
+			logger.error("Not a contest? No format for: " + contestText);
 			return;
 		}
 		String name = cnm.getContestName();

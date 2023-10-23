@@ -105,7 +105,6 @@ public class ContestNameExtractor {
 		String name = "Unknown contest";
 		try {
 			name = m.group("name");
-//System.out.printf("getContestName: name: %s%n", name);
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			logger.error(msg);
@@ -113,7 +112,6 @@ public class ContestNameExtractor {
 		if (name.endsWith("\n")) {
 			name = name.substring(0, name.length() - 1);
 		}
-//System.out.printf("getContestName: name: %s%n", name);
 		return name;
 	}
 	

@@ -135,7 +135,7 @@ public class ContestGen {
 		if (!specimenFilePath.endsWith("txt")) {
 			Utils.logFatalError("file \"" + specimenFilePath + "\" doesn't end with TXT extension.");
 		}
-		specimenText = Utils.readTextFile(specimenFilePath);
+		specimenText = Utils.readTextFile(specimenFilePath);		
 		// check args[1] is present and a directory
 		outPath = args[1];
 		File directory1 = new File(outPath);
