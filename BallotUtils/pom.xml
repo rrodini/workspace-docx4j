@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>ballot-utils</artifactId>
-	<version>1.4.1</version>
+	<version>1.5.0</version>
 	<packaging>jar</packaging>
 	<name>BallotUtils</name>
 	<description>Utilities for sample ballot generation</description>
@@ -13,7 +13,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>11</release>
+					<release>17</release>
 				</configuration>
 			</plugin>
 			<plugin>

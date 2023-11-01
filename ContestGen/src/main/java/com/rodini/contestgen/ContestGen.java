@@ -149,8 +149,6 @@ public class ContestGen {
 		// read in program's properties
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
 		props = Utils.loadProperties(propsFilePath);
-		String envStr = props.getProperty("environment");
-		env = Environment.valueOf(envStr);
 		WRITE_IN = props.getProperty(COUNTY + ".write.in");		
 		logger.info(String.format("WRITE_IN: %s%n", WRITE_IN));		
 		// initialize marker classes

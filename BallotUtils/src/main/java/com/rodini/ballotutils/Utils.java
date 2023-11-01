@@ -78,7 +78,7 @@ System.out.printf("log4jLevel: %s%n", log4jLevel);
 	public static String getPropValue(Properties props, String propName) {
 		String value = props.getProperty(propName);
 		if (value == null) {
-			logger.info("propery value not found for property name: " + propName);
+			logger.info("property value not found for property name: " + propName);
 		}
 		return value;
 	}

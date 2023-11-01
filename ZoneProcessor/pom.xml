@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rodini</groupId>
   <artifactId>zone-processor</artifactId>
-  <version>1.4.1</version>
+  <version>1.5.0</version>
   <name>Zone Processor</name>
   <description>Provide and API for mapping precinct# to zone, and zone's list of precincts.</description>
   <build>
@@ -11,7 +11,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>11</release>
+          <release>17</release>
         </configuration>
       </plugin>
 			<plugin>
@@ -55,7 +55,7 @@
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>ballot-utils</artifactId>
-    	  <version>1.4.1</version>
+    	  <version>1.5.0</version>
 		</dependency>
 	</dependencies>
   
