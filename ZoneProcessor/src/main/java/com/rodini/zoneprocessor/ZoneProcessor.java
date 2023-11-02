@@ -4,8 +4,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
@@ -20,7 +23,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class ZoneProcessor {
-	static final Logger logger = LoggerFactory.getLogger(ZoneProcessor.class);
+	static final Logger logger = LogManager.getLogger(ZoneProcessor.class);
 
 	// Municipality No (key) Zone (value)
 	// 020                   7

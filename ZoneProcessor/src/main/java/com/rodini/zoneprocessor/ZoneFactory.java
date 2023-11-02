@@ -5,8 +5,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ZoneFactory creates a new Zone provided it doesn't already exist.
@@ -15,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ZoneFactory {
-	static final Logger logger = LoggerFactory.getLogger(ZoneFactory.class);
+	static final Logger logger = LogManager.getLogger(ZoneFactory.class);
 	//             key: zoneNo  value: Zone object
 	private static Map<String,  Zone> zoneMap = new TreeMap<>();
 	
