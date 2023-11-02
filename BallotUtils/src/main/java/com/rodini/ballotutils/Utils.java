@@ -17,9 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// SLF4J
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+// LOG4J
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utils class contains common utility methods across all ballot
@@ -30,9 +34,11 @@ import org.slf4j.LoggerFactory;
  */
 public class Utils {
 
-	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
+	private static final Logger logger = LogManager.getLogger(Utils.class);
 	static final String JVM_LOG_LEVEL = "log.level";
-	static final int ZONE_STR_LEN = 2; 		// Normalized zoneNo is two digits
+	// Custom log4j level. Should always be logged.
+	public final static Level ATTN = Level.forName("ATTN", 90);
+	static final int ZONE_STR_LEN = 2; 	// Normalized zoneNo is two digits
 	static final int MUNI_STR_LEN = 3;	// Normalized muniNo is three digits
 	
 	/** 
@@ -51,16 +57,24 @@ public class Utils {
 				"WARN", WARN,
 				"INFO", INFO,
 				"DEBUG", DEBUG,
-				"TRACE", TRACE
+				"TRACE", TRACE,
+				// custom LOG4J level
+				"ATTN", ATTN
 				);
 		// get logging level from JVM argument
-		String level = System.getProperty(JVM_LOG_LEVEL, "ERROR").toUpperCase();
-		org.apache.logging.log4j.Level log4jLevel = logLevels.get(level);
-System.out.printf("log4jLevel: %s%n", log4jLevel);
-		if (log4jLevel == null) {
-			log4jLevel = ERROR;
+		String strLevel = System.getProperty(JVM_LOG_LEVEL, "ERROR").toUpperCase();
+//		org.apache.logging.log4j.Level log4jLevel = logLevels.get(strLevel);
+//      System.out.printf("log4jLevel: %s%n", log4jLevel);
+//		if (log4jLevel == null) {
+//			log4jLevel = ERROR;
+//		}
+//		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,log4jLevel);
+		Level level = logLevels.get(strLevel);
+		System.out.printf("log4jLevel: %s%n", level);
+		if (level == null) {
+			level = ERROR;
 		}
-		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,log4jLevel);
+		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,level);
 	}
 	// load program properties (as per Java conventions).
 	public static Properties loadProperties(String resourcePath) {
