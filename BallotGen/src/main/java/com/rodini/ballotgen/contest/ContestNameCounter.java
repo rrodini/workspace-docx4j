@@ -3,8 +3,11 @@ package com.rodini.ballotgen.contest;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ContestNameCounter is a pseudo-container for the contests on a 
@@ -21,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class ContestNameCounter {
-	private static final Logger logger = LoggerFactory.getLogger(ContestNameCounter.class);
+	private static final Logger logger = LogManager.getLogger(ContestNameCounter.class);
 	
 	private final String ballotText;
 	// (key, entry) example:  "Auditor", 0

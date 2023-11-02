@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
@@ -24,7 +27,7 @@ import com.rodini.zoneprocessor.Zone;
  * 
  */
 public class WriteinProcessor {
-	private static final Logger logger = LoggerFactory.getLogger(WriteinProcessor.class);
+	private static final Logger logger = LogManager.getLogger(WriteinProcessor.class);
 	// Precinct no. (key)  List of Writeins (value)
 	// 754                 Writein1, Writein2, ...
 	private Map <String, List<Writein>> precinctWriteins;

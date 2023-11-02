@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Initialize;
@@ -26,7 +27,7 @@ import com.rodini.ballotgen.common.Party;
  */
 public class ContestFactory {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ContestFactory.class);
+	private static final Logger logger = LogManager.getLogger(ContestFactory.class);
 	// CHESTER
 	//private final String CONTEST_END = "Write-in";
 	// BUCKS

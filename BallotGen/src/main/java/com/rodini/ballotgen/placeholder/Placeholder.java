@@ -1,9 +1,12 @@
 package com.rodini.ballotgen.placeholder;
 
 import org.docx4j.wml.P;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** 
  * Placeholder is a simple value object that represents a found
@@ -12,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * @author Bob Rodini
  */
 public class Placeholder {
-	private static final Logger logger = LoggerFactory.getLogger(Placeholder.class);
+	private static final Logger logger = LogManager.getLogger(Placeholder.class);
 	final String name;
 	final P replaceParagraph;
 	final PlaceholderLocation loc;

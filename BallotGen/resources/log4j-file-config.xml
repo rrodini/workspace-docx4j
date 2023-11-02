@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="BallotGen" packages="">
+<Configuration status="ERROR" name="BallotGen">
   <Appenders>
     <File name="BallotGen" fileName="../logs/ballotgen.log">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+		<PatternLayout pattern="%-5level %c{1}:%M:%L - %msg%n" />
+		<Append>false</Append>		
+<!--
+ -->						
     </File>
   </Appenders>
   <Loggers>
+    <!-- The Root logger can be controlled by the JVM argument -Dlog.level e.g.
+         log.level=INFO
+    -->
     <Root level="ERROR">
       <AppenderRef ref="BallotGen"/>
     </Root>
+    <!-- For deep logging in any package add the leve attribute below
+         level="INFO"
+    -->
+    <Logger name="com.rodini.ballotgen"> 
+		<RegexFilter regex="No subclass found for /word/media/hdphoto1.wdp; defaulting to binary" onMatch="DENY" onMismatch="ACCEPT" />
+    </Logger>
+    <Logger name="com.rodini.ballotgen.common"> 
+    </Logger>
+    <Logger name="com.rodini.ballotgen.contest"> 
+    </Logger>
+    <Logger name="com.rodini.ballotgen.endorsement"> 
+    </Logger>
+    <Logger name="com.rodini.ballotgen.placeholder"> 
+    </Logger>
+    <Logger name="com.rodini.ballotgen.writein"> 
+    </Logger>
   </Loggers>
 </Configuration>

@@ -9,8 +9,11 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.zoneprocessor.Zone;
 import com.rodini.zoneprocessor.ZoneProcessor;
@@ -25,7 +28,7 @@ import com.rodini.ballotutils.Utils;
 
 
 public class WriteinFactory {
-	private static final Logger logger = LoggerFactory.getLogger(WriteinFactory.class);
+	private static final Logger logger = LogManager.getLogger(WriteinFactory.class);
 	// Precinct no. (key)  List of Writeins (value)
 	// 754                 Writein1, Writein2, ...
 	private static Map <String, List<Writein>> precinctWriteins = new HashMap<>();

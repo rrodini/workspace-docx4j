@@ -30,8 +30,11 @@ package com.rodini.ballotgen.endorsement;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Party;
@@ -43,7 +46,7 @@ import static com.rodini.ballotgen.endorsement.EndorsementMode.*;
 import static com.rodini.ballotgen.endorsement.EndorsementScope.*;
 
 public class EndorsementProcessor {
-	private static final Logger logger = LoggerFactory.getLogger(EndorsementProcessor.class);
+	private static final Logger logger = LogManager.getLogger(EndorsementProcessor.class);
 
 	// Candidate name (key) List of Endorsements (value)
 	// SAMANTHA JOUIN       End1, End2, ...

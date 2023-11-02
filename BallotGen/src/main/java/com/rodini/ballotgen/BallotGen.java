@@ -5,12 +5,16 @@ import java.util.Map;
 import java.util.Set;
 
 //import org.apache.logging.log4j.LogManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.Initialize;
 import com.rodini.ballotgen.endorsement.Endorsement;
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;
 /**
  * BallotGen is the program that generated the municipal level .docx (Word) files.
  * It is dependent on an upstream program (ContestGen) to generate municipal
@@ -29,21 +33,21 @@ import com.rodini.ballotutils.Utils;
  */
 public class BallotGen {
 	
-	private static final Logger logger = LoggerFactory.getLogger(BallotGen.class);
+	private static final Logger logger = LogManager.getLogger(BallotGen.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	
 	public static void main(String[] args){
 		// Get the logging level from JVM parameter on command line.
-		Utils.setLoggingLevel("com.rodini.ballotgen");
+		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String msg = String.format("Start of BallotGen app. Version: %s", version);
 		System.out.println(msg);
-		logger.info(msg);
+		logger.log(ATTN, msg);
 		Initialize.COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		msg = String.format("Ballots for: %s Co.", Initialize.COUNTY);
 		System.out.println(msg);
-		logger.info(msg);
+		logger.log(ATTN, msg);
 		Initialize.start(args);
 		// TODO: use a loop here if ballotFiles size > 1
 		for (String ballotFile: Initialize.ballotFiles) {
@@ -58,10 +62,10 @@ public class BallotGen {
 		}
 		terminate();
 		msg = String.format("Generated %d docx files", Initialize.docxGenCount);
-		logger.info(msg);
+		logger.log(ATTN, msg);
 		msg = "End of BallotGen app";
 		System.out.println(msg);
-		logger.info(msg);
+		logger.log(ATTN, msg);
 	}
 	/**
 	 * Terminate ends the BallotGen with summary information.
@@ -75,14 +79,14 @@ public class BallotGen {
 		String line = "Endorsed Candidate      No. endorsements";
 		//             STEPHANIE GIBSON WILLIAMS           
 		logger.info(line);
-		// First loop
+		// First loop - messages always recorded.
 		for (String name: names) {
 			line = String.format("%-25s %5d", name, GenDocxBallot.endorsedCandidates.get(name));
-			logger.info(line);
+			logger.log(ATTN, line);
 		}
 		Map<String,List<Endorsement>> candidateEndorsements = Initialize.endorsementProcessor.getCandidateEndorsements();
 		names = candidateEndorsements.keySet();
-		// Second loop.
+		// Second loop - ERROR messages.
 		for (String name: names) {
 			if (GenDocxBallot.endorsedCandidates.get(name) == null) {
 				

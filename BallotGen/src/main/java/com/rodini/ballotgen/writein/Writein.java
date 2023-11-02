@@ -2,8 +2,11 @@ package com.rodini.ballotgen.writein;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** 
  * Writein class represents a line from the write-in CSV file.
@@ -12,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class Writein {
-	private static final Logger logger = LoggerFactory.getLogger(Writein.class);
+	private static final Logger logger = LogManager.getLogger(Writein.class);
 	
 	private final String candidateName;
 	private final String contestName;

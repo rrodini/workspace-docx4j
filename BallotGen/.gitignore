@@ -1,7 +1,6 @@
 ### General
 *.DS_Store
 codemr/
-../logs/
 
 ### Eclipse ###
 bin/

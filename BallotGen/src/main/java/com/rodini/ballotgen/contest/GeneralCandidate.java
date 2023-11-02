@@ -1,7 +1,8 @@
 package com.rodini.ballotgen.contest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.Party;
 
@@ -23,7 +24,7 @@ import com.rodini.ballotgen.common.Party;
  */
 public class GeneralCandidate extends Candidate {
 
-	private static final Logger logger = LoggerFactory.getLogger(GeneralCandidate.class);
+	private static final Logger logger = LogManager.getLogger(GeneralCandidate.class);
 	
 	// general election use party
 	private String textBeneathName;

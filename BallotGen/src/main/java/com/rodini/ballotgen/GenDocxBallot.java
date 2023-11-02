@@ -35,8 +35,12 @@ import org.docx4j.wml.R;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
 import org.docx4j.wml.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Initialize;
@@ -53,6 +57,7 @@ import com.rodini.ballotgen.placeholder.PlaceholderProcessor;
 import com.rodini.ballotgen.placeholder.Placeholder;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;
 
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
@@ -77,7 +82,7 @@ import jakarta.xml.bind.JAXBException;
  *
  */
 public class GenDocxBallot {
-	private static final Logger logger = LoggerFactory.getLogger(GenDocxBallot.class);
+	private static final Logger logger = LogManager.getLogger(GenDocxBallot.class);
 
 	// from constructor
 	private String dotxPath;  // path to DOTX template file
@@ -198,8 +203,10 @@ public class GenDocxBallot {
 		if (precinctNoName.endsWith(FILE_SUFFIX)) {
 			precinctNoName = precinctNoName.substring(0, precinctNoName.length() - FILE_SUFFIX.length());
 		}
+		
 		precinctNo = precinctNoName.substring(0, 3);
 		precinctName = precinctNoName.substring(3);
+		logger.log(ATTN, precinctNoName);
 		try {
 			Integer.parseInt(precinctNo);
 		} catch (NumberFormatException e) {
@@ -475,6 +482,8 @@ public class GenDocxBallot {
 			String contestName = elements[0];
 			contestName = Contest.processContestName(contestName);
 			String contestFormat = elements[1];
+			// Is there a "page break" in the ballot?
+			// Test if a pseudo contest box should be generated.
 			List<P> contestParagraphs = contestName.equals(Initialize.PAGE_BREAK)?
 					  genPageBreak(docx.getMainDocumentPart())
 					: genContest(ballotFactory, contestName, contestFormat);
@@ -506,10 +515,7 @@ public class GenDocxBallot {
 		String contestText = cf.findContestText(name);
 		if (!contestText.isBlank()) {
 			Contest contest = cf.parseContestText(name, contestText, format);
-			// TODO: configuration item?
-//			if (contest.getCandidates().size() > 0) {
-				contestParagraphs = genContestParagraphs(mdp, contest);
-//			}
+			contestParagraphs = genContestParagraphs(mdp, contest);
 		}
 		return contestParagraphs;
 	}
@@ -703,16 +709,19 @@ public class GenDocxBallot {
 	 * @return list of new paragraphs.
 	 */
 	List<P> genPageBreak(MainDocumentPart mdp) {
-		logger.info("generating page break");
 		List<P> pageBreakParagraphs = new ArrayList<>();
-		P newParagraph;
-		// first paragraph
-		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
-		pageBreakParagraphs.add(newParagraph);
-		// Draw a border line as a separator
-		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
-		// last paragraph
-		pageBreakParagraphs.add(newParagraph);  // Paragraph separator
+		// Test the property value here
+		if (Initialize.PAGE_BREAK_DISPLAY) {
+			logger.info("generating page break");
+			P newParagraph;
+			// first paragraph
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
+			pageBreakParagraphs.add(newParagraph);
+			// Draw a border line as a separator
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+			// last paragraph
+			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
+		}
 		return pageBreakParagraphs;
 	}
 	/** 

@@ -1,7 +1,8 @@
 package com.rodini.ballotgen.contest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.Party;
 /**
@@ -9,7 +10,7 @@ import com.rodini.ballotgen.common.Party;
  * This makes endorsements hard as an auxiliary file is needed.
  */public class PrimaryCandidate extends Candidate {
 
-	private static final Logger logger = LoggerFactory.getLogger(PrimaryCandidate.class);
+	private static final Logger logger = LogManager.getLogger(PrimaryCandidate.class);
 
 	// this could be a county, township, or "Male - Tredyffrin township"
 	private String residence;  // Note: May be "".

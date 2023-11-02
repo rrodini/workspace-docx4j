@@ -1,7 +1,10 @@
 package com.rodini.ballotgen.contest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Party;
@@ -24,7 +27,7 @@ import java.util.List;
  * 
  */
 public class CandidateFactory {
-	private static final Logger logger = LoggerFactory.getLogger(CandidateFactory.class);
+	private static final Logger logger = LogManager.getLogger(CandidateFactory.class);
 
 	private final String contestName;	 // name of the contest / office
 	private final String candidatesText; // text of the regex <candidate> group

@@ -3,15 +3,16 @@ package com.rodini.ballotgen.contest;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Contest is a value object that holds information about
  * a particular political contest (race).
  */
 public class Contest {
-	private static final Logger logger = LoggerFactory.getLogger(Contest.class);
+	private static final Logger logger = LogManager.getLogger(Contest.class);
 
 	// use this to avoid null values
 	public final static Contest GENERIC_CONTEST = new Contest("Generic contest", "Generic term", "Generic instructions", new ArrayList<Candidate>());

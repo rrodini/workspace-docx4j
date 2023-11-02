@@ -13,8 +13,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.contest.ContestFileLevel;
 import com.rodini.ballotgen.endorsement.Endorsement;
@@ -35,7 +38,7 @@ import com.rodini.zoneprocessor.Zone;
  *
  */
 public class Initialize {
-	private static final Logger logger = LoggerFactory.getLogger(Initialize.class);
+	private static final Logger logger = LogManager.getLogger(Initialize.class);
 	// Global variables
 	public static ElectionType elecType;	// e.g. PRIMARY or GENERAL
 	public static Party endorsedParty;		// e.g. Democratic (or NULL)
@@ -76,6 +79,7 @@ public class Initialize {
 	public	static       String COUNTY;
 	public  static       String WRITE_IN;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
+	public  static       boolean PAGE_BREAK_DISPLAY;
 	public  static       String PAGE_BREAK_WORDING;
 	
 
@@ -122,6 +126,7 @@ public class Initialize {
 						.filter(file -> !file.isDirectory() && file.getName().endsWith(".txt"))
 						.map(File::getName)
 						.map(name -> ballotFilePath + File.separator + name)
+						.sorted()  // alphabetic order by file name
 						.collect(toList());
 
 			} else if (path.isFile()) {
@@ -331,6 +336,13 @@ public class Initialize {
 	}
 	
 	static void validatePageBreak() {
+		boolean display = false;
+		String strDisplay = ballotGenProps.getProperty("page.break.display");
+		if (strDisplay != null) {
+			display = Boolean.valueOf(strDisplay);
+		}
+		PAGE_BREAK_DISPLAY = display;
+		logger.info(String.format("%s: %s", "PAGE_BREAK_DISPLAY", Boolean.toString(display)));
 		String value = ballotGenProps.getProperty("page.break.wording");
 		if (value == null) {
 			value = "Page Break";

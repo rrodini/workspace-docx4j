@@ -14,8 +14,12 @@ import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.P;
 import org.docx4j.wml.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_CONTESTS;
 
@@ -32,7 +36,7 @@ import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_CONTESTS;
  *
  */
 public class PlaceholderProcessor {
-	private static final Logger logger = LoggerFactory.getLogger(PlaceholderProcessor.class);
+	private static final Logger logger = LogManager.getLogger(PlaceholderProcessor.class);
 
 	private final MainDocumentPart bodyPart;
 	private final HeaderPart headerPart;

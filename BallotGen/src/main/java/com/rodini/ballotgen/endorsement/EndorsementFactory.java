@@ -11,8 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * EndorsementFactory processes the endorsementsCSVText into Endorsement objects.
  * It is the only class that knows the format of the CSV file (endorsements.csv).
@@ -20,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author Bob Rodini
  */
 public class EndorsementFactory {
-	private static final Logger logger = LoggerFactory.getLogger(EndorsementFactory.class);
+	private static final Logger logger = LogManager.getLogger(EndorsementFactory.class);
 
 	static Map <String, List<Endorsement>> candidateEndorsements = new HashMap<>();
 	// Get the names of endorseMode as a String

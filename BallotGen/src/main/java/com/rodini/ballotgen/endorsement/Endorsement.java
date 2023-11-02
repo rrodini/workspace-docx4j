@@ -3,8 +3,9 @@ package com.rodini.ballotgen.endorsement;
 import static com.rodini.ballotgen.endorsement.EndorsementMode.UNENDORSED;
 import static com.rodini.ballotgen.endorsement.EndorsementScope.ZONE;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Endorsement is a simple class. It represents a line of the endorsement CSV file.
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author Bob Rodini
  */
 public class Endorsement {
-	private static final Logger logger = LoggerFactory.getLogger(Endorsement.class);
+	private static final Logger logger = LogManager.getLogger(Endorsement.class);
 
 	private final String name;	// Endorsed candidate name
 	private final EndorsementMode mode;	// Mode of endorsement
