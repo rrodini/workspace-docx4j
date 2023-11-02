@@ -8,11 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-//import org.apache.logging.log4j.LogManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;
+
 /**
  * TextCleaner is a simple program that takes an input text file and cleans
  * the text from the locked PDF conversion process. The reason for this
@@ -31,7 +35,7 @@ import com.rodini.ballotutils.Utils;
  */
 public class TextCleaner {
 	
-	private static final Logger logger = LoggerFactory.getLogger(TextCleaner.class);
+	private static final Logger logger = LogManager.getLogger(TextCleaner.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	static final String PROPS_FILE = "textcleaner.properties";
@@ -51,11 +55,11 @@ public class TextCleaner {
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of Text Cleaner app. Version: %s", version);
 		System.out.println(startMsg);
-		logger.info(startMsg);
+		logger.log(ATTN, startMsg);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		startMsg = String.format("Text Cleaner for: %s Co.", COUNTY);
 		System.out.println(startMsg);
-		logger.info(startMsg);
+		logger.log(ATTN, startMsg);
 		initialize(args);
 		
 		// Below is the heart of the program.
@@ -72,7 +76,7 @@ public class TextCleaner {
 		}
 		String endMsg = String.format("End of Text Cleaner app.");
 		System.out.println(endMsg);
-		logger.info(endMsg);
+		logger.log(ATTN, endMsg);
 
 	}
 

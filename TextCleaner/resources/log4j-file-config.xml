@@ -2,12 +2,14 @@
 <Configuration status="warn" name="TextCleaner" packages="">
   <Appenders>
     <File name="TextCleaner" fileName="../logs/textcleaner.log">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <PatternLayout pattern="%-5level %c{1}:%M:%L - %msg%n"/>
     </File>
   </Appenders>
   <Loggers>
     <Root level="ERROR">
       <AppenderRef ref="TextCleaner"/>
     </Root>
+    <Logger name="com.rodini.textcleaner"> 
+    </Logger>
   </Loggers>
 </Configuration>
