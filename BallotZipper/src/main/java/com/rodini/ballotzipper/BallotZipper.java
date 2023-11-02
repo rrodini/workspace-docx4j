@@ -56,7 +56,7 @@ public class BallotZipper {
 	 * @param args CLI arguments.
 	 */
 	public static void main(String[] args) {
-		Utils.setLoggingLevel("com.rodini.ballotzipper");
+		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
 		String version = System.getenv(ENV_BALLOTGEN_VERSION);
 		String message = String.format("Start of BallotZipper app. Version: %s", version);
 		System.out.println(message);
