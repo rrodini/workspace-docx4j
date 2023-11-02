@@ -33,10 +33,14 @@ package com.rodini.ballotzipper;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;
 import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 import com.rodini.zoneprocessor.ZoneFactory;
@@ -45,7 +49,7 @@ public class BallotZipper {
 
 	private BallotZipper() {
 	}
-	static final Logger logger = LoggerFactory.getLogger(BallotZipper.class);
+	static final Logger logger = LogManager.getLogger(BallotZipper.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	/** 
 	 * main implements the algorithm described above.
@@ -56,7 +60,7 @@ public class BallotZipper {
 		String version = System.getenv(ENV_BALLOTGEN_VERSION);
 		String message = String.format("Start of BallotZipper app. Version: %s", version);
 		System.out.println(message);
-		logger.info(message);
+		logger.log(ATTN, message);
 		Initialize.initialize(args);
 		// Process CSV file into two data structures
 		//  muniNoMap (TreeMap) key: MuniNo (String) value: zone (Zone object)
@@ -67,12 +71,12 @@ public class BallotZipper {
 		// Produce zone report to console & log file
 		message = "Zone report:";
 		System.out.println(message);
-		logger.info(message);
+		logger.log(ATTN, message);
 		for (String zoneNo: zoneMap.keySet()) {
 			Zone zone = zoneMap.get(zoneNo);
 			message = String.format("Zone no: %s name %s", zone.getZoneNo(), zone.getZoneName());
 			System.out.println(message);
-			logger.info(message);
+			logger.log(ATTN, message);
 		}
 //		Map<String, Zone> muniNoMap = GenMuniMap.getMuniNoMap();
 //		for (String muniNo: muniNoMap.keySet()) {
@@ -85,11 +89,11 @@ public class BallotZipper {
 		Map<String, MuniFiles> docxNoMap = GenDocxMap.getDocxNoMap();
 		message = "docxMap:";
 		System.out.println(message);
-		logger.info(message);
+		logger.log(ATTN, message);
 		for (String docxNo: docxNoMap.keySet()) {
 			message = String.format("%s: %s", docxNo, docxNoMap.get(docxNo).toString());
 			System.out.println(message);
-			logger.info(message);
+			logger.log(ATTN, message);
 		}
 		GenZipFiles.genZips();
 	}

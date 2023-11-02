@@ -11,8 +11,11 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
@@ -23,7 +26,7 @@ import com.rodini.zoneprocessor.ZoneFactory;
  *
  */
 public class GenZipFiles {
-	static final Logger logger = LoggerFactory.getLogger(GenZipFiles.class);
+	static final Logger logger = LogManager.getLogger(GenZipFiles.class);
 	
 	static final String ZIP = ".zip";
 	

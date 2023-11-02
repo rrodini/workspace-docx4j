@@ -2,12 +2,15 @@
 <Configuration status="warn" name="BallotZipper" packages="">
   <Appenders>
     <File name="BallotZipper" fileName="../logs/ballotzipper.log">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <PatternLayout pattern="%-5level %c{1}:%M:%L - %msg%n"/>
+	  <Append>false</Append>		
     </File>
   </Appenders>
   <Loggers>
     <Root level="ERROR">
       <AppenderRef ref="BallotZipper"/>
     </Root>
+   <Logger name="com.rodini.ballotzipper"> 
+    </Logger>
   </Loggers>
 </Configuration>

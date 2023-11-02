@@ -8,8 +8,11 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * GenDocxMap is the complement to GenMuniMap. It's job is to group the sample ballot files
@@ -19,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class GenDocxMap {
-	static final Logger logger = LoggerFactory.getLogger(GenDocxMap.class);
+	static final Logger logger = LogManager.getLogger(GenDocxMap.class);
 	
 	private static final Map<String, MuniFiles> docxNoMap = new TreeMap<>();
 	// Docx No (key)         MuniFiles

@@ -6,8 +6,11 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
@@ -19,7 +22,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class Initialize {
-	static final Logger logger = LoggerFactory.getLogger(Initialize.class);
+	static final Logger logger = LogManager.getLogger(Initialize.class);
 	// Global variables
 	static String csvFilePath;
 	static String inDirPath;
