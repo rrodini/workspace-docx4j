@@ -95,7 +95,9 @@ public class Utils {
 		if (addTime) {
 			dateTime = " " + getDateTimeString();
 		}
-		logger.log(ATTN, msg + dateTime);
+		String totalMsg = msg + dateTime;
+		logger.log(ATTN, totalMsg);
+		System.out.println(totalMsg);
 	}
 	/**
 	 * getErrorCount returns the number of ERROR messages written to the log file.

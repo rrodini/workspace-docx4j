@@ -100,11 +100,14 @@ class TestUtils {
 		logAppMessage(logger, message, true);
 		assertEquals(1, mockedAppender.messages.size());
 		String logMessage = mockedAppender.messages.get(0);
+System.out.println("logMessage: " + logMessage);
 		assertTrue(logMessage.startsWith(message));
 		// TODO: Statement below not true. Consider two digit dates!
 		// The date/time value should have the same length no matter what.
 		message += " Nov 7, 2023, 3:03:25 PM";
-		assertEquals(message.length(), logMessage.length());
+		//           Nov 9, 2023, 11:20:42 AM
+		int lengthDiff = logMessage.length() - message.length();
+		assertTrue(lengthDiff >= 0 && lengthDiff <= 3);
 	}
 	@Test
 	void testLogAppMessageWithoutDateTime() {

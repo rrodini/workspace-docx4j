@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;
 
 /**
  * BallotNamer is the program that runs after the Voter Services master sample ballot
@@ -45,7 +46,7 @@ import com.rodini.ballotutils.Utils;
  */
 public class BallotNamer {
 	
-	static final Logger logger = LogManager.getLogger(BallotNamer.class);
+	static final Logger logger = LogManager.getRootLogger();
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	static String COUNTY;
@@ -63,15 +64,6 @@ public class BallotNamer {
 	static Map<String, List<String>> preContests = new TreeMap<String, List<String>>();
 	static final String FILE_SUFFIX = "_VS";	// suffix for renamed files
 	static ENVIRONMENT env;
-	/** 
-	 * Log a fatal error and stop program.
-	 * @param msg message to display / log.
-	 */
-	public static void logFatalError(String msg) {
-		System.out.println(msg);
-		logger.error(msg);
-		System.exit(1); // non-zero exit code == fatal error
-	}
 	/**
 	 * initialize the program and perform validation.
 	 * Will fail early if something is wrong.
@@ -81,7 +73,7 @@ public class BallotNamer {
 	static void initialize(String[] args) {
 		// check the # of command line args
 		if (args.length < 1) {
-			logFatalError("initialize: missing command line argument:\n" +
+			Utils.logFatalError("initialize: missing command line argument:\n" +
 					"args[0]: path to directory w/ PDF and text files");
 		} else {
 			String msg0 = String.format("path to dir w/ PDF and text files: %s", args[0]);
@@ -90,13 +82,8 @@ public class BallotNamer {
 		}
 		// validate the CLI args
 		dirPath = args[0];
-		File directory1 = new File(dirPath);
-		try {
-			if (!directory1.isDirectory()) {
-				logFatalError("initialize: command line arg[0] is not a directory: " + dirPath);
-			}
-		} catch (SecurityException e) {
-			logFatalError("initialize: can't access this directory" + dirPath);
+		if (!Utils.checkDirExists(dirPath)) {
+				Utils.logFatalError("initialize: command line arg[0] is not a directory: " + dirPath);
 		}
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
 		// get ballotnamer properties
@@ -127,7 +114,7 @@ public class BallotNamer {
 		Pattern compiledRegex = null;
 		if (startRegex == null) {
 			String msg = String.format("property \"$s.ballotnamer.ballot.heading.format\" cannot be found: ", COUNTY);
-			logFatalError(msg);
+			Utils.logFatalError(msg);
 		}
 		String endRegex = startRegex.replace(GENERIC_NAME, contestGenProps.getProperty(COUNTY + ".ballotnamer.ballot.title"));
 		logger.debug(String.format("getFileBallotPattern: endRegex: %s", endRegex));
@@ -135,7 +122,7 @@ public class BallotNamer {
 			compiledRegex = Pattern.compile(endRegex, Pattern.MULTILINE);
 		} catch (Exception e) {
 			String msg = String.format("can't compile regex: %s msg: %s", endRegex , e.getMessage());
-			logFatalError(msg);
+			Utils.logFatalError(msg);
 		}
 		logger.debug(String.format("getFileBallotPattern: compiledRegex: %s", compiledRegex.toString()));
 		return compiledRegex;
@@ -146,20 +133,16 @@ public class BallotNamer {
 	 * @param args CLI arguments
 	 */
 	public static void main(String[] args) {
-		Utils.setLoggingLevel("com.rodini.ballotnamer");
+		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of BallotNamer app. Version: %s", version);
-		System.out.println(startMsg);
-		logger.info(startMsg);
+		Utils.logAppMessage(logger, startMsg, true);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		startMsg = String.format("Names for: %s Co.", COUNTY);
-		System.out.println(startMsg);
-		logger.info(startMsg);
-
+		Utils.logAppMessage(logger, startMsg, false);
 		initialize(args);
         processFiles();
- 		logger.info("End of BallotNamer app.");
-		System.out.println("End of BallotNamer app.");
+		Utils.logAppMessage(logger, "End of BallotNamer app.", true);
 	}
 	/**
 	 * processFiles builds lists of files in the directory where the "split'
@@ -183,7 +166,8 @@ public class BallotNamer {
 			// names should be in a one-to-one correspondence.
 			processFile(txtFileNameList.get(i), pdfFileNameList.get(i));
 		}
-		
+		msg = String.format("Renamed %s files", txtFileNameList.size());
+		Utils.logAppMessage(logger, msg, false);
 	}
 	/**
 	 * collectFilesByExtension returns a list of files in a directory that have 
@@ -257,13 +241,13 @@ public class BallotNamer {
 		String ballotFileName = "";
 		if (!m.find()) {
 			String msg = String.format("parseFile: no match for file name: %s", txtFileName);
-			logFatalError(msg);
+			Utils.logFatalError(msg);
 		} else {
 			try {
 				ballotFileName = m.group("id") + "_" + m.group("name");
 			} catch (Exception e) {
 				String msg = e.getMessage();
-				logFatalError(msg);
+				Utils.logFatalError(msg);
 			}
 		}
 		if (props.get("replace.space.with.underscore").equals("true")) {
