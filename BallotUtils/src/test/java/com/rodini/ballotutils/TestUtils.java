@@ -51,6 +51,20 @@ class TestUtils {
 	void tearDown() throws Exception {
 	}
 	@Test
+	void testSetLoggingLevel() {
+		String strLevel = System.setProperty(JVM_LOG_LEVEL, "ATTN").toUpperCase();
+		setLoggingLevel(logger.getName());
+		Level level = logger.getLevel();
+		assertEquals(ATTN, level);
+	}
+	@Test
+	@ExpectSystemExit
+	void testLogFatalError() {
+		Utils.logFatalError("A fatal error has occurred");
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith("A fatal error has occurred"));
+	}
+	@Test
 	void testLoggingLevelError() {
 		// default level is ERROR
 		// see setupClass()
@@ -80,7 +94,32 @@ class TestUtils {
 		assertEquals(1, mockedAppender.messages.size());
 		assertTrue(mockedAppender.messages.get(0).startsWith("warn message"));
 	}
-
+	@Test
+	void testLogAppMessageWithDateTime() {
+		String message = "Start ballot generation app.";
+		logAppMessage(logger, message, true);
+		assertEquals(1, mockedAppender.messages.size());
+		String logMessage = mockedAppender.messages.get(0);
+		assertTrue(logMessage.startsWith(message));
+		// TODO: Statement below not true. Consider two digit dates!
+		// The date/time value should have the same length no matter what.
+		message += " Nov 7, 2023, 3:03:25 PM";
+		assertEquals(message.length(), logMessage.length());
+	}
+	@Test
+	void testLogAppMessageWithoutDateTime() {
+		String message = "Start ballot generation app.";
+		logAppMessage(logger, message, false);
+		assertEquals(1, mockedAppender.messages.size());
+		String logMessage = mockedAppender.messages.get(0);
+		assertTrue(logMessage.startsWith(message));
+		assertEquals(message.length(), logMessage.length());
+	}
+	@Test
+	void testGetErrorCount() {
+		String logFilePath = "./src/test/java/test-log-file.log";
+		assertEquals(6, getErrorCount(logFilePath));
+	}
 	@Test
 	void testLoadGoodPropertiesFile() {
 		String propsPath = "./src/test/java/test-props1.properties";
@@ -151,6 +190,18 @@ class TestUtils {
 		assertFalse(exists);
 	}
 	@Test
+	void textCheckDirExistsTrue() {
+		boolean exists = Utils.checkDirExists("./src/test/java/DirExists");
+		assertTrue(exists);
+	}
+	@Test
+	void textCheckDirExistsFalse() {
+		boolean exists = Utils.checkDirExists("./src/test/java/non-existant.txt");
+		assertFalse(exists);
+		exists = Utils.checkDirExists("./src/test/java/gettysburg.txt");
+		assertFalse(exists);
+	}
+	@Test
 	void testReadTextFile() {
 		String expected = 
 				"Four score and seven years ago our fathers brought forth\n" +
@@ -196,6 +247,32 @@ class TestUtils {
 	void testEnvVariable3() {
 		// don't expect OPTIONAL variable to always exist
 		assertTrue(null== Utils.getEnvVariable("OPTIONAL", false));
+	}
+	@Test
+	void testNormalizeMuniNoGood() {
+		String expected = "047";
+		String normalized = normalizeMuniNo(47);
+		assertEquals(expected, normalized);
+	}
+	@Test
+	@ExpectSystemExit
+	void testNormalizeMuniNoBad() {
+		String normalized = normalizeMuniNo(-1);
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith("can't normalize #:"));
+	}
+	@Test
+	void testNormalizeZoneNoGood() {
+		String expected = "01";
+		String normalized = normalizeZoneNo(1);
+		assertEquals(expected, normalized);
+	}
+	@Test
+	@ExpectSystemExit
+	void testNormalizeMZoneNoBad() {
+		String normalized = normalizeZoneNo(100);
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith("can't normalize #:"));
 	}
 
 }

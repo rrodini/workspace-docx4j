@@ -16,10 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 // SLF4J
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
+
 // LOG4J
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -51,6 +55,14 @@ public class Utils {
 		System.exit(1);	// non-zero exit code means fatal error
 	}
 	// just for log4j
+	/** setLoggingLevel sets the logging LOG4J level dynamically. It
+	 *  uses a non-public LOG4J API but seems to work.
+	 *  
+	 *  This method is typically called at program start in order to
+	 *  set the level of the root logger.
+	 *  
+	 * @param loggerName name whose level to set.
+	 */
 	public static void setLoggingLevel(String loggerName) {
 		Map<String, org.apache.logging.log4j.Level> logLevels = Map.of(
 				"ERROR", ERROR,
@@ -63,20 +75,50 @@ public class Utils {
 				);
 		// get logging level from JVM argument
 		String strLevel = System.getProperty(JVM_LOG_LEVEL, "ERROR").toUpperCase();
-//		org.apache.logging.log4j.Level log4jLevel = logLevels.get(strLevel);
-//      System.out.printf("log4jLevel: %s%n", log4jLevel);
-//		if (log4jLevel == null) {
-//			log4jLevel = ERROR;
-//		}
-//		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,log4jLevel);
 		Level level = logLevels.get(strLevel);
+		// echo out for the world to see.
 		System.out.printf("log4jLevel: %s%n", level);
 		if (level == null) {
 			level = ERROR;
 		}
 		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,level);
 	}
-	// load program properties (as per Java conventions).
+	/**
+	 * logAppMessage - logs an application message at ATTN level. An application message is typically logged
+	 * at application startup or shutdown.
+	 * @logger logger to use.
+	 * @param msg message to log.
+	 * @param addTime true => add date/time to the msg.
+	 */
+	public static void logAppMessage(Logger logger, String msg, boolean addTime) {
+		String dateTime = "";
+		if (addTime) {
+			dateTime = " " + getDateTimeString();
+		}
+		logger.log(ATTN, msg + dateTime);
+	}
+	/**
+	 * getErrorCount returns the number of ERROR messages written to the log file.
+	 * It is typically called at the end of a ballot generation program.
+	 * 
+	 * @param logFilePath path to the programs's log file.
+	 * @return count of ERROR messages written to the log file.
+	 */
+	public static int getErrorCount(String logFilePath) {
+		int errors = 0;
+		String logFileText = readTextFile(logFilePath);
+		Pattern pat = compileRegex(".*ERROR.*");
+		Matcher m = pat.matcher(logFileText);
+		errors = (int) m.results().count();
+		return errors;
+	}
+	
+	/**
+	 * loadProperties loads the program's properties from a Java properties file.
+	 * 
+	 * @param resourcePath path to properties file.
+	 * @return Properties object.
+	 */
 	public static Properties loadProperties(String resourcePath) {
 		// get properties
 		Properties props = new Properties();
@@ -89,6 +131,13 @@ public class Utils {
 		return props;
 	}
 	// get a property value.
+	/** 
+	 * getPropValue gets a specific property value from a Properties object.
+	 * 
+	 * @param props Properties object.
+	 * @param propName name of property.
+	 * @return value (String) of property.
+	 */
 	public static String getPropValue(Properties props, String propName) {
 		String value = props.getProperty(propName);
 		if (value == null) {
@@ -96,10 +145,16 @@ public class Utils {
 		}
 		return value;
 	}
-	// specifically for contest.format.1
-	//                  contest.format.2
+	/** 
+	 * getPropOrderedValues gets a list of name-related properties.
+	 * Example:  contest.format.1
+	 *           contest.format.2
+	 *           
+	 * @param props Properties object.
+	 * @param propNamePrefix name prefix for the related properties.
+	 * @return List of name-related property values.
+	 */
 	public static List<String> getPropOrderedValues(Properties props, String propNamePrefix) {
-		List<String> propNames = new ArrayList<>();
 		List<String> propValues = new ArrayList<>();
 		int i = 1;
 		String propName = propNamePrefix + "." + Integer.toString(i);
@@ -114,11 +169,15 @@ public class Utils {
 		} while (propValue != null);
 		if (propValues.size() == 0 ) {
 //			Not an error (actually expected)
-//			logger.error("no property names starting with: " + propNamePrefix);
+			logger.info("no property names starting with: " + propNamePrefix);
 		}
 		return propValues;
 	}
-	// check if file exits.
+	/**
+	 * checkFileExists checks if a file exists. If it doesn't an ERROR is logged.
+	 * @param filePath path to the file.
+	 * @return true/false reflecting existence.
+	 */
 	public static boolean checkFileExists(String filePath) {
 		boolean exists = true;
 		if (!Files.exists(Path.of(filePath), NOFOLLOW_LINKS)) {
@@ -127,7 +186,29 @@ public class Utils {
 		}
 		return exists;
 	}
+	/**
+	 * checkDirExists checks if a directory exists. If it doesn't an ERROR is logged.
+	 * @param dirPath path to the file.
+	 * @return true/false reflecting existence.
+	 */
+	public static boolean checkDirExists(String dirPath) {
+		boolean exists = true;
+		if (!Files.exists(Path.of(dirPath), NOFOLLOW_LINKS)) {
+			logger.error("directory \"" + dirPath + "\" does not exist");
+			exists = false;
+		} else if (!Files.isDirectory(Path.of(dirPath), NOFOLLOW_LINKS)) {
+			logger.error("directory \"" + dirPath + "\" does not exist");
+			exists = false;
+		}
+		return exists;
+	}
 	// read all the text of a file.
+	/**
+	 * readTextFile reads an entire text file.
+	 * 
+	 * @param textFilePath path to txt file.
+	 * @return text file contents as a string.
+	 */
 	public static String readTextFile(String textFilePath) {
  		List<String> textLines = null;
 		try {
@@ -138,7 +219,14 @@ public class Utils {
  		String text = textLines.stream().collect(joining("\n"));
  		return text;
 	}
-	// compile a regular expression.
+	/** 
+	 * compileRegex compiles a regular expression. Since these are critical 
+	 * to the operation of ballot generation, a fatal error is reported if 
+	 * the regex fails to compile.
+	 * 
+	 * @param regex regular expression.
+	 * @return Pattern object.
+	 */
 	public static Pattern compileRegex(String regex) {
 		Pattern pattern = null;
 		try {
@@ -150,6 +238,13 @@ public class Utils {
 		return pattern;
 	}
 	// check that an environment variable exists
+	/**
+	 * getEnvVariable gets the value of an environmental variable. E.g. BALLOTGEN_VERSION.
+	 * 
+	 * @param name name of env variable.
+	 * @param necessary is the env variable's value really needed?
+	 * @return value of the env variable.
+	 */
 	public static String getEnvVariable(String name, boolean necessary) {
 		String value = System.getenv(name);
 		boolean exists = value != null && !value.isBlank();
@@ -158,26 +253,55 @@ public class Utils {
 		}
 		return value;
 	}
-	
-	// Normalize an int to a string with leading zeros.
-	// Errors are considered fatal since zoneNo/zoneStr
-	// and muniNo/muniStr are treated as keys throughout the code.
-	public static String normalizeNo(int no, int maxlen) {
+	/**
+	 * normalizeNo normalizes a # by supplying leading zeros to reach desired length.
+	 * Typical usage:  precinct #s are length 3, zone #s are length 2.
+	 * Fatal error is recorded because these strings are used as keys throughout code.
+	 * 
+	 * 
+	 * @param no number to normalize.
+	 * @param maxlen desired length for normalized number.
+	 * @return normalized number as string.
+	 */
+	private static String normalizeNo(int no, int maxlen) {
+		if (no < 0) {
+			logFatalError(String.format("can't normalize #: %d since it is negative", no));
+		}
 		String str = Integer.toString(no);
 		int strlen = str.length();
 		if (strlen > maxlen) {
-			logFatalError(String.format("can't normalize no: $d since it exceeds max length: %d", no, maxlen));
+			logFatalError(String.format("can't normalize #: %d since it exceeds max length: %d", no, maxlen));
 		}
 		String zeros = "0".repeat(maxlen);
 		return zeros.substring(0, maxlen - str.length()) + str;
 	}
-	// zoneNos are always 2 digits
+	/**
+	 * normalizeZoneNo normalize a zone # to 2 digit string.
+	 * 
+	 * @param zoneNo zone # to normalize.
+	 * @return normalized zone # string.
+	 */
 	public static String normalizeZoneNo(int zoneNo) {
 		return normalizeNo(zoneNo, ZONE_STR_LEN);
 	}
-	// muniNos are always 3 digits
+	/**
+	 * normalizeMuniNo normalize a precinct # to 3 digit string.
+	 * 
+	 * @param muniNo precinct # to normalize.
+	 * @return normalized precinct # string.
+	 */
 	public static String normalizeMuniNo(int muniNo) {
 		return normalizeNo(muniNo, MUNI_STR_LEN);
 	}
-
+	/**
+	 * getDateTimeString - returns the current Date and Time as 
+	 * as string for printing. Example: Nov 7, 2023, 3:03:25 PM
+	 */
+	public static String getDateTimeString() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDateTime(java.time.format.FormatStyle.MEDIUM);
+		LocalDateTime lt = LocalDateTime.now();
+		return dtf.format(lt);
+	}
+	
+	
 }
