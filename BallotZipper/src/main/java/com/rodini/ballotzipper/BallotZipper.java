@@ -51,16 +51,21 @@ public class BallotZipper {
 	}
 	static final Logger logger = LogManager.getLogger(BallotZipper.class);
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
+	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
+	static String COUNTY;		// chester vs. bucks
+
 	/** 
 	 * main implements the algorithm described above.
 	 * @param args CLI arguments.
 	 */
 	public static void main(String[] args) {
 		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
-		String version = System.getenv(ENV_BALLOTGEN_VERSION);
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		String message = String.format("Start of BallotZipper app. Version: %s", version);
-		System.out.println(message);
-		logger.log(ATTN, message);
+		Utils.logAppMessage(logger, message, true);		
+		message = String.format("Zip files for: %s Co.", COUNTY);
+		Utils.logAppMessage(logger, message, false);
 		Initialize.initialize(args);
 		// Process CSV file into two data structures
 		//  muniNoMap (TreeMap) key: MuniNo (String) value: zone (Zone object)
@@ -92,9 +97,11 @@ public class BallotZipper {
 		logger.log(ATTN, message);
 		for (String docxNo: docxNoMap.keySet()) {
 			message = String.format("%s: %s", docxNo, docxNoMap.get(docxNo).toString());
-			System.out.println(message);
-			logger.log(ATTN, message);
+			Utils.logAppMessage(logger, message, false);
 		}
 		GenZipFiles.genZips();
+		message = "End of BallotZipper app";
+		Utils.logAppErrorCount(logger);
+		Utils.logAppMessage(logger, message, true);
 	}
 }
