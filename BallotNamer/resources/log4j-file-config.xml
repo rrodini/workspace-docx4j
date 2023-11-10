@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="BallotNamer" packages="">
+<Configuration status="warn" name="BallotGen" packages="">
   <Appenders>
-    <File name="BallotNamer" fileName="../logs/ballotnamer.log">
+    <File name="BallotGen" fileName="../logs/ballotnamer.log">
       <PatternLayout pattern="%-5level %c{1}:%M:%L - %msg%n"/>
 	  <Append>false</Append>		
     </File>
   </Appenders>
   <Loggers>
     <Root level="ERROR">
-      <AppenderRef ref="BallotNamer"/>
+      <AppenderRef ref="BallotGen"/>
     </Root>
     <Logger name="com.rodini.ballotnamer"> 
     </Logger>

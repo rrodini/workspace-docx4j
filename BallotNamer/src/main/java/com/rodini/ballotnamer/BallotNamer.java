@@ -142,6 +142,7 @@ public class BallotNamer {
 		Utils.logAppMessage(logger, startMsg, false);
 		initialize(args);
         processFiles();
+        Utils.logAppErrorCount(logger);
 		Utils.logAppMessage(logger, "End of BallotNamer app.", true);
 	}
 	/**

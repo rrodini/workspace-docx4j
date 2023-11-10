@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -28,6 +29,10 @@ import java.time.LocalDateTime;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.spi.LoggerContext;
 
 /**
  * Utils class contains common utility methods across all ballot
@@ -100,19 +105,43 @@ public class Utils {
 		System.out.println(totalMsg);
 	}
 	/**
-	 * getErrorCount returns the number of ERROR messages written to the log file.
+	 * getLogFilePath queries the LOG4J API to get the name of the log file for
+	 * the application. This code only works due to the convention that the appender
+	 * is given the name "BallotGen" in all ballot gen applications.
+	 * 
+	 * @param logger Logger object.
+	 * @return null or log file path.
+	 */
+	private static String getLogFilePath(Logger logger) {
+		final String BALLOTGEN = "BallotGen";
+	    FileAppender fileAppender = null;
+		String logFilePath = null;
+		Map<String, Appender> appenderMap = ((org.apache.logging.log4j.core.Logger) logger).getAppenders();
+		Appender currAppender = appenderMap.get(BALLOTGEN);
+	    if (currAppender instanceof FileAppender) {
+	        fileAppender = (FileAppender) currAppender;
+	    }
+		if (fileAppender != null) {
+		    logFilePath = fileAppender.getFileName();
+		}
+		return logFilePath;
+	}
+	/**
+	 * logAppErrorCount logs the number of ERROR messages written to the log file.
 	 * It is typically called at the end of a ballot generation program.
 	 * 
-	 * @param logFilePath path to the programs's log file.
-	 * @return count of ERROR messages written to the log file.
+	 * @param logger root logger.
 	 */
-	public static int getErrorCount(String logFilePath) {
-		int errors = 0;
-		String logFileText = readTextFile(logFilePath);
-		Pattern pat = compileRegex(".*ERROR.*");
-		Matcher m = pat.matcher(logFileText);
-		errors = (int) m.results().count();
-		return errors;
+	public static void logAppErrorCount(Logger logger) {
+		String logFilePath = getLogFilePath(logger);
+		if (logFilePath != null) {
+			int errors = 0;
+			String logFileText = readTextFile(logFilePath);
+			Pattern pat = compileRegex(".*ERROR.*");
+			Matcher m = pat.matcher(logFileText);
+			errors = (int) m.results().count();
+			logAppMessage(logger, String.format("Error count: %d", errors), false);
+		}
 	}
 	
 	/**
