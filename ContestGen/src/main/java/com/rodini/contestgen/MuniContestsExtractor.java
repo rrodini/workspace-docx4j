@@ -1,7 +1,11 @@
 package com.rodini.contestgen;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * MuniContestExtractor "rips" the text of each municipality
  * and creates ordered contest objects. The text passed to 
@@ -14,7 +18,7 @@ import org.slf4j.LoggerFactory;;
  */
 
 public class MuniContestsExtractor {
-	private static final Logger logger = LoggerFactory.getLogger(MuniContestsExtractor.class);
+	private static final Logger logger = LogManager.getLogger(MuniContestsExtractor.class);
 
 // Sample:
 //		Justice of the Supreme Court
@@ -76,7 +80,7 @@ public class MuniContestsExtractor {
 		logger.info(String.format("extractContestName: format: %d", format));
 		if (format == -1) {
 			// this error is typical for long referendum questions.
-			logger.error("Not a contest? No format for: " + contestText);
+			logger.error(String.format("contest error muniName: %s text: %s: ", muniName, contestText));
 			return;
 		}
 		String name = cnm.getContestName();

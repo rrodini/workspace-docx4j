@@ -3,8 +3,11 @@ package com.rodini.contestgen;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
@@ -19,7 +22,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class MuniTextExtractor {
-	private static final Logger logger = LoggerFactory.getLogger(MuniTextExtractor.class);
+	private static final Logger logger = LogManager.getLogger(MuniTextExtractor.class);
 	
 	private final String muniName;  // e.g. 640_TREDYFFRIN_W-3
 	private final String muniText;  // ballot text for 640_TREDYFFRIN_W-3
@@ -86,6 +89,11 @@ public class MuniTextExtractor {
 	String getMuniName() {
 		return muniName;
 	}
-	
-	
+	/**
+	 * getMuniText returns the municipal ballot text.
+	 * @return the municipal ballot text.
+	 */
+	String getMuniText() {
+		return muniText;
+	}
 }

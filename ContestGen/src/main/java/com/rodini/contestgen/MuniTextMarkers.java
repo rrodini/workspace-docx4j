@@ -3,8 +3,11 @@ package com.rodini.contestgen;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
@@ -20,7 +23,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class MuniTextMarkers {
-	static final Logger logger = LoggerFactory.getLogger(MuniTextMarkers.class);
+	static final Logger logger = LogManager.getLogger(MuniTextMarkers.class);
 	private static int pageCount;
 	private static String page1Regex;
 	private static String page2Regex;

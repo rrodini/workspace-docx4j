@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
@@ -14,7 +17,7 @@ import com.rodini.ballotutils.Utils;
  * ContestNameMarkers - 
  */
 public class ContestNameMarkers {
-	static final Logger logger = LoggerFactory.getLogger(ContestNameMarkers.class);
+	static final Logger logger = LogManager.getLogger(ContestNameMarkers.class);
 	// test or resource values
 	private static String [] contestNameFormats;
 	// compiled patterns

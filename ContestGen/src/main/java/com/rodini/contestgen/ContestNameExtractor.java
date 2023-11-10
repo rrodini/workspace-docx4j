@@ -3,8 +3,11 @@ package com.rodini.contestgen;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ContestNameExtractor - attempts to match the contest text against
@@ -50,7 +53,7 @@ import org.slf4j.LoggerFactory;
 //Vote for ONE                  <= contest instruction
 
 public class ContestNameExtractor {
-	private static final Logger logger = LoggerFactory.getLogger(ContestNameExtractor.class);
+	private static final Logger logger = LogManager.getLogger(ContestNameExtractor.class);
 	private static Pattern [] cnPatterns;
 	private static boolean initialized = false;
 	private Matcher m;

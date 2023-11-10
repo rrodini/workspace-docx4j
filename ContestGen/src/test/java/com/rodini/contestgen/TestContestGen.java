@@ -25,6 +25,7 @@ class TestContestGen {
 	    logger = (Logger)LogManager.getLogger(ContestGen.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
+
 	}
 
 	@AfterAll
@@ -90,12 +91,25 @@ class TestContestGen {
 		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
 	}
 	@Test
+	@ExpectSystemExit
+	void testInitializeArg2IsBad1() {
+		String [] args = {
+				"./src/test/java/Chester-General-2021.txt",
+				"./contests",
+				"./non-existent-folder"
+		};
+		String expected = "command line arg[2] is not a folder";
+		ContestGen.initialize(args);
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
+	}
+	@Test
 	void testInitializeArgsGood() {
 		String [] args = {
 				"./src/test/java/Chester-General-2021.txt",
-				"./contests"
+				"./contests",
+				"./ballots"
 		};
-		String expected = "command line arg[1] is not a folder";
 		ContestGen.initialize(args);
 		assertTrue(ContestGen.props != null);
 	}

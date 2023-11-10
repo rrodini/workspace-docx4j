@@ -16,23 +16,32 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;
 /**
  * ContestGen is the program that analyzes the text of the Voter Services specimen
- * file and extracts the municipal level contests from it. At the end of the run
- * the contests folder should be populated as follows:
+ * file and extracts the ballot text and municipal level contests from it. 
+ * 
+ * At the end of the run the contests folder (args[1]) should be populated as follows:
  *   005_Atglen_contests.txt
  *   010_Avondale_contests.txt
  *   ...
  *   common_contests.txt     <= not currently used 
  *   Ballot_Summary.txt      <= summary report
+ * And the text ballots folder (args[2]) should be populated as follows;
+ *   municipal0.txt (to be changed to 005_Atglen)
+ *   municipal1.txt (to be changed to 010_Avondale)
  *   
  * CLI arguments: 
  * args[0] path Voter Services specimen text file.
  * args[1] path to directory for generated municipal level "NNN_XYZ_contests.txt" files.
+ * args[2] path to directory for generated municipal level "municipalNNN.txt" files.
  * 
  * ENV variables:
  * BALLOTGEN_VERSION version # of Ballot Gen Software (e.g. "1.4.0")
@@ -43,12 +52,14 @@ import com.rodini.ballotutils.Utils;
  */
 public class ContestGen {
 	
-	static final Logger logger = LoggerFactory.getLogger(ContestGen.class);
+	static final Logger logger = LogManager.getRootLogger();
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	static final String PROPS_FILE = "contestgen.properties";
 	static final String RESOURCE_PATH = "./resources/";
 	static final String CONTESTS_FILE = "_contests.txt";
+	static final String MUNICIPAL_FILE = "municipal";
+	static final String TEXT_EXT = ".txt";
 	static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
 	static final String SUMMARY_FILE_NAME = "Ballot_Summary.txt";
 
@@ -56,7 +67,8 @@ public class ContestGen {
 	static String WRITE_IN; 	// Write-in vs. Write-In
 	static Environment env;		// TEST vs. PRODUCTION
 	static String specimenText; // text of the Voter Services specimen.
-	static String outPath;		// path to output directory
+	static String outContestPath;		// path to contest output directory
+	static String outBallotPath;		// path to ballot output directory
 	static Properties props;
 	static MuniContestNames muniContestNames;
 	static MuniContestNames commonContestNames;
@@ -67,23 +79,23 @@ public class ContestGen {
 	 * @param args CLI arguments
 	 */
 	public static void main(String[] args){
-		Utils.setLoggingLevel("com.rodini.contestgen");
+		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
-		String startMsg = String.format("Start of ContestGen app. Version: %s", version);
-		System.out.println(startMsg);
-		logger.info(startMsg);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		String startMsg = String.format("Start of ContestGen app. Version: %s", version);
+		Utils.logAppMessage(logger, startMsg, true);
 		startMsg = String.format("Contests for: %s Co.", COUNTY);
-		System.out.println(startMsg);
-		logger.info(startMsg);
-		
+		Utils.logAppMessage(logger, startMsg, false);		
 		initialize(args);
-		logger.info(startMsg);
 		
 		boolean first = true;
-		// Use below during development, switch to resource loading afterwards.
+		// use muniNameRegex to split specimenText MunitTextExtractor objects.
 		SpecimenMuniExtractor sme = new SpecimenMuniExtractor(specimenText);
 		List<MuniTextExtractor> mteList = sme.extract();
+		// Take the MuniTextExtractor objects and generate municipal ballots.
+		genMuniBallots(mteList);
+		
+		
 		MuniContestNames muniContestNames;
 		List<MuniContestNames> mcnList = new ArrayList<> ();
 		for (MuniTextExtractor mte: mteList) {
@@ -99,15 +111,15 @@ public class ContestGen {
 				commonContestNames = commonContestNames.intersect(muniContestNames);
 			}
 			// generate municipality contests
-			genMuniContestsFile(muniName, muniContestNames.get());
+			genMuniContests(muniName, muniContestNames.get());
 			mcnList.add(muniContestNames);
 		}
 		// generate common contests.
-		genMuniContestsFile("common", commonContestNames.get());
+		genMuniContests("common", commonContestNames.get());
 		// generate a summary report.
 		genBallotReport(mcnList);
-		logger.info("End of ContestGen app.");
-		System.out.println("End of ContestGen app.");
+		Utils.logAppErrorCount(logger);
+		Utils.logAppMessage(logger, "End of ContestGen app.", true);
 	}
 	/**
 	 * initialize the application attempting to FAIL EARLY if possible.
@@ -115,17 +127,21 @@ public class ContestGen {
 	 */
 	static void initialize(String [] args) {
 		// check the # of command line args
-		if (args.length < 2) {
+		if (args.length < 3) {
 			Utils.logFatalError("missing command line arguments:\n" +
 					"args[0]: path Voter Services specimen text file.\n" +
-					"args[1]: path to directory for generated municipal level \"NNN_XYZ_contests.txt\" files.");
+					"args[1]: path to directory for generated municipal level \"NNN_XYZ_contests.txt\" files." +
+					"args[2]: path to directory for generated municipal level \"municipalNNN.txt\" files.");
 		} else {
-			String msg0 = String.format("path to Voter Services specimen text   : %s", args[0]);
-			String msg1 = String.format("path to directory for generate contests: %s", args[1]);
+			String msg0 = String.format("path to Voter Services specimen text: %s", args[0]);
+			String msg1 = String.format("path to directory for contests:       %s", args[1]);
+			String msg2 = String.format("path to directory for ballots :       %s", args[2]);
 			System.out.println(msg0);
-			logger.info(msg0);
+			logger.log(ATTN, msg0);
 			System.out.println(msg1);
-			logger.info(msg1);
+			logger.log(ATTN, msg1);
+			System.out.println(msg2);
+			logger.log(ATTN, msg2);
 		}
 		// check args[0] is present and is a TXT file
 		String specimenFilePath = args[0];
@@ -137,14 +153,24 @@ public class ContestGen {
 		}
 		specimenText = Utils.readTextFile(specimenFilePath);		
 		// check args[1] is present and a directory
-		outPath = args[1];
-		File directory1 = new File(outPath);
+		outContestPath = args[1];
+		File directory1 = new File(outContestPath);
 		try {
 			if (!directory1.isDirectory()) {
-				Utils.logFatalError("command line arg[1] is not a directory: " + outPath);
+				Utils.logFatalError("command line arg[1] is not a directory: " + outContestPath);
 			}
 		} catch (SecurityException e) {
-			Utils.logFatalError("can't access this directory" + outPath);
+			Utils.logFatalError("can't access this directory" + outContestPath);
+		}
+		// check args[2] is present and a directory
+		outBallotPath = args[2];
+		File directory2 = new File(outBallotPath);
+		try {
+			if (!directory2.isDirectory()) {
+				Utils.logFatalError("command line arg[2] is not a directory: " + outBallotPath);
+			}
+		} catch (SecurityException e) {
+			Utils.logFatalError("can't access this directory" + outBallotPath);
 		}
 		// read in program's properties
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
@@ -170,12 +196,34 @@ public class ContestGen {
 		ContestNameMarkers.initialize(propsFilePath);
 	}
 	/**
-	 * genMuniContestsFile generates the contest(s) file for the municipality.
+	 * GenMuniBallots generates the ballot file for each municipality.
+	 */
+	static void genMuniBallots(List<MuniTextExtractor> mteList) {
+		int i = 1;
+		for (MuniTextExtractor mte: mteList) {
+			String muniName = mte.getMuniName();
+			String muniBallotText = mte.getMuniText();
+			String ballotFilePath = outBallotPath + File.separator + MUNICIPAL_FILE + Integer.toString(i) + TEXT_EXT;
+			String msg = String.format("writing file: %s", ballotFilePath);
+			System.out.println(msg);
+			logger.info(msg);
+			try (FileWriter ballotFile = new FileWriter(ballotFilePath, false);) {
+				ballotFile.write(muniBallotText);
+				
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
+			i++;
+		}
+	}
+	
+	/**
+	 * genMuniContests generates the contests file for the municipality.
 	 * 
 	 * @param muniName municipality name
 	 * @param cnList list of contest names w/ formats.
 	 */
-	static void genMuniContestsFile(String muniName, List<ContestName> cnList) {
+	static void genMuniContests(String muniName, List<ContestName> cnList) {
 		if (env == TEST) {
 			for (ContestName mcn: cnList) {
 				String contestName = mcn.getName();
@@ -184,7 +232,7 @@ public class ContestGen {
 			}
 		} else {
 			// PRODUCTION
-			String contestFilePath = outPath + File.separator + muniName + CONTESTS_FILE;
+			String contestFilePath = outContestPath + File.separator + muniName + CONTESTS_FILE;
 			String msg = String.format("writing file: %s", contestFilePath);
 			System.out.println(msg);
 			logger.info(msg);
@@ -208,13 +256,14 @@ public class ContestGen {
 	 */
 	static void genBallotReport(List<MuniContestNames> mcnList) {
 		// try with resources will close the output file.
-		try (PrintWriter pw = new PrintWriter(new File(outPath + File.separator + SUMMARY_FILE_NAME))) {
+		try (PrintWriter pw = new PrintWriter(new File(outContestPath + File.separator + SUMMARY_FILE_NAME))) {
 			String line = "Ballot Summary Report";
 			System.out.println(line);
 			pw.println(line);
 //			logger.info(line);
 			line = String.format("Precinct count: %s", mcnList.size());
 			System.out.println(line);
+			logger.log(ATTN, line);
 			pw.println(line);
 //			logger.info(line);
 			// determine how many unique ballots

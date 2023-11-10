@@ -7,10 +7,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
+import static com.rodini.ballotutils.Utils.ATTN;;
+
 /**
  * SpecimenMuniExtractor "rips" the specimen text and 
  * generates MuniTextExtractor objects.
@@ -26,7 +31,7 @@ import com.rodini.ballotutils.Utils;
  *
  */
 public class SpecimenMuniExtractor {
-	private static final Logger logger = LoggerFactory.getLogger(SpecimenMuniExtractor.class);
+	private static final Logger logger = LogManager.getLogger(SpecimenMuniExtractor.class);
 
 	private final String specimenText;
 	
@@ -59,9 +64,8 @@ public class SpecimenMuniExtractor {
 		} else {
 			try {
 				// After first call to m.find() need to reset the matcher.
+				// And don't call m.find() again or you will lose the first match.
 				m.reset();
-				// Now call m.find() again so as not to lose the first find.
-				m.find();
 				muniNames = m.results()
 						.map(ContestGen.COUNTY.equals("chester")?
 								// CHESTER 1=>id               2=>name
@@ -73,23 +77,13 @@ public class SpecimenMuniExtractor {
 						// avoid embedded spaces
 						.map( name -> name.replace(" ", "_"))
 						.collect(toList());
-//				NEW - below was used to find the bug for specimen's that list municipality once.
-//				m.reset();
-//				while (m.find()) {
-//					String id = m.group(1);
-//					String name = m.group(2);
-//					String muniName = id + "_" + name.replace(" ", "_");
-//					if (!muniNames.contains(muniName)) {
-//						muniNames.add(muniName);
-//					}
-//				}
 			} catch (Exception e) {
 				String msg = e.getMessage();
 				logger.error(msg);
 			}
-			logger.debug(String.format("Specimen Muni Names: %d%n", muniNames.size()));
+			logger.log(ATTN,String.format("Specimen Muni Names: %d", muniNames.size()));
 			for (String name: muniNames) {
-				logger.debug(String.format("%s%n", name));
+				logger.debug(String.format("%s", name));
 			}
 		}
 		return muniNames;
@@ -99,42 +93,77 @@ public class SpecimenMuniExtractor {
 	 * extract extracts the municipal text from the text of the Voter Services text.
 	 * It relies on a critical format (regular expression) passed to the constructor.
 	 * 
-	 * Note: The regex that extracts the name also delimits the text boundaries.
+	 * Notes: 
+	 * 1) The regex that extracts the name is reused to delimit the ballot text boundaries.
+	 * 2) The ballot text that is extracted should be very similar to the result of PDFBox Extract utility.
+	 *    The advantage of doing it in this program is that the Specimen Text may have been
+	 *    manually repaired, so each municipal ballot is also repaired. 
 	 * 
 	 * @return Ordered list of MunicipalTextExtractor objects.
 	 */
+// NEW CODE
 	List<MuniTextExtractor> extract() {
 		List<String> muniNames = extractMuniNames();
-		logger.info(String.format("SpecimenMuniExtractor: there are %d municipalities", muniNames.size()));
-//logger.debug(String.format("muniNameRegex: %s%n", SpecimenMuniMarkers.getMuniNamePattern().pattern().toString()));
-//		String [] muniStringExtracts = specimenText.split(SpecimenMuniMarkers.getMuniNamePattern().pattern().toString(), 0);
-		Pattern muniNamePattern = SpecimenMuniMarkers.getMuniNamePattern();
-		String [] muniStringExtracts = muniNamePattern.split(specimenText, 0);
-logger.debug(String.format("muniStringExtracts.length=%d%n", muniStringExtracts.length));
-for (int i=0; i <muniStringExtracts.length; i++) {
-	logger.debug(String.format("extract[%d]: %s%n",i, muniStringExtracts[i]));
-}
+		Pattern pat = SpecimenMuniMarkers.getMuniNamePattern();
+		Matcher match = pat.matcher(specimenText);
 
-		if (ContestGen.COUNTY.equals("chester")) {
-			// structure of Chester Co. ballot below
-			int repeat = SpecimenMuniMarkers.getRepeatCount();
-			// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
-			for (int i = 0; i < muniNames.size(); i++) {
-				int j = (i + 1) * repeat;
-				muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j]));
+		match.find();
+		boolean matching = true;
+		int count = 0;
+		String muniName;
+		int fileSize = specimenText.length();
+		int repeat = SpecimenMuniMarkers.getRepeatCount();
+		while (matching) {
+			muniName = muniNames.get(count);
+			int start = match.start();
+			for (int r = 1; r < repeat; r++) {
+				// skip next match
+				match.find();
 			}
-		} else if (ContestGen.COUNTY.equals("bucks")) {
-			// structure of Bucks Co. ballot below
-			//int repeat = SpecimenMuniMarkers.getRepeatCount();
-			int j = 0;
-			// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
-			for (int i = 0; i < muniNames.size(); i++) {
-				j++;
-				muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j] + muniStringExtracts[j + 1]));
-				j++;
+			int end = 0;
+			if (match.find()) {
+				end = match.start() - 1;
+			} else {
+				matching = false;
+				end = fileSize;
 			}
+			logger.info(String.format("%s start: %d end %d ", muniName, start, end));
+			muniExtracts.add(new MuniTextExtractor(muniName,specimenText.substring(start, end)));
+			count++;
 		}
 		return muniExtracts;
 	}
+//OLD CODE	
+//	List<MuniTextExtractor> extract1() {
+//		List<String> muniNames = extractMuniNames();
+//		logger.info(String.format("SpecimenMuniExtractor: there are %d municipalities", muniNames.size()));
+//		Pattern muniNamePattern = SpecimenMuniMarkers.getMuniNamePattern();
+//		String [] muniStringExtracts = muniNamePattern.split(specimenText, 0);
+//		logger.debug(String.format("muniStringExtracts.length=%d%n", muniStringExtracts.length));
+//		for (int i=0; i <muniStringExtracts.length; i++) {
+//			logger.debug(String.format("extract[%d]: %s%n",i, muniStringExtracts[i]));
+//		}
+//
+//		if (ContestGen.COUNTY.equals("chester")) {
+//			// structure of Chester Co. ballot below
+//			int repeat = SpecimenMuniMarkers.getRepeatCount();
+//			// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
+//			for (int i = 0; i < muniNames.size(); i++) {
+//				int j = (i + 1) * repeat;
+//				muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j]));
+//			}
+//		} else if (ContestGen.COUNTY.equals("bucks")) {
+//			// structure of Bucks Co. ballot below
+//			//int repeat = SpecimenMuniMarkers.getRepeatCount();
+//			int j = 0;
+//			// Loop below uses the results of specimenText extract to create the muniText extracts for each municipality.
+//			for (int i = 0; i < muniNames.size(); i++) {
+//				j++;
+//				muniExtracts.add(new MuniTextExtractor(muniNames.get(i), muniStringExtracts[j] + muniStringExtracts[j + 1]));
+//				j++;
+//			}
+//		}
+//		return muniExtracts;
+//	}
 
 }

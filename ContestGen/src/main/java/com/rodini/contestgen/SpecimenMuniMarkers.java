@@ -3,13 +3,16 @@ package com.rodini.contestgen;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
 public class SpecimenMuniMarkers {
-	private static final Logger logger = LoggerFactory.getLogger(SpecimenMuniMarkers.class);
+	private static final Logger logger = LogManager.getLogger(SpecimenMuniMarkers.class);
 
 	private static int repeatCount; // # of times the ballot name is repeated
 	private static String muniNameRegex;
