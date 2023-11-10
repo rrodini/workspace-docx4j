@@ -117,7 +117,9 @@ public class GenDocxBallot {
 	// so when the template is loaded the existence of the styles is checked.
 	// If style is not found "Normal" style is used.
 	private static String STYLEID_CONTEST_TITLE = "ContestTitle";
+	private static String STYLEID_CONTEST_GENERIC_TITLE = "ContestGenericTitle";
 	private static String STYLEID_CONTEST_INSTRUCTIONS = "ContestInstructions";
+	private static String STYLEID_CONTEST_GENERIC_INSTRUCTIONS = "ContestGenericInstructions";
 	private static String STYLEID_CANDIDATE_NAME = "CandidateName";
 	private static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
 	private static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
@@ -286,13 +288,21 @@ public class GenDocxBallot {
 			logger.error("dotx template missing this styleId: " + STYLEID_CANDIDATE_PARTY);
 			STYLEID_CANDIDATE_PARTY = "Normal";
 		}
+		if (!templateIdStyles.contains(STYLEID_CONTEST_TITLE)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_TITLE);
+			STYLEID_CONTEST_TITLE = "Normal";
+		}
+		if (!templateIdStyles.contains(STYLEID_CONTEST_GENERIC_TITLE)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_GENERIC_TITLE);
+			STYLEID_CONTEST_GENERIC_TITLE = "Normal";
+		}
 		if (!templateIdStyles.contains(STYLEID_CONTEST_INSTRUCTIONS)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_INSTRUCTIONS);
 			STYLEID_CONTEST_INSTRUCTIONS = "Normal";
 		}
-		if (!templateIdStyles.contains(STYLEID_CONTEST_TITLE)) {
-			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_TITLE);
-			STYLEID_CONTEST_TITLE = "Normal";
+		if (!templateIdStyles.contains(STYLEID_CONTEST_GENERIC_INSTRUCTIONS)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_GENERIC_INSTRUCTIONS);
+			STYLEID_CONTEST_GENERIC_INSTRUCTIONS = "Normal";
 		}
 		if (!templateIdStyles.contains(STYLEID_ENDORSED_CANDIDATE_NAME)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_NAME);
@@ -546,13 +556,19 @@ public class GenDocxBallot {
 	List<P> genContestHeader(MainDocumentPart mdp, Contest contest) {
 		P newParagraph;
 		List<P> headParagraphs = new ArrayList<>();
-		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, contest.getName());
+		String style = !contest.getName().equals(Contest.GENERIC_CONTEST.getName())?
+				STYLEID_CONTEST_TITLE:
+				STYLEID_CONTEST_GENERIC_TITLE;	
+		newParagraph = mdp.createStyledParagraphOfText(style, contest.getName());
 		headParagraphs.add(newParagraph);
+		style = !contest.getTerm().equals(Contest.GENERIC_CONTEST.getTerm())?
+				STYLEID_CONTEST_INSTRUCTIONS:
+				STYLEID_CONTEST_GENERIC_INSTRUCTIONS;	
 		if (!contest.getTerm().isEmpty()) {
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getTerm());
+			newParagraph = mdp.createStyledParagraphOfText(style, contest.getTerm());
 			headParagraphs.add(newParagraph);
 		}
-		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_INSTRUCTIONS, contest.getInstructions());
+		newParagraph = mdp.createStyledParagraphOfText(style, contest.getInstructions());
 		headParagraphs.add(newParagraph);
 		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
 		headParagraphs.add(newParagraph);

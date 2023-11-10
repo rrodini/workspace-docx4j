@@ -42,12 +42,10 @@ public class BallotGen {
 		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String msg = String.format("Start of BallotGen app. Version: %s", version);
-		System.out.println(msg);
-		logger.log(ATTN, msg);
+		Utils.logAppMessage(logger, msg, true);
 		Initialize.COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		msg = String.format("Ballots for: %s Co.", Initialize.COUNTY);
-		System.out.println(msg);
-		logger.log(ATTN, msg);
+		Utils.logAppMessage(logger, msg, false);
 		Initialize.start(args);
 		// TODO: use a loop here if ballotFiles size > 1
 		for (String ballotFile: Initialize.ballotFiles) {
@@ -62,10 +60,10 @@ public class BallotGen {
 		}
 		terminate();
 		msg = String.format("Generated %d docx files", Initialize.docxGenCount);
-		logger.log(ATTN, msg);
+		Utils.logAppMessage(logger, msg, false);
+		Utils.logAppErrorCount(logger);
 		msg = "End of BallotGen app";
-		System.out.println(msg);
-		logger.log(ATTN, msg);
+		Utils.logAppMessage(logger, msg, true);
 	}
 	/**
 	 * Terminate ends the BallotGen with summary information.
