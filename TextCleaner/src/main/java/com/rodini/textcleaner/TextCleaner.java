@@ -51,15 +51,14 @@ public class TextCleaner {
 
 	public static void main(String[] args) {
 		// Get the logging level from JVM parameter on command line.
-		Utils.setLoggingLevel("com.rodini.textcleaner");
+		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
 		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		String startMsg = String.format("Start of Text Cleaner app. Version: %s", version);
 		System.out.println(startMsg);
-		logger.log(ATTN, startMsg);
+		Utils.logAppMessage(logger, startMsg, true);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		startMsg = String.format("Text Cleaner for: %s Co.", COUNTY);
-		System.out.println(startMsg);
-		logger.log(ATTN, startMsg);
+		Utils.logAppMessage(logger, startMsg, false);
 		initialize(args);
 		
 		// Below is the heart of the program.
@@ -74,10 +73,9 @@ public class TextCleaner {
 		} catch (Exception ex) {
 			Utils.logFatalError(ex.getMessage());
 		}
+		Utils.logAppErrorCount(logger);
 		String endMsg = String.format("End of Text Cleaner app.");
-		System.out.println(endMsg);
-		logger.log(ATTN, endMsg);
-
+		Utils.logAppMessage(logger, endMsg, true);
 	}
 
 	/* private */
@@ -133,7 +131,7 @@ public class TextCleaner {
 	 */
 	static String processLine(String line) {
 		String newLine = line;
-		boolean startsBadly = line.startsWith("0 ") || line.startsWith("O ")  || line.startsWith("7 ");
+		boolean startsBadly = line.startsWith("0 ") || line.startsWith("O ") || line.startsWith("o ")  || line.startsWith("7 ");
 		if (line.isBlank()) {
 			newLine = null;
 		} else if (startsBadly) {

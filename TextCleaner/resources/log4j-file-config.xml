@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="TextCleaner" packages="">
+<Configuration status="warn" name="BallotGen" packages="">
   <Appenders>
-    <File name="TextCleaner" fileName="../logs/textcleaner.log">
+    <File name="BallotGen" fileName="../logs/textcleaner.log">
       <PatternLayout pattern="%-5level %c{1}:%M:%L - %msg%n"/>
     </File>
   </Appenders>
   <Loggers>
     <Root level="ERROR">
-      <AppenderRef ref="TextCleaner"/>
+      <AppenderRef ref="BallotGen"/>
     </Root>
     <Logger name="com.rodini.textcleaner"> 
     </Logger>
