@@ -33,7 +33,7 @@ import static com.rodini.ballotutils.Utils.ATTN;
  */
 public class BallotGen {
 	
-	private static final Logger logger = LogManager.getLogger(BallotGen.class);
+	private static final Logger logger = LogManager.getRootLogger();
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	
