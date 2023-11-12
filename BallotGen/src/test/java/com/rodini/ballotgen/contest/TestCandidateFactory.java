@@ -14,8 +14,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations.*;
 
 import com.rodini.ballotgen.common.MockedAppender;
+import com.rodini.ballotgen.common.Initialize;
 import com.rodini.ballotgen.contest.Candidate;
 import com.rodini.ballotgen.contest.CandidateFactory;
 import com.rodini.ballotgen.contest.ContestFactory;
@@ -29,6 +32,36 @@ class TestCandidateFactory {
 
 	private static MockedAppender mockedAppender;
 	private static Logger logger;
+    private static List<String> namesOfTicketContests = List.of(
+    		"GOVERNOR AND LIEUTENANT GOVERNOR",
+			"PRESIDENT AND VICE-PRESIDENT");
+
+    private static List<String> namesOfLocalContests = List.of(
+		"AUDITOR",
+		"CONSTABLE",
+		"DEMOCRATIC COUNTY COMMISSIONER",
+		"INSPECTOR OF ELECTIONS",
+		"JUDGE OF ELECTIONS",
+		"MAGISTERIAL DISTRICT JUDGE",
+		"MAYOR",
+		"MEMBER OF COUNCIL",
+		"SCHOOL DIRECTOR",
+		"TOWNSHIP COMMISSIONER",
+		"TOWNSHIP SUPERVISOR",
+		"TOWNSHIP SUPERVISOR AT LARGE",
+		"TOWNSHIP DISTRICT SUPERVISOR",
+		"TAX COLLECTOR",
+		"DISTRICT SUPERVISOR",
+		"COUNCIL",
+		"SUPERVISOR",
+		"BOROUGH COUNCIL");
+	
+	private static final List<String> namesOfLocalContestsExceptions = List.of(
+		"SCHOOL DIRECTOR OCTORARA REGION 1",
+		"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION C",
+		"SCHOOL DIRECTOR TWIN VALLEY REGION 2",
+		"SCHOOL DIRECTOR SPRING FORD REGION 3");
+
 
 	@BeforeAll
 	static void setupClass() {
@@ -37,6 +70,9 @@ class TestCandidateFactory {
 	    logger = (Logger)LogManager.getLogger(ContestFactory.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
+	    Initialize.namesOfTicketContests = namesOfTicketContests;
+	    Initialize.namesOfLocalContests = namesOfLocalContests;
+	    Initialize.namesOfLocalContestsExceptions = namesOfLocalContestsExceptions;
 	}
 
 	@AfterAll
@@ -51,6 +87,7 @@ class TestCandidateFactory {
 
 	@AfterEach
 	void tearDown() throws Exception {
+	    mockedAppender.messages.clear();
 	}
 	@Test
 	void testPrimaryCandidates01() {

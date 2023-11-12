@@ -8,10 +8,15 @@ import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.Utils;
 
 import static com.rodini.ballotgen.common.ElectionType.*;
+import static com.rodini.ballotgen.common.Initialize.*;
+
+
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -38,41 +43,48 @@ public class CandidateFactory {
 	// 1. Unique prefixes of these contest names will do.
 	// 2. Formatting such are line breaks (e.g.\n) should be removed by the caller
 	
-// CHESTER / BUCKS move this lists to text file
-	private static final List<String> namesOfTicketContests = List.of(
-			"GOVERNOR AND LIEUTENANT GOVERNOR",
-			"PRESIDENT AND VICE-PRESIDENT"
-			);
-	private static final List<String> namesOfLocalContests = List.of(
-			"AUDITOR",
-			"CONSTABLE",
-			"DEMOCRATIC COUNTY COMMISSIONER",
-			"INSPECTOR OF ELECTIONS",
-			"JUDGE OF ELECTIONS",
-			"MAGISTERIAL DISTRICT JUDGE",
-			"MAYOR",
-			"MEMBER OF COUNCIL",
-			"SCHOOL DIRECTOR",
-			"TOWNSHIP COMMISSIONER",
-			"TOWNSHIP SUPERVISOR",
-			"TOWNSHIP SUPERVISOR AT LARGE",
-			"TOWNSHIP DISTRICT SUPERVISOR",
-			"TAX COLLECTOR",
-			"DISTRICT SUPERVISOR",
-			"COUNCIL",
-			"SUPERVISOR",
-			"BOROUGH COUNCIL"
-			);
+	// See properties file.
+//	private static final List<String> namesOfTicketContests = List.of(
+//			"GOVERNOR AND LIEUTENANT GOVERNOR",
+//			"PRESIDENT AND VICE-PRESIDENT"
+//			);
+//	private static final List<String> namesOfTicketContests = 
+//			Arrays.asList(Utils.getPropValue(ballotGenProps, TICKET_CONTEST_NAMES).split(","));
+	
+//	private static final List<String> namesOfLocalContests = List.of(
+//			"AUDITOR",
+//			"CONSTABLE",
+//			"DEMOCRATIC COUNTY COMMISSIONER",
+//			"INSPECTOR OF ELECTIONS",
+//			"JUDGE OF ELECTIONS",
+//			"MAGISTERIAL DISTRICT JUDGE",
+//			"MAYOR",
+//			"MEMBER OF COUNCIL",
+//			"SCHOOL DIRECTOR",
+//			"TOWNSHIP COMMISSIONER",
+//			"TOWNSHIP SUPERVISOR",
+//			"TOWNSHIP SUPERVISOR AT LARGE",
+//			"TOWNSHIP DISTRICT SUPERVISOR",
+//			"TAX COLLECTOR",
+//			"DISTRICT SUPERVISOR",
+//			"COUNCIL",
+//			"SUPERVISOR",
+//			"BOROUGH COUNCIL"
+//			);
+//	private static final List<String> namesOfLocalContests = 
+//			Arrays.asList(Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_NAMES).split(","));
 	// School district regions below have boundaries that extend beyond Chester County.
 	// This results in the candidate name being followed by their county of residence.
 	// Yet another anomaly in a primary ballot.
-	private static final List<String> namesOfLocalContestsExceptions = List.of(
-			"SCHOOL DIRECTOR OCTORARA REGION 1",
-			"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION C",
-			"SCHOOL DIRECTOR TWIN VALLEY REGION 2",
-			"SCHOOL DIRECTOR SPRING FORD REGION 3"
-			);
-	
+//	private static final List<String> namesOfLocalContestsExceptions = List.of(
+//			"SCHOOL DIRECTOR OCTORARA REGION 1",
+//			"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION C",
+//			"SCHOOL DIRECTOR TWIN VALLEY REGION 2",
+//			"SCHOOL DIRECTOR SPRING FORD REGION 3"
+//			);
+//	private static final List<String> namesOfLocalContestsExceptions = 
+//			Arrays.asList(Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_EXCEPTION_NAMES).split(","));
+
 	List<Candidate> candidates = new ArrayList<Candidate>();
 	/**
 	 * Constructor

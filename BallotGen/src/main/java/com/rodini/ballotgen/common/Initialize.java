@@ -1,5 +1,8 @@
 package com.rodini.ballotgen.common;
 
+import static com.rodini.ballotgen.common.Initialize.LOCAL_CONTEST_EXCEPTION_NAMES;
+import static com.rodini.ballotgen.common.Initialize.TICKET_CONTEST_NAMES;
+import static com.rodini.ballotgen.common.Initialize.ballotGenProps;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -8,6 +11,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -81,7 +85,12 @@ public class Initialize {
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
 	public  static       boolean PAGE_BREAK_DISPLAY;
 	public  static       String PAGE_BREAK_WORDING;
-	
+	public  static final String TICKET_CONTEST_NAMES = "ticket.contest.names";
+	public  static final String LOCAL_CONTEST_NAMES = "local.contest.names";
+	public  static final String LOCAL_CONTEST_EXCEPTION_NAMES = "local.contest.exception.names";
+	public  static       List<String> namesOfTicketContests;
+	public  static       List<String> namesOfLocalContests;
+	public  static       List<String> namesOfLocalContestsExceptions;
 
 	/**
 	 * validateCommandLineArgs checks that there are at least 2 CLI args
@@ -351,6 +360,19 @@ public class Initialize {
 		logger.info(String.format("%s: %s", "PAGE_BREAK_WORDING", value));
 	}
 	/**
+	 * Used by CandidateFactory (of all things).
+	 */
+	static void validateTicketAndLocalContestNames() {
+		String 	contestNames;
+		contestNames = Utils.getPropValue(ballotGenProps, TICKET_CONTEST_NAMES);
+		namesOfTicketContests = Arrays.asList(contestNames.split(","));
+		contestNames = Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_NAMES);
+		namesOfLocalContests = Arrays.asList(contestNames.split(","));
+		contestNames = Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_EXCEPTION_NAMES);
+		namesOfLocalContestsExceptions = Arrays.asList(contestNames.split(","));
+	}
+	
+	/**
 	 * start begins the initialization process.
 	 * @param args CLI arguments
 	 */
@@ -378,6 +400,7 @@ public class Initialize {
 		validateWriteInDisplay();
 		validateColumnBreakContestCount();
 		validatePageBreak();
+		validateTicketAndLocalContestNames();
 	}
 	
 	
