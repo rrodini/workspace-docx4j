@@ -1,0 +1,24 @@
+ATTN  BallotGen:main:46 - Start of BallotGen app. Version: 1.5.0
+ATTN  BallotGen:main:50 - Ballots for: chester Co.
+ERROR ZoneProcessor:processLine:51 - duplicate precinct no. 356
+ATTN  GenDocxBallot:initDocxFile:211 - 005_ATGLEN
+ATTN  GenDocxBallot:initDocxFile:211 - 010_AVONDALE
+ERROR ContestFactory:findContestText:98 - can't find this contest end text for: Member of Council
+Avondale Borough
+ATTN  GenDocxBallot:initDocxFile:211 - 014_BIRMINGHAM_1
+ATTN  GenDocxBallot:initDocxFile:211 - 015_BIRMINGHAM_2
+ATTN  GenDocxBallot:initDocxFile:211 - 020_E_BRADFORD_N-1
+ATTN  GenDocxBallot:initDocxFile:211 - 021_E_BRADFORD_N-2
+ATTN  GenDocxBallot:initDocxFile:211 - 023_E_BRADFORD_S-1
+ATTN  GenDocxBallot:initDocxFile:211 - 024_E_BRADFORD_S-2
+ATTN  GenDocxBallot:initDocxFile:211 - 025_W_BRADFORD_1
+ATTN  GenDocxBallot:initDocxFile:211 - 030_W_BRADFORD_2
+ATTN  GenDocxBallot:initDocxFile:211 - 031_W_BRADFORD_3
+ATTN  GenDocxBallot:initDocxFile:211 - 032_W_BRADFORD_4
+ATTN  GenDocxBallot:initDocxFile:211 - 033_W_BRADFORD_5
+ATTN  GenDocxBallot:initDocxFile:211 - 035_E_BRANDYWINE_N-1
+ERROR ContestFactory:parseContestText:122 - no match for contest name: Judge of the Commonwealth Court and format: 1
+ERROR ContestFactory:parseContestText:141 - COULD NOT GENERATE CONTEST FOR: Judge of the Commonwealth Court
+ERROR ContestFactory:parseContestText:122 - no match for contest name: Judge of the Court of Common Pleas and format: 1
+ERROR ContestFactory:parseContestText:141 - COULD NOT GENERATE CONTEST FOR: Judge of the Court of Common Pleas
+ATTN  BallotGen:main:46 - End of BallotGen app. Version: 1.5.0

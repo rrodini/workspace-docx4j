@@ -1,0 +1,8 @@
+ATTN  BallotGen:main:48 - Start of BallotGen app. Version: 1.5.0
+ATTN  BallotGen:main:52 - Ballots for: chester Co.
+ERROR Utils:checkFileExists:125 - file "../2023-precincts-zones.csv" does not exist
+ERROR Utils:checkFileExists:125 - file "../2023-primary-endorsements.csv" does not exist
+ERROR Utils:checkFileExists:125 - file "../chester-2023-general-writeins.csv" does not exist
+ERROR Initialize:validateColumnBreakContestCount:318 - bad chester.column.break.contest.count property: 
+ATTN  BallotGen:main:67 - Generated 0 docx files
+ATTN  BallotGen:main:70 - End of BallotGen app
