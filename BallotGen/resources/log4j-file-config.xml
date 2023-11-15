@@ -18,7 +18,7 @@
     <!-- For deep logging in any package add the leve attribute below
          level="INFO"
     -->
-    <Logger name="com.rodini.ballotgen"> 
+    <Logger name="com.rodini.ballotgen" level="INFO" > 
 		<RegexFilter regex="No subclass found for /word/media/hdphoto1.wdp; defaulting to binary" onMatch="DENY" onMismatch="ACCEPT" />
     </Logger>
     <Logger name="com.rodini.ballotgen.common"> 

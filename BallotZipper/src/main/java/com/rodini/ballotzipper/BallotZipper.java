@@ -49,7 +49,7 @@ public class BallotZipper {
 
 	private BallotZipper() {
 	}
-	static final Logger logger = LogManager.getLogger(BallotZipper.class);
+	static final Logger logger = LogManager.getRootLogger();
 	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
 	static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	static String COUNTY;		// chester vs. bucks

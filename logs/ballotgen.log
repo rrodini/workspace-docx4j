@@ -1,8 +1,1450 @@
-ATTN  BallotGen:main:48 - Start of BallotGen app. Version: 1.5.0
-ATTN  BallotGen:main:52 - Ballots for: chester Co.
-ERROR Utils:checkFileExists:125 - file "../2023-precincts-zones.csv" does not exist
-ERROR Utils:checkFileExists:125 - file "../2023-primary-endorsements.csv" does not exist
-ERROR Utils:checkFileExists:125 - file "../chester-2023-general-writeins.csv" does not exist
-ERROR Initialize:validateColumnBreakContestCount:318 - bad chester.column.break.contest.count property: 
-ATTN  BallotGen:main:67 - Generated 0 docx files
-ATTN  BallotGen:main:70 - End of BallotGen app
+ATTN  :logAppMessage:104 - Start of BallotGen app. Version: 1.5.0 Nov 12, 2023, 1:38:24 PM
+ATTN  :logAppMessage:104 - Ballots for: chester Co.
+INFO  Initialize:validateCommandLineArgs:114 - output  dir: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output
+INFO  Initialize:validateCommandLineArgs:115 - contest dir: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-contests
+INFO  Initialize:processBallotFiles:158 - files to process: 
+[/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/005_ATGLEN_VS...t/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/860_WEST_CHESTER_7_VS.txt]
+INFO  Initialize:validateCommandLineArgs:122 - msWordTemplateFile: ./resources/Sample_Ballot_3-column_letter.dotx
+INFO  Initialize:validateElectionType:182 - election.type: General
+INFO  Initialize:validateEndorsedParty:190 - endorsed.party: Democratic
+INFO  Initialize:validateContestFileLevel:198 - contest.file.level: MUNICIPAL
+INFO  Initialize:validateFormatsText:212 - formatsText:
+^%contest name%\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$
+^%contest name%\n(?<term>^(\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$
+^%contest name%\n(?<region>^Region [A-Z].*)\n(?<term>^(\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$
+^%contest name%\n(?<instructions>^Vote(.*\n)*?Vote for ONE)\n(?<candidates>((.*\n){1})*)^Write-in$
+
+INFO  Initialize:validateContestFormats:226 - chester.contest.format.1.1: ^(?<name>(.*
+){1,3})(?<instructions>^Vote.*)
+(?<candidates>((.*
+){1})*)^Write-in$
+INFO  Initialize:validateContestFormats:226 - chester.contest.format.2.2: ^(?<name>(.*
+){1,3})(?<term>^(\d Year |Unexpired ).*)
+(?<instructions>^Vote.*)
+(?<candidates>((.*
+){1})*)^Write-in$
+INFO  Initialize:validateContestFormats:226 - chester.contest.format.3.3: ^(?<name>(.*
+){1,3})(?<region>^Region [A-Z].*)
+(?<term>^(\d |Unexpired ).*)
+(?<instructions>^Vote.*)
+(?<candidates>((.*
+){1})*)^Write-in$
+INFO  Initialize:validateContestFormats:226 - chester.contest.format.4.4: ^(?<name>(.*
+){1,3})(?<instructions>^Vote(.*
+)*?Vote for ONE)
+(?<candidates>((.*
+){1})*)^Write-in$
+INFO  Initialize:validateContestFormats:226 - chester.contest.format.5.5: null
+INFO  Initialize:validateContestFormats:231 - there are 4 contest formats in the contestgen properties file
+INFO  Initialize:validatePrecinctZoneFile:252 - chester.precinct.to.zone.file: ../2023-precincts-zones.csv
+ERROR Utils:checkFileExists:215 - file "../2023-precincts-zones.csv" does not exist
+INFO  Initialize:validatePrecinctZoneFile:255 - chester.precinct.to.zone.file does not exist: ../2023-precincts-zones.csv 
+INFO  Initialize:validatePrecinctZoneFile:256 - Cannot endorse at the zone/precinct level.
+INFO  Initialize:validateEndorsementsFile:269 - chester.endorsements.file: ../2023-primary-endorsements.csv
+ERROR Utils:checkFileExists:215 - file "../2023-primary-endorsements.csv" does not exist
+INFO  Initialize:validateEndorsementsFile:272 - chester.endorsements.file does not exist: ../2023-primary-endorsements.csv 
+INFO  Initialize:validateEndorsementsFile:273 - Can only endorse at the party level in general elections.
+INFO  Initialize:validateWriteinsFile:286 - chester.write.ins.file: ../chester-2023-general-writeins.csv
+ERROR Utils:checkFileExists:215 - file "../chester-2023-general-writeins.csv" does not exist
+INFO  Initialize:validateWriteinsFile:289 - chester.write.ins.file does not exist: ../chester-2023-general-writeins.csv 
+INFO  Initialize:validateWriteInDisplay:309 - chester.write.in.display: true
+ERROR Initialize:validateColumnBreakContestCount:332 - bad chester.column.break.contest.count property: 
+INFO  Initialize:validatePageBreak:354 - PAGE_BREAK_DISPLAY: false
+INFO  Initialize:validatePageBreak:360 - PAGE_BREAK_WORDING: See other side of ballot
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 005_ATGLEN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 005_ATGLEN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/005_ATGLEN.docx
+ERROR GenDocxBallot:initStyles:296 - dotx template missing this styleId: ContestGenericTitle
+ERROR GenDocxBallot:initStyles:304 - dotx template missing this styleId: ContestGenericInstructions
+ERROR GenDocxBallot:initStyles:308 - dotx template missing this styleId: EndorsedCandidateName
+ERROR GenDocxBallot:initStyles:312 - dotx template missing this styleId: EndorsedCandidateParty
+ERROR GenDocxBallot:initStyles:316 - dotx template missing this styleId: AntiEndorsedCandidateName
+ERROR GenDocxBallot:initStyles:320 - dotx template missing this styleId: WriteInCandidateName
+ERROR GenDocxBallot:initStyles:324 - dotx template missing this styleId: BottomBorder
+ERROR GenDocxBallot:initStyles:328 - dotx template missing this styleId: ColumnBreakParagraph
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 010_AVONDALE_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 010_AVONDALE
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/010_AVONDALE.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 014_BIRMINGHAM_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 014_BIRMINGHAM_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/014_BIRMINGHAM_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 015_BIRMINGHAM_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 015_BIRMINGHAM_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/015_BIRMINGHAM_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 020_E_BRADFORD_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 020_E_BRADFORD_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/020_E_BRADFORD_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 021_E_BRADFORD_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 021_E_BRADFORD_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/021_E_BRADFORD_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 023_E_BRADFORD_S-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 023_E_BRADFORD_S-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/023_E_BRADFORD_S-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 024_E_BRADFORD_S-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 024_E_BRADFORD_S-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/024_E_BRADFORD_S-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 025_W_BRADFORD_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 025_W_BRADFORD_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/025_W_BRADFORD_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 030_W_BRADFORD_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 030_W_BRADFORD_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/030_W_BRADFORD_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 031_W_BRADFORD_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 031_W_BRADFORD_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/031_W_BRADFORD_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 032_W_BRADFORD_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 032_W_BRADFORD_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/032_W_BRADFORD_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 033_W_BRADFORD_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 033_W_BRADFORD_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/033_W_BRADFORD_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 035_E_BRANDYWINE_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 035_E_BRANDYWINE_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/035_E_BRANDYWINE_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 036_E_BRANDYWINE_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 036_E_BRANDYWINE_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/036_E_BRANDYWINE_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 038_E_BRANDYWINE_S_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 038_E_BRANDYWINE_S
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/038_E_BRANDYWINE_S.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 040_W_BRANDYWINE_E-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 040_W_BRANDYWINE_E-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/040_W_BRANDYWINE_E-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 041_W_BRANDYWINE_E-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 041_W_BRANDYWINE_E-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/041_W_BRANDYWINE_E-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 043_W_BRANDYWINE_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 043_W_BRANDYWINE_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/043_W_BRANDYWINE_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 045_CALN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 045_CALN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/045_CALN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 050_CALN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 050_CALN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/050_CALN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 053_CALN_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 053_CALN_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/053_CALN_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 054_CALN_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 054_CALN_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/054_CALN_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 055_EAST_CALN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 055_EAST_CALN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/055_EAST_CALN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 056_EAST_CALN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 056_EAST_CALN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/056_EAST_CALN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 060_WEST_CALN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 060_WEST_CALN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/060_WEST_CALN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 061_WEST_CALN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 061_WEST_CALN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/061_WEST_CALN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 065_CHARLESTOWN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 065_CHARLESTOWN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/065_CHARLESTOWN.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 070_COATESVILLE_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 070_COATESVILLE_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/070_COATESVILLE_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 080_COATESVILLE_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 080_COATESVILLE_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/080_COATESVILLE_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 090_COATESVILLE_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 090_COATESVILLE_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/090_COATESVILLE_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 100_COATESVILLE_4-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 100_COATESVILLE_4-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/100_COATESVILLE_4-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 110_COATESVILLE_4-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 110_COATESVILLE_4-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/110_COATESVILLE_4-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 120_COATESVILLE_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 120_COATESVILLE_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/120_COATESVILLE_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 140_S_COATESVILLE_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 140_S_COATESVILLE
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/140_S_COATESVILLE.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 145_N_COVENTRY_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 145_N_COVENTRY_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/145_N_COVENTRY_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 150_N_COVENTRY_M_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 150_N_COVENTRY_M
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/150_N_COVENTRY_M.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 155_N_COVENTRY_W-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 155_N_COVENTRY_W-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/155_N_COVENTRY_W-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 156_N_COVENTRY_W-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 156_N_COVENTRY_W-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/156_N_COVENTRY_W-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 160_E_COVENTRY_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 160_E_COVENTRY_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/160_E_COVENTRY_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 165_E_COVENTRY_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 165_E_COVENTRY_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/165_E_COVENTRY_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 170_S_COVENTRY_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 170_S_COVENTRY
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/170_S_COVENTRY.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 175_E_DOWNINGTOWN_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 175_E_DOWNINGTOWN_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/175_E_DOWNINGTOWN_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 180_E_DOWNINGTOWN_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 180_E_DOWNINGTOWN_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/180_E_DOWNINGTOWN_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 185_W_DOWNINGTOWN_N_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 185_W_DOWNINGTOWN_N
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/185_W_DOWNINGTOWN_N.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 190_W_DOWNINGTOWN_S_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 190_W_DOWNINGTOWN_S
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/190_W_DOWNINGTOWN_S.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 195_EASTTOWN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 195_EASTTOWN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/195_EASTTOWN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 198_EASTTOWN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 198_EASTTOWN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/198_EASTTOWN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 201_EASTTOWN_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 201_EASTTOWN_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/201_EASTTOWN_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 204_EASTTOWN_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 204_EASTTOWN_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/204_EASTTOWN_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 207_EASTTOWN_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 207_EASTTOWN_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/207_EASTTOWN_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 210_EASTTOWN_6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 210_EASTTOWN_6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/210_EASTTOWN_6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 213_EASTTOWN_7_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 213_EASTTOWN_7
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/213_EASTTOWN_7.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 215_ELK_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 215_ELK
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/215_ELK.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 220_ELVERSON_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 220_ELVERSON
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/220_ELVERSON.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 225_E_FALLOWFIELD_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 225_E_FALLOWFIELD_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/225_E_FALLOWFIELD_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 230_E_FALLOWFIELD_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 230_E_FALLOWFIELD_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/230_E_FALLOWFIELD_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 235_W_FALLOWFIELD_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 235_W_FALLOWFIELD
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/235_W_FALLOWFIELD.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 240_FRANKLIN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 240_FRANKLIN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/240_FRANKLIN.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 243_E_GOSHEN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 243_E_GOSHEN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/243_E_GOSHEN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 244_E_GOSHEN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 244_E_GOSHEN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/244_E_GOSHEN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 245_E_GOSHEN_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 245_E_GOSHEN_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/245_E_GOSHEN_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 246_E_GOSHEN_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 246_E_GOSHEN_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/246_E_GOSHEN_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 247_E_GOSHEN_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 247_E_GOSHEN_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/247_E_GOSHEN_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 248_E_GOSHEN_6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 248_E_GOSHEN_6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/248_E_GOSHEN_6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 249_E_GOSHEN_7_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 249_E_GOSHEN_7
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/249_E_GOSHEN_7.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 250_E_GOSHEN_8_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 250_E_GOSHEN_8
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/250_E_GOSHEN_8.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 251_E_GOSHEN_9_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 251_E_GOSHEN_9
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/251_E_GOSHEN_9.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 255_W_GOSHEN_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 255_W_GOSHEN_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/255_W_GOSHEN_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 260_W_GOSHEN_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 260_W_GOSHEN_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/260_W_GOSHEN_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 261_W_GOSHEN_N-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 261_W_GOSHEN_N-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/261_W_GOSHEN_N-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 262_W_GOSHEN_N-4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 262_W_GOSHEN_N-4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/262_W_GOSHEN_N-4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 265_W_GOSHEN_M-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 265_W_GOSHEN_M-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/265_W_GOSHEN_M-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 270_W_GOSHEN_M-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 270_W_GOSHEN_M-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/270_W_GOSHEN_M-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 275_W_GOSHEN_S-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 275_W_GOSHEN_S-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/275_W_GOSHEN_S-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 280_W_GOSHEN_S-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 280_W_GOSHEN_S-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/280_W_GOSHEN_S-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 285_W_GOSHEN_S-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 285_W_GOSHEN_S-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/285_W_GOSHEN_S-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 286_W_GOSHEN_S-4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 286_W_GOSHEN_S-4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/286_W_GOSHEN_S-4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 290_HIGHLAND_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 290_HIGHLAND
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/290_HIGHLAND.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 295_HONEY_BROOK_BOROUGH_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 295_HONEY_BROOK_BOROUGH
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/295_HONEY_BROOK_BOROUGH.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 300_HONEY_BROOK_TOWNSHIP_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 300_HONEY_BROOK_TOWNSHIP_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/300_HONEY_BROOK_TOWNSHIP_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 301_HONEY_BROOK_TOWNSHIP_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 301_HONEY_BROOK_TOWNSHIP_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/301_HONEY_BROOK_TOWNSHIP_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 305_KENNETT_SQUARE_N_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 305_KENNETT_SQUARE_N
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/305_KENNETT_SQUARE_N.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 310_KENNETT_SQUARE_S-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 310_KENNETT_SQUARE_S-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/310_KENNETT_SQUARE_S-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 315_KENNETT_SQUARE_S-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 315_KENNETT_SQUARE_S-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/315_KENNETT_SQUARE_S-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 320_KENNETT_TOWNSHIP_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 320_KENNETT_TOWNSHIP_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/320_KENNETT_TOWNSHIP_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 325_KENNETT_TOWNSHIP_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 325_KENNETT_TOWNSHIP_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/325_KENNETT_TOWNSHIP_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 328_KENNETT_TOWNSHIP_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 328_KENNETT_TOWNSHIP_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/328_KENNETT_TOWNSHIP_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 329_KENNETT_TOWNSHIP_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 329_KENNETT_TOWNSHIP_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/329_KENNETT_TOWNSHIP_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 330_LONDON_BRITAIN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 330_LONDON_BRITAIN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/330_LONDON_BRITAIN.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 335_LONDONDERRY_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 335_LONDONDERRY
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/335_LONDONDERRY.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 340_LONDON_GROVE_CH_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 340_LONDON_GROVE_CH
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/340_LONDON_GROVE_CH.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 345_LONDON_GROVE_S_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 345_LONDON_GROVE_S
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/345_LONDON_GROVE_S.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 350_MALVERN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 350_MALVERN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/350_MALVERN.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 355_E_MARLBOROUGH_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 355_E_MARLBOROUGH_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/355_E_MARLBOROUGH_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 356_E_MARLBOROUGH_S-01_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 356_E_MARLBOROUGH_S-01
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/356_E_MARLBOROUGH_S-01.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 356_E_MARLBOROUGH_S-02_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 356_E_MARLBOROUGH_S-02
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/356_E_MARLBOROUGH_S-02.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 360_E_MARLBOROUGH_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 360_E_MARLBOROUGH_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/360_E_MARLBOROUGH_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 365_W_MARLBOROUGH_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 365_W_MARLBOROUGH
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/365_W_MARLBOROUGH.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 370_MODENA_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 370_MODENA
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/370_MODENA.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 375_E_NANTMEAL_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 375_E_NANTMEAL
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/375_E_NANTMEAL.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 380_W_NANTMEAL_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 380_W_NANTMEAL
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/380_W_NANTMEAL.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 385_NEW_GARDEN_N_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 385_NEW_GARDEN_N
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/385_NEW_GARDEN_N.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 390_NEW_GARDEN_S-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 390_NEW_GARDEN_S-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/390_NEW_GARDEN_S-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 391_NEW_GARDEN_S-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 391_NEW_GARDEN_S-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/391_NEW_GARDEN_S-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 395_NEW_LONDON_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 395_NEW_LONDON
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/395_NEW_LONDON.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 400_NEWLIN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 400_NEWLIN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/400_NEWLIN.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 405_E_NOTTINGHAM_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 405_E_NOTTINGHAM_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/405_E_NOTTINGHAM_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 406_E_NOTTINGHAM_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 406_E_NOTTINGHAM_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/406_E_NOTTINGHAM_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 410_W_NOTTINGHAM_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 410_W_NOTTINGHAM
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/410_W_NOTTINGHAM.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 415_OXFORD_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 415_OXFORD_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/415_OXFORD_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 420_OXFORD_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 420_OXFORD_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/420_OXFORD_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 425_LOWER_OXFORD_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 425_LOWER_OXFORD_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/425_LOWER_OXFORD_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 430_LOWER_OXFORD_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 430_LOWER_OXFORD_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/430_LOWER_OXFORD_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 435_UPPER_OXFORD_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 435_UPPER_OXFORD
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/435_UPPER_OXFORD.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 440_PARKESBURG_N_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 440_PARKESBURG_N
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/440_PARKESBURG_N.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 445_PARKESBURG_S_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 445_PARKESBURG_S
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/445_PARKESBURG_S.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 450_PENN_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 450_PENN
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/450_PENN.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 453_PENNSBURY_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 453_PENNSBURY_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/453_PENNSBURY_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 454_PENNSBURY_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 454_PENNSBURY_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/454_PENNSBURY_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 456_PENNSBURY_S-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 456_PENNSBURY_S-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/456_PENNSBURY_S-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 457_PENNSBURY_S-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 457_PENNSBURY_S-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/457_PENNSBURY_S-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 461_PHOENIXVILLE_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 461_PHOENIXVILLE_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/461_PHOENIXVILLE_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 462_PHOENIXVILLE_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 462_PHOENIXVILLE_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/462_PHOENIXVILLE_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 463_PHOENIXVILLE_N-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 463_PHOENIXVILLE_N-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/463_PHOENIXVILLE_N-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 467_PHOENIXVILLE_M-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 467_PHOENIXVILLE_M-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/467_PHOENIXVILLE_M-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 468_PHOENIXVILLE_M-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 468_PHOENIXVILLE_M-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/468_PHOENIXVILLE_M-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 469_PHOENIXVILLE_M-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 469_PHOENIXVILLE_M-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/469_PHOENIXVILLE_M-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 472_PHOENIXVILLE_E-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 472_PHOENIXVILLE_E-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/472_PHOENIXVILLE_E-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 473_PHOENIXVILLE_E-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 473_PHOENIXVILLE_E-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/473_PHOENIXVILLE_E-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 474_PHOENIXVILLE_E-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 474_PHOENIXVILLE_E-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/474_PHOENIXVILLE_E-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 477_PHOENIXVILLE_W-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 477_PHOENIXVILLE_W-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/477_PHOENIXVILLE_W-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 478_PHOENIXVILLE_W-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 478_PHOENIXVILLE_W-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/478_PHOENIXVILLE_W-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 479_PHOENIXVILLE_W-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 479_PHOENIXVILLE_W-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/479_PHOENIXVILLE_W-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 515_E_PIKELAND_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 515_E_PIKELAND_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/515_E_PIKELAND_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 520_E_PIKELAND_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 520_E_PIKELAND_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/520_E_PIKELAND_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 521_E_PIKELAND_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 521_E_PIKELAND_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/521_E_PIKELAND_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 525_W_PIKELAND_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 525_W_PIKELAND
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/525_W_PIKELAND.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 530_POCOPSON_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 530_POCOPSON
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/530_POCOPSON.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 535_SADSBURY_N_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 535_SADSBURY_N
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/535_SADSBURY_N.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 540_SADSBURY_S_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 540_SADSBURY_S
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/540_SADSBURY_S.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 545_W_SADSBURY_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 545_W_SADSBURY
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/545_W_SADSBURY.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 550_SCHUYLKILL_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 550_SCHUYLKILL_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/550_SCHUYLKILL_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 555_SCHUYLKILL_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 555_SCHUYLKILL_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/555_SCHUYLKILL_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 556_SCHUYLKILL_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 556_SCHUYLKILL_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/556_SCHUYLKILL_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 558_SCHUYLKILL_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 558_SCHUYLKILL_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/558_SCHUYLKILL_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 560_SPRING_CITY_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 560_SPRING_CITY_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/560_SPRING_CITY_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 565_SPRING_CITY_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 565_SPRING_CITY_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/565_SPRING_CITY_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 570_SPRING_CITY_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 570_SPRING_CITY_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/570_SPRING_CITY_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 575_SPRING_CITY_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 575_SPRING_CITY_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/575_SPRING_CITY_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 580_THORNBURY_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 580_THORNBURY_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/580_THORNBURY_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 581_THORNBURY_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 581_THORNBURY_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/581_THORNBURY_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 585_TREDYFFRIN_E-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 585_TREDYFFRIN_E-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/585_TREDYFFRIN_E-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 590_TREDYFFRIN_E-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 590_TREDYFFRIN_E-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/590_TREDYFFRIN_E-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 595_TREDYFFRIN_E-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 595_TREDYFFRIN_E-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/595_TREDYFFRIN_E-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 600_TREDYFFRIN_E-4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 600_TREDYFFRIN_E-4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/600_TREDYFFRIN_E-4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 605_TREDYFFRIN_E-5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 605_TREDYFFRIN_E-5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/605_TREDYFFRIN_E-5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 614_TREDYFFRIN_M-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 614_TREDYFFRIN_M-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/614_TREDYFFRIN_M-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 615_TREDYFFRIN_M-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 615_TREDYFFRIN_M-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/615_TREDYFFRIN_M-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 616_TREDYFFRIN_M-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 616_TREDYFFRIN_M-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/616_TREDYFFRIN_M-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 617_TREDYFFRIN_M-4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 617_TREDYFFRIN_M-4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/617_TREDYFFRIN_M-4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 618_TREDYFFRIN_M-5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 618_TREDYFFRIN_M-5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/618_TREDYFFRIN_M-5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 619_TREDYFFRIN_M-6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 619_TREDYFFRIN_M-6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/619_TREDYFFRIN_M-6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 620_TREDYFFRIN_M-7_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 620_TREDYFFRIN_M-7
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/620_TREDYFFRIN_M-7.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 630_TREDYFFRIN_W-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 630_TREDYFFRIN_W-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/630_TREDYFFRIN_W-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 635_TREDYFFRIN_W-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 635_TREDYFFRIN_W-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/635_TREDYFFRIN_W-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 640_TREDYFFRIN_W-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 640_TREDYFFRIN_W-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/640_TREDYFFRIN_W-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 645_TREDYFFRIN_W-4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 645_TREDYFFRIN_W-4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/645_TREDYFFRIN_W-4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 647_TREDYFFRIN_W-5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 647_TREDYFFRIN_W-5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/647_TREDYFFRIN_W-5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 653_UWCHLAN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 653_UWCHLAN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/653_UWCHLAN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 654_UWCHLAN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 654_UWCHLAN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/654_UWCHLAN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 655_UWCHLAN_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 655_UWCHLAN_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/655_UWCHLAN_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 656_UWCHLAN_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 656_UWCHLAN_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/656_UWCHLAN_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 657_UWCHLAN_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 657_UWCHLAN_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/657_UWCHLAN_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 658_UWCHLAN_6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 658_UWCHLAN_6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/658_UWCHLAN_6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 659_UWCHLAN_7_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 659_UWCHLAN_7
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/659_UWCHLAN_7.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 660_UWCHLAN_8_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 660_UWCHLAN_8
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/660_UWCHLAN_8.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 661_UWCHLAN_9_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 661_UWCHLAN_9
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/661_UWCHLAN_9.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 665_UPPER_UWCHLAN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 665_UPPER_UWCHLAN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/665_UPPER_UWCHLAN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 666_UPPER_UWCHLAN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 666_UPPER_UWCHLAN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/666_UPPER_UWCHLAN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 667_UPPER_UWCHLAN_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 667_UPPER_UWCHLAN_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/667_UPPER_UWCHLAN_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 670_VALLEY_N-1.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 670_VALLEY_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/670_VALLEY_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 670_VALLEY_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 670_VALLEY_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/670_VALLEY_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 671_VALLEY_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 671_VALLEY_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/671_VALLEY_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 672_VALLEY_N-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 672_VALLEY_N-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/672_VALLEY_N-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 675_VALLEYS_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 675_VALLEYS
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/675_VALLEYS.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 680_E_VINCENT_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 680_E_VINCENT_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/680_E_VINCENT_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 681_E_VINCENT_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 681_E_VINCENT_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/681_E_VINCENT_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 682_E_VINCENT_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 682_E_VINCENT_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/682_E_VINCENT_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 683_E_VINCENT_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 683_E_VINCENT_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/683_E_VINCENT_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 690_W_VINCENT_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 690_W_VINCENT_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/690_W_VINCENT_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 693_W_VINCENT_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 693_W_VINCENT_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/693_W_VINCENT_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 700_WARWICK_E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 700_WARWICK_E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/700_WARWICK_E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 705_WARWICK_W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 705_WARWICK_W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/705_WARWICK_W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 710_WEST_GROVE_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 710_WEST_GROVE_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/710_WEST_GROVE_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 715_WEST_GROVE_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 715_WEST_GROVE_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/715_WEST_GROVE_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 720_WESTTOWN_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 720_WESTTOWN_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/720_WESTTOWN_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 725_WESTTOWN_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 725_WESTTOWN_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/725_WESTTOWN_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 730_WESTTOWN_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 730_WESTTOWN_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/730_WESTTOWN_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 733_WESTTOWN_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 733_WESTTOWN_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/733_WESTTOWN_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 734_WESTTOWN_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 734_WESTTOWN_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/734_WESTTOWN_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 735_E_WHITELAND_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 735_E_WHITELAND_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/735_E_WHITELAND_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 740_E_WHITELAND_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 740_E_WHITELAND_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/740_E_WHITELAND_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 745_E_WHITELAND_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 745_E_WHITELAND_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/745_E_WHITELAND_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 750_E_WHITELAND_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 750_E_WHITELAND_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/750_E_WHITELAND_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 752_E_WHITELAND_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 752_E_WHITELAND_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/752_E_WHITELAND_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 754_E_WHITELAND_6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 754_E_WHITELAND_6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/754_E_WHITELAND_6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 759_W_WHITELAND_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 759_W_WHITELAND_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/759_W_WHITELAND_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 760_W_WHITELAND_2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 760_W_WHITELAND_2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/760_W_WHITELAND_2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 761_W_WHITELAND_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 761_W_WHITELAND_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/761_W_WHITELAND_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 762_W_WHITELAND_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 762_W_WHITELAND_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/762_W_WHITELAND_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 763_W_WHITELAND_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 763_W_WHITELAND_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/763_W_WHITELAND_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 764_W_WHITELAND_6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 764_W_WHITELAND_6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/764_W_WHITELAND_6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 765_W_WHITELAND_7_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 765_W_WHITELAND_7
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/765_W_WHITELAND_7.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 770_WILLISTOWN_N-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 770_WILLISTOWN_N-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/770_WILLISTOWN_N-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 775_WILLISTOWN_N-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 775_WILLISTOWN_N-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/775_WILLISTOWN_N-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 780_WILLISTOWN_N-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 780_WILLISTOWN_N-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/780_WILLISTOWN_N-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 785_WILLISTOWN_N-4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 785_WILLISTOWN_N-4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/785_WILLISTOWN_N-4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 790_WILLISTOWN_N-5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 790_WILLISTOWN_N-5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/790_WILLISTOWN_N-5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 795_WILLISTOWN_N-6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 795_WILLISTOWN_N-6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/795_WILLISTOWN_N-6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 800_WILLISTOWN_S-1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 800_WILLISTOWN_S-1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/800_WILLISTOWN_S-1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 805_WILLISTOWN_S-2_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 805_WILLISTOWN_S-2
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/805_WILLISTOWN_S-2.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 806_WILLISTOWN_S-3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 806_WILLISTOWN_S-3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/806_WILLISTOWN_S-3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 810_WEST_CHESTER_1_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 810_WEST_CHESTER_1
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/810_WEST_CHESTER_1.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 820_WEST_CHESTER_2-E_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 820_WEST_CHESTER_2-E
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/820_WEST_CHESTER_2-E.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 825_WEST_CHESTER_2-W_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 825_WEST_CHESTER_2-W
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/825_WEST_CHESTER_2-W.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 835_WEST_CHESTER_3_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 835_WEST_CHESTER_3
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/835_WEST_CHESTER_3.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 842_WEST_CHESTER_4_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 842_WEST_CHESTER_4
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/842_WEST_CHESTER_4.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 846_WEST_CHESTER_5_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 846_WEST_CHESTER_5
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/846_WEST_CHESTER_5.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 850_WEST_CHESTER_6_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 850_WEST_CHESTER_6
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/850_WEST_CHESTER_6.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+INFO  GenDocxBallot:generate:166 - start new docx file
+INFO  GenDocxBallot:initDocxFile:201 - pathName: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output fileName: 860_WEST_CHESTER_7_VS.txt
+ATTN  GenDocxBallot:initDocxFile:211 - 860_WEST_CHESTER_7
+INFO  GenDocxBallot:initDocxFile:220 - fileOutputPath: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/860_WEST_CHESTER_7.docx
+ERROR PlaceholderProcessor:validatePlaceholders:126 - placeholder "Contests" missing from body area
+INFO  GenDocxBallot:generate:175 - end new docx file
+ATTN  :logAppMessage:104 - Generated 231 docx files
+ATTN  :logAppMessage:104 - Error count: 243
+ATTN  :logAppMessage:104 - End of BallotGen app Nov 12, 2023, 1:38:28 PM
