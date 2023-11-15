@@ -55,13 +55,12 @@ import org.apache.logging.log4j.Logger;
 public class ContestNameExtractor {
 	private static final Logger logger = LogManager.getLogger(ContestNameExtractor.class);
 	private static Pattern [] cnPatterns;
-	private static boolean initialized = false;
 	private Matcher m;
 	/**
 	 * constructor
 	 */
 	ContestNameExtractor() {
-		this.cnPatterns = ContestNameMarkers.getContestNamePatterns();
+		cnPatterns = ContestNameMarkers.getContestNamePatterns();
 	}
 	
 	/**
