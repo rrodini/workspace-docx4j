@@ -45,11 +45,15 @@ public class MuniTextExtractor {
 	 */
 	String extractPageText(Pattern pattern, int pageNo) {
 		String text = "";
+		boolean fullTextExposed = false;
 		Matcher m = pattern.matcher(muniText);
 		if (!m.find()) {
 			String msg = String.format("no match for municipal page %d. muniName: %s regex: %s", pageNo, muniName, pattern.pattern());
 			logger.error(msg);
-			msg = String.format("muniText: %s%n", muniText);
+			if (!fullTextExposed) {
+				msg = String.format("muniText: %s%n", muniText);
+				fullTextExposed = true;
+			}
 			logger.error(msg);
 			// Previously this condition was FATAL ERROR
 			//Utils.logFatalError(msg);
