@@ -428,9 +428,15 @@ public class GenDocxBallot {
 					if (name.equals(PLACEHOLDER_CONTESTS)) {
 						phProcessor.replaceContent(ph, genContests());
 					} else if (name.equals(PLACEHOLDER_REFERENDUMS)) {
+						// Are there referendums?
+						if (referendumsText != null) {
 							phProcessor.replaceContent(ph, genReferendums());
+						}
 					} else if (name.equals(PLACEHOLDER_RETENTIONS)) {
-						phProcessor.replaceContent(ph, genRetentions());
+						// Are there retentions?
+						if (retentionsText != null) {
+							phProcessor.replaceContent(ph, genRetentions());
+						}
 					} else {
 						P paragraph = genPlaceholderValue(name, ph, "Normal", docx.getMainDocumentPart());
 						phProcessor.replaceContent(ph, List.of(paragraph));
