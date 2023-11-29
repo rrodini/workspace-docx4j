@@ -22,6 +22,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_CONTESTS;
+import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_REFERENDUMS;
+import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_RETENTIONS;
 
 /**
  * PlaceholderProcessor classes does these functions
@@ -111,8 +113,11 @@ public class PlaceholderProcessor {
 	private void validatePlaceholders() {
 		boolean bodyHasContests = false;
 		for (Placeholder ph: headerPlaceholders) {
-			if (ph.getName().equals(PLACEHOLDER_CONTESTS)) {
-				logger.error("placeholder \"" + PLACEHOLDER_CONTESTS + "\" cannot be in header area");
+			String phName = ph.getName();
+			if (phName.equals(PLACEHOLDER_CONTESTS) ||
+				phName.equals(PLACEHOLDER_REFERENDUMS) ||
+				phName.equals(PLACEHOLDER_RETENTIONS)) {
+				logger.error("placeholder \"" + phName + "\" cannot be in header area");
 				// remove Placeholder object since generation will fail.
 				headerPlaceholders.remove(ph);
 			}
@@ -126,8 +131,11 @@ public class PlaceholderProcessor {
 			logger.error("placeholder \"" + PLACEHOLDER_CONTESTS + "\" missing from body area");
 		}
 		for (Placeholder ph: footerPlaceholders) {
-			if (ph.getName().equals(PLACEHOLDER_CONTESTS)) {
-				logger.error("placeholder \"" + PLACEHOLDER_CONTESTS + "\" cannot be in footer area");
+			String phName = ph.getName();
+			if (phName.equals(PLACEHOLDER_CONTESTS) ||
+				phName.equals(PLACEHOLDER_REFERENDUMS) ||
+				phName.equals(PLACEHOLDER_RETENTIONS)) {
+				logger.error("placeholder \"" + phName + "\" cannot be in footer area");
 				// remove Placeholder object since generation will fail.
 				footerPlaceholders.remove(ph);
 			}

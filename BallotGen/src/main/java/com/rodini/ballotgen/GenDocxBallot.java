@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.docx4j.Docx4J;
 import org.docx4j.TraversalUtil;
@@ -41,6 +43,7 @@ import org.docx4j.wml.Text;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import static org.apache.logging.log4j.Level.DEBUG;
 
 import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Initialize;
@@ -88,14 +91,16 @@ public class GenDocxBallot {
 	private String dotxPath;  // path to DOTX template file
 	private String ballotTextFilePath; // path to ballot text file
 	private ContestFileLevel contestLevel; // COMMON or MUNICIPAL
-	private String contestsText; // text of contests on this ballot
+	private String ballotText; // text of ballotTextFile
+	private String contestsText; // text of contest names on this ballot
+	private String referendumsText; // text of referendum questions on this ballot
+	private String retentionsText; // text of retention questions on this ballot
 	// local variables
 	private WordprocessingMLPackage docx;  // document under construction
 	private String precinctNoName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
 	private String precinctName; // e.g. "Atglen" or "East_Whiteland_4"
 	private String precinctNo; // e.g. "005" or "750"
 	private static final String FILE_SUFFIX = "_VS";
-//	private String ballotText; // text of ballotTextFile
 	private String fileOutputPath; // generated DOCX file
 	private String formatsText;   // formats (regexes) read from properties
 	private EndorsementProcessor endorsementProcessor;
@@ -106,16 +111,20 @@ public class GenDocxBallot {
 	// Placeholders are predefined strings that may be embedded in the template file
 	// so they can be located programmatically by this program.
 	public static final String PLACEHOLDER_CONTESTS = "Contests";
+	public static final String PLACEHOLDER_REFERENDUMS = "Referendums";
+	public static final String PLACEHOLDER_RETENTIONS = "Retentions";
 	public static final String PLACEHOLDER_PRECINCT_NO = "PrecinctNo";
 	public static final String PLACEHOLDER_PRECINCT_NAME = "PrecinctName";
 	public static final String PLACEHOLDER_PRECINCT_NO_NAME = "PrecinctNoName";
 	public static final String PLACEHOLDER_ZONE_NO_CHUNK = "ZoneNo.chunk";	
-	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME, PLACEHOLDER_ZONE_NO_CHUNK);
+	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_REFERENDUMS, PLACEHOLDER_RETENTIONS,
+			  PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME, PLACEHOLDER_ZONE_NO_CHUNK);
 	private static PlaceholderProcessor phProcessor;
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
 	// so when the template is loaded the existence of the styles is checked.
 	// If style is not found "Normal" style is used.
+	private static String STYLEID_NORMAL = "Normal";
 	private static String STYLEID_CONTEST_TITLE = "ContestTitle";
 	private static String STYLEID_CONTEST_GENERIC_TITLE = "ContestGenericTitle";
 	private static String STYLEID_CONTEST_INSTRUCTIONS = "ContestInstructions";
@@ -181,7 +190,7 @@ public class GenDocxBallot {
 	/* private */ 
 	void initialize() {
 		initDocxFile();
-		initContestsText();
+		initContestsFileText();
 		initReadBallotText();
 		initStyles();
 	}
@@ -232,9 +241,9 @@ public class GenDocxBallot {
 		}
 	}
 	/**
-	 * initContestsText reads in the contests file for this ballot.
+	 * initContestsFileText reads in the contests file for this ballot.
 	 */
-	void initContestsText() {
+	void initContestsFileText() {
 		String contestsPath = Initialize.ballotContestsPath + File.separator;
 		if (contestLevel == COMMON) {
 			contestsPath = contestsPath + Initialize.COMMON_CONTESTS_FILE;
@@ -244,20 +253,45 @@ public class GenDocxBallot {
 			Utils.logFatalError("contest file level not recognized. See: " + contestLevel.toString());
 		}
 		logger.debug("Loading contests file: " + contestsPath);
-		List<String> contestsLines = null;
-		try {
-			contestsLines = Files.readAllLines(Path.of(contestsPath));
-		} catch (IOException e) {
-			Utils.logFatalError("can't read: " + contestsPath);
-		}
-		contestsText = contestsLines.stream().collect(joining("\n"));
+		String contestsFileText = Utils.readTextFile(contestsPath);
 		// prepare logging message
-		int len = contestsText.length();
-		String msgText = contestsText;
+		int len = contestsFileText.length();
+		String msgText = contestsFileText;
 		if (len > 100) {
-			msgText = contestsText.substring(0, 50) + "..." + contestsText.substring(len - 50, len);
+			msgText = contestsFileText.substring(0, 50) + "..." + contestsFileText.substring(len - 50, len);
 		}
-		logger.debug("contestsText: " + msgText);
+		logger.debug("contestsFileText: " + msgText);
+		initContestsSectionsText(contestsFileText);
+	}
+	/**
+	 * initContestsSectionsText separates the contents of a municipal contests file into
+	 * its sections: Contests (required), Referendums (optional), Retentions (optional).
+	 * Note: ContestGen uses the order above.
+	 * 
+	 * @param contestsFileText
+	 */
+	void initContestsSectionsText(String contestsFileText) {
+		int indexContests = contestsFileText.indexOf(PLACEHOLDER_CONTESTS);
+		int indexReferendums = contestsFileText.indexOf(PLACEHOLDER_REFERENDUMS);
+		int indexRetentions = contestsFileText.indexOf(PLACEHOLDER_RETENTIONS);
+		int end = contestsFileText.length();
+		// is "Retentions" present?
+		if (indexRetentions >= 0) {
+			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
+			end = indexRetentions;
+		}
+		// is "Referendums" present?
+		if (indexReferendums >= 0) {
+			referendumsText = contestsFileText.substring(indexReferendums + PLACEHOLDER_REFERENDUMS.length()+1, end);
+			end = indexReferendums;
+		}
+		// is "Contests" present? Should be.
+		if (indexContests >= 0) {
+			contestsText = contestsFileText.substring(indexContests + PLACEHOLDER_CONTESTS.length()+1, end);
+		}
+		if (contestsText == null || contestsText.isBlank()) {
+			logger.error("no contest names found in this municipality's contest file");
+		}
 	}
 	/**
 	 * initReadBallotText reads the contents of the ballot text file
@@ -266,7 +300,7 @@ public class GenDocxBallot {
 	/* private */ 
 	void initReadBallotText() {
 		// Perform file existence check here.
-		String ballotText = Utils.readTextFile(ballotTextFilePath);
+		ballotText = Utils.readTextFile(ballotTextFilePath);
 	}
 	/**
 	 * initStyles checks that the expected StyleIds (just strings) exist
@@ -282,51 +316,51 @@ public class GenDocxBallot {
 		// Can't refactor below.  Doing so would lose String reference to specific variable.
 		if (!templateIdStyles.contains(STYLEID_CANDIDATE_NAME)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CANDIDATE_NAME);
-			STYLEID_CANDIDATE_NAME = "Normal";
+			STYLEID_CANDIDATE_NAME = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_CANDIDATE_PARTY)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CANDIDATE_PARTY);
-			STYLEID_CANDIDATE_PARTY = "Normal";
+			STYLEID_CANDIDATE_PARTY = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_CONTEST_TITLE)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_TITLE);
-			STYLEID_CONTEST_TITLE = "Normal";
+			STYLEID_CONTEST_TITLE = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_CONTEST_GENERIC_TITLE)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_GENERIC_TITLE);
-			STYLEID_CONTEST_GENERIC_TITLE = "Normal";
+			STYLEID_CONTEST_GENERIC_TITLE = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_CONTEST_INSTRUCTIONS)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_INSTRUCTIONS);
-			STYLEID_CONTEST_INSTRUCTIONS = "Normal";
+			STYLEID_CONTEST_INSTRUCTIONS = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_CONTEST_GENERIC_INSTRUCTIONS)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_CONTEST_GENERIC_INSTRUCTIONS);
-			STYLEID_CONTEST_GENERIC_INSTRUCTIONS = "Normal";
+			STYLEID_CONTEST_GENERIC_INSTRUCTIONS = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_ENDORSED_CANDIDATE_NAME)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_NAME);
-			STYLEID_ENDORSED_CANDIDATE_NAME = "Normal";
+			STYLEID_ENDORSED_CANDIDATE_NAME = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_ENDORSED_CANDIDATE_PARTY)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_ENDORSED_CANDIDATE_PARTY);
-			STYLEID_ENDORSED_CANDIDATE_PARTY = "Normal";
+			STYLEID_ENDORSED_CANDIDATE_PARTY = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_ANTI_ENDORSED_CANDIDATE_NAME)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_ANTI_ENDORSED_CANDIDATE_NAME);
-			STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "Normal";
+			STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_WRITE_IN_CANDIDATE_NAME)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_WRITE_IN_CANDIDATE_NAME);
-			STYLEID_WRITE_IN_CANDIDATE_NAME = "Normal";
+			STYLEID_WRITE_IN_CANDIDATE_NAME = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_BOTTOM_BORDER)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_BOTTOM_BORDER);
-			STYLEID_BOTTOM_BORDER = "Normal";
+			STYLEID_BOTTOM_BORDER = STYLEID_NORMAL;
 		}
 		if (!templateIdStyles.contains(STYLEID_COLUMN_BREAK_PARAGRAPH)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_COLUMN_BREAK_PARAGRAPH);
-			STYLEID_COLUMN_BREAK_PARAGRAPH = "Normal";
+			STYLEID_COLUMN_BREAK_PARAGRAPH = STYLEID_NORMAL;
 		}
 	}
 	/**
@@ -393,6 +427,10 @@ public class GenDocxBallot {
 				if (isPlaceholderNameMatch(ph, name)) {
 					if (name.equals(PLACEHOLDER_CONTESTS)) {
 						phProcessor.replaceContent(ph, genContests());
+					} else if (name.equals(PLACEHOLDER_REFERENDUMS)) {
+							phProcessor.replaceContent(ph, genReferendums());
+					} else if (name.equals(PLACEHOLDER_RETENTIONS)) {
+						phProcessor.replaceContent(ph, genRetentions());
 					} else {
 						P paragraph = genPlaceholderValue(name, ph, "Normal", docx.getMainDocumentPart());
 						phProcessor.replaceContent(ph, List.of(paragraph));
@@ -462,6 +500,7 @@ public class GenDocxBallot {
 	}
 	/**
 	 * genBallotInstructions generates the ballot instructions provided by Voter Services.
+	 * Note: Not used but a useful technique.
 	 */
 	/* private */
 	void genBallotInstructions() {
@@ -484,7 +523,8 @@ public class GenDocxBallot {
 		// contestsParagraphs is the list of all of the contest paragraphs.
 		List<P> contestsParagraphs = new ArrayList<>();		
 		String[] contestLines = contestsText.split("\n");
-		ContestNameCounter ballotFactory = new ContestNameCounter(Utils.readTextFile(ballotTextFilePath));
+		Utils.logLines(logger, DEBUG, "contestLines:", contestLines);
+		ContestNameCounter ballotFactory = new ContestNameCounter(ballotText);
 		int i = 0;
 		int j = 0;
 		for (String line: contestLines) {
@@ -717,7 +757,175 @@ public class GenDocxBallot {
 		candParagraphs.add(newParagraph);
 		return candParagraphs;
 	}
-	
+	/** 
+	 * genReferendums generates the referendum boxes (like contest boxes) within the docx.
+	 * 
+	 * @return list of referendum paragraphs.
+	 */
+	List<P> genReferendums() {
+		logger.debug("generating referendums for document");
+		List<P> referendumParagraphs = new ArrayList<>();
+		String[] referendumLines = referendumsText.split("\n");
+		Utils.logLines(logger, DEBUG, "referendumLines:", referendumLines);
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		for (String line: referendumLines) {
+			// Each line is a referendum question
+			String refQuestion = line;
+			referendumParagraphs.addAll(genReferendum(mdp, refQuestion));
+		}
+		return referendumParagraphs;
+	}
+	/**
+	 * genReferendum generates a single referendum box within the docx.
+	 * Notes: ballotgen.referendum.format regex used here.
+	 * 
+	 * @param mdp main document part.
+	 * @param refQuestion referendum question.
+	 * @return list of paragraphs.
+	 */
+	List<P> genReferendum(MainDocumentPart mdp, String refQuestion) {
+		List<P> referendumParagraphs = new ArrayList<>();
+		// retrofit the refQuestion to the referendumFormat (replace %question% )
+		final String REF_QUESTION = "%question%";
+		String regex = Initialize.referendumFormat.replace(REF_QUESTION, refQuestion);
+		Pattern compiledRegex = Utils.compileRegex(regex);	
+		Matcher m = compiledRegex.matcher(ballotText);
+		if (m.find() ) {
+			referendumParagraphs = genReferendumParagraphs(mdp, refQuestion, m.group("text"));
+		} else {
+			logger.error(String.format("no match for ref. question %s", refQuestion));
+		}
+		return referendumParagraphs;
+	}
+	/**
+	 * genReferendumParagraphs generates the paragraphs of the referendum questions.
+	 * 
+	 * Notes:
+	 * 1) conversion for printing and conversion for endorsement is tricky.
+	 * 
+	 */
+	List<P> genReferendumParagraphs(MainDocumentPart mdp, String question, String text) {
+		P newParagraph;
+		List<P> refParagraphs = new ArrayList<>();
+		String style = STYLEID_CONTEST_TITLE;
+		// conversion for printing
+		String question1 = Contest.processContestName(question);
+		newParagraph = mdp.createStyledParagraphOfText(style, question1);
+		refParagraphs.add(newParagraph);
+		style = STYLEID_NORMAL;
+		newParagraph = mdp.createStyledParagraphOfText(style, text);
+		refParagraphs.add(newParagraph);
+		// conversion for endorsement.
+		String question2 = question1.replaceAll("\n", " ");
+		refParagraphs.addAll(genYesNoParagraphs(mdp, question2));
+		return refParagraphs;
+	}
+	/** 
+	 * genRetentions generates the retention boxes (like contest boxes) within the docx.
+	 * 
+	 * @return list of retention paragraphs.
+	 */
+	List<P> genRetentions() {
+		logger.debug("generating retentions for document");
+		List<P> retentionParagraphs = new ArrayList<>();
+		String[] retentionLines = retentionsText.split("\n");
+		Utils.logLines(logger, DEBUG, "retentionLines:", retentionLines);
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		for (String line: retentionLines) {
+			// Each line is a referendum question
+			String [] elements = line.split(",");
+			String officeName = elements[0];
+			String judgeName = elements[1];
+			retentionParagraphs.addAll(genRetention(mdp, officeName, judgeName));
+		}
+		return retentionParagraphs;
+	}
+	/**
+	 * genRetention generates a single retention box within the docx.
+	 * Notes: ballotgen.retention.format regex used here.
+	 * 
+	 * @param mdp main document part.
+	 * @param officeName judicial office name.
+	 * @param judgeName judge's name.
+	 * @return list of paragraphs.
+	 */
+	List<P> genRetention(MainDocumentPart mdp, String officeName, String judgeName) {
+		List<P> retentionParagraphs = new ArrayList<>();
+		// retrofit both the office name and the judge name to retentionFormat (replace %office name% and %judge name%)
+		final String RET_OFFICE_NAME = "%office name%";
+		final String RET_JUDGE_NAME = "%judge name%";
+		String regex = Initialize.retentionFormat.replace(RET_OFFICE_NAME, officeName);
+		regex = regex.replace(RET_JUDGE_NAME, judgeName);
+		Pattern compiledRegex = Utils.compileRegex(regex);
+		Matcher m = compiledRegex.matcher(ballotText);
+		if (m.find() ) {
+			retentionParagraphs = genRetentionParagraphs(mdp, officeName, judgeName, m.group(1));
+		} else {
+			logger.error(String.format("no match for retention office: %s judge: %s", officeName, judgeName));
+		}
+		return retentionParagraphs;
+	}
+	/**
+	 * genRetentionParagraphs generates the paragraphs of the retention questions.
+	 * 
+	 */
+	List<P> genRetentionParagraphs(MainDocumentPart mdp, String officeName, String judgeName, String text) {
+		P newParagraph;
+		List<P> retParagraphs = new ArrayList<>();
+		String style = STYLEID_CONTEST_TITLE;
+		// massage the office name string.
+		officeName = Contest.processContestName(officeName);
+		newParagraph = mdp.createStyledParagraphOfText(style, officeName);
+		retParagraphs.add(newParagraph);
+		style = STYLEID_NORMAL;
+		// TODO: find the judge name and use a BOLD font.
+		newParagraph = mdp.createStyledParagraphOfText(style, text);
+		retParagraphs.add(newParagraph);
+		retParagraphs.addAll(genYesNoParagraphs(mdp, judgeName));
+		return retParagraphs;
+	}
+	/**
+	 * genYesNoParagraphs generates the paragraphs for the YES/NO recommendations
+	 *   for referendum questions and judge retentions.
+	 *   Note:
+	 *   1) The referendum question or retention judge is the endorsee here.
+	 *   
+	 * @param mdp MainDocument part.
+	 * @param endorsee recipient of an Endorsement object.
+	 * @return list of paragraphs.
+	 */
+	List<P> genYesNoParagraphs(MainDocumentPart mdp, String endorsee) {
+		P newParagraph;
+		// YES / NO recommendation here
+		List<P> yesNoParagraphs = new ArrayList<>();
+		String style = STYLEID_NORMAL;
+		EndorsementMode mode = endorsementProcessor.getEndorsementMode(endorsee, precinctNo);
+		endorsedCandidates.merge(endorsee.toUpperCase(), 1, (prev, inc) -> prev + inc);
+		String yesStr = " YES";
+		String noStr  = " NO";
+		switch (mode) {
+		case ENDORSED:
+			yesStr = blackEllipse + yesStr;
+			noStr  = whiteEllipse + noStr;
+			break;
+		case UNENDORSED:
+			yesStr = whiteEllipse + yesStr;
+			noStr  = whiteEllipse + noStr;
+			break;
+		case ANTIENDORSED:
+			yesStr = whiteEllipse + yesStr;
+			noStr  = blackEllipse + noStr;
+			break;
+		}
+		newParagraph = mdp.createStyledParagraphOfText(style, yesStr);
+		yesNoParagraphs.add(newParagraph);
+		newParagraph = mdp.createStyledParagraphOfText(style, noStr);
+		yesNoParagraphs.add(newParagraph);		
+		// Draw a border line as a separator
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+		yesNoParagraphs.add(newParagraph);
+		return yesNoParagraphs;
+	}
 	/**
 	 * genPageBreak generates the pseudo contest name "PAGE BREAK" using
 	 * the wording in the property PAGE_BREAK_WORDING (e.g. "See other side of ballot")

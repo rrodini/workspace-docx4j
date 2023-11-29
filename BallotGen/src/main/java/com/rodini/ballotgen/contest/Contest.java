@@ -65,6 +65,7 @@ public class Contest {
 	 * @param name contest name which may have embedded \n
 	 * @return new contest name build dynamically
 	 */
+	// TODO: Determine if this method does anything.
 	public static String processContestName(String name) {
 		String [] elements = name.split("\\\\n");
 		StringBuffer sb = new StringBuffer();

@@ -49,6 +49,8 @@ public class Initialize {
 	public static List<String> ballotFiles; // e.g. List: "Atglen_VS.txt","Avondale_VS.txt",..,"West_Chester_7_VS.txt"
 	public static String ballotContestsPath;
 	public static String formatsText;		// read from properties file
+	public static String referendumFormat;		// read from properties file
+	public static String retentionFormat;		// read from properties file
 	public static String msWordTemplateFile = "";	// MS Word template file
 	public static ContestFileLevel contestLevel; 	// e.g. COMMON or MUNICIPAL
 	public static ENVIRONMENT env;			// TEST vs. PRODUCTION
@@ -73,6 +75,8 @@ public class Initialize {
 	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WORD_TEMPLATE_DEFAULT = ".word.template.default";
 	private static final String PROP_CONTEST_FORMAT_PREFIX = ".contest.format";
+	private static final String PROP_REFERENDUM_FORMAT = ".ballotgen.referendum.format";
+	private static final String PROP_RETENTION_FORMAT = ".ballotgen.retention.format";
 	private static final String CONTEST_FILE_LEVEL = "contest.file.level";
 	public  static final String COMMON_CONTESTS_FILE = "common_contests.txt";
 	private static final String PRECINCT_TO_ZONE_FILE = ".precinct.to.zone.file";
@@ -229,6 +233,20 @@ public class Initialize {
 			}
 		} while (format != null);
 		logger.info(String.format("there are %d contest formats in the contestgen properties file", count-1));
+	}
+	
+	static void validateReferendumFormat() {
+		// referendumFormat is a regex.
+		String propName =  COUNTY + PROP_REFERENDUM_FORMAT;
+		referendumFormat = Utils.getPropValue(contestGenProps, propName);
+		logger.info(String.format("%s: %s", propName, referendumFormat));
+	}
+	
+	static void validateRetentionFormat() {
+		// retentionFormat is a regex.
+		String propName =  COUNTY + PROP_RETENTION_FORMAT;
+		retentionFormat = Utils.getPropValue(contestGenProps, propName);
+		logger.info(String.format("%s: %s", propName, retentionFormat));
 	}
 	/**
 	 * validateWordTemplate validates the existence of the Word template file.
@@ -389,6 +407,8 @@ public class Initialize {
 		validateContestFileLevel();
 		validateFormatsText();
 		validateContestFormats();
+		validateReferendumFormat();
+		validateRetentionFormat();
 		validatePrecinctZoneFile();
 		validateEndorsementsFile();
 		validateWriteinsFile();

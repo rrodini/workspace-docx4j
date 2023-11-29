@@ -168,9 +168,11 @@ public class WriteinFactory {
 		// No header, so start at 0
 		for (int i = 0; i < csvLines.length; i++) {
 			String csvLine = csvLines[i];
-			//System.out.println(csvLine);
-			String[] fields = csvLine.split(",");
-			processData(i + 1, fields);
+			// Comment lines start with #.
+			if (!csvLine.startsWith("#")) {
+				String[] fields = csvLine.split(",");
+				processData(i + 1, fields);
+			}
 		}
 
 	}

@@ -17,6 +17,8 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rodini.ballotgen.contest.Contest;
+
 /**
  * EndorsementFactory processes the endorsementsCSVText into Endorsement objects.
  * It is the only class that knows the format of the CSV file (endorsements.csv).
@@ -132,9 +134,11 @@ public class EndorsementFactory {
 		// No header, so start at 0
 		for (int i = 0; i < csvLines.length; i++) {
 			String csvLine = csvLines[i];
-			//System.out.println(csvLine);
-			String[] fields = csvLine.split(",");
-			processData(i + 1, fields);
+			// lines that start with # are comments
+			if (!csvLine.startsWith("#")) {
+				String[] fields = csvLine.split(",");
+				processData(i + 1, fields);
+			}
 		}
 	}
 	// Get the map of endorsements for a candidate.

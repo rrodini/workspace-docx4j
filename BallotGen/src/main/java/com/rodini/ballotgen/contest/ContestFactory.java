@@ -57,7 +57,7 @@ public class ContestFactory {
 		String [] formats = formatsText.split("\\n");
 		// Note: trailing / removed for all except last by split().
 		int index=1;
-		logger.trace("contextFormats by key:");		
+		logger.trace("contestFormats by key:");		
 		for (String f: formats) {
 			logger.trace(String.format("key: %d format: %s%n", index, f));
 			contestFormats.put(Integer.toString(index), f);

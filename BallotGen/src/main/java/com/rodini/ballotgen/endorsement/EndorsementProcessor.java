@@ -108,6 +108,13 @@ public class EndorsementProcessor {
 		}
 		return mode;
 	}
+	// referendum questions and retention questions.
+	public EndorsementMode getEndorsementMode(String question, String muniNoStr) {
+		logger.debug(String.format("get ref endorsement for %s%n precinct #%s", question, muniNoStr));
+		EndorsementMode mode = getEndorsmentModeByEndorsement(question, "", muniNoStr);
+		return mode;
+	}
+	
 	/**
 	 * getCandidateEndorsements return the list of candidates with 
 	 * @return
@@ -147,8 +154,8 @@ public class EndorsementProcessor {
 		// Set the default value.
 		EndorsementMode mode = ANTIENDORSED;
 		// Attention: key is upper case to avoid case-sensitivity;
-		candidateName = candidateName.toUpperCase();
-		List<Endorsement> endorsements = candidateEndorsements.get(candidateName);
+		String candidateName1 = candidateName.toUpperCase();
+		List<Endorsement> endorsements = candidateEndorsements.get(candidateName1);
 		if (endorsements != null) {
 			for (Endorsement end: endorsements) {
 				EndorsementScope scope = end.getScope();
@@ -167,10 +174,7 @@ public class EndorsementProcessor {
 				}
 			}
 		}
-		if (mode == ENDORSED || mode == UNENDORSED) {
-			// Don't log the ANTIENDORSED candidates since that clutters the log file.
-			logger.info(String.format("%s has endorsement mode: %s", candidateName, mode.toString()));
-		}
+		logger.info(String.format("%s has endorsement mode: %s", candidateName, mode.toString()));
 		return mode;
 	}
 

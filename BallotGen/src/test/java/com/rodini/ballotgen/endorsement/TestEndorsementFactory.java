@@ -67,11 +67,11 @@ class TestEndorsementFactory {
 		EndorsementFactory.processCSVText(endorsementsCSVText);
 		Map<String, List<Endorsement>> candidateEnds = EndorsementFactory.getCandidateEndorsements();
 		assertEquals(3, mockedAppender.messages.size());
-		String expected1 = "CSV line #1 has fewer than 3 fields";
+		String expected1 = "CSV line #2 has fewer than 3 fields";
 		assertTrue(mockedAppender.messages.get(0).startsWith(expected1));
-		String expected2 = "CSV line #2 endorsement scope ZOOM has error";
+		String expected2 = "CSV line #3 endorsement scope ZOOM has error";
 		assertTrue(mockedAppender.messages.get(1).startsWith(expected2));
-		String expected3 = "CSV line #3 zone # missing";
+		String expected3 = "CSV line #4 zone # missing";
 		assertTrue(mockedAppender.messages.get(2).startsWith(expected3));
 		assertEquals(0, candidateEnds.keySet().size());
 	}
@@ -87,5 +87,34 @@ class TestEndorsementFactory {
 		assertEquals(EndorsementScope.ZONE, end.getScope());
 		assertEquals(Integer.parseInt(element[3]),end.getZoneNo());
 	}
+	@Test
+	void testEdorsements04() {
+		String endorsementsCSVText = Utils.readTextFile("./src/test/java/test-endorsements-03.csv");
+		EndorsementFactory.processCSVText(endorsementsCSVText);
+		Map<String, List<Endorsement>> candidateEnds = EndorsementFactory.getCandidateEndorsements();
+//		for (String name: candidateEnds.keySet()) {
+//			System.out.println("Candidate: " + name);
+//			for (Endorsement end: candidateEnds.get(name)) {
+//				System.out.println("  " + end.toString());
+//			}
+//		}		
+		Set<String> names = candidateEnds.keySet();
+		assertTrue(names.contains("BONNIE J. WOLFF"));
+		assertTrue(names.contains("HONEY BROOK TOWNSHIP BOARD OF SUPERVISORS REFERENDUM"));
+		assertTrue(names.contains("JOHN L. HALL"));
+		List<Endorsement> ends1 = candidateEnds.get("BONNIE J. WOLFF");
+		assertEquals(1, ends1.size());
+		assertEquals(EndorsementMode.ENDORSED, ends1.get(0).getMode());
+		List<Endorsement> ends2 = candidateEnds.get("HONEY BROOK TOWNSHIP BOARD OF SUPERVISORS REFERENDUM");
+		assertEquals(1, ends2.size());
+		assertEquals(EndorsementMode.UNENDORSED, ends2.get(0).getMode());
+		List<Endorsement> ends3 = candidateEnds.get("JOHN L. HALL");
+		assertEquals(1, ends3.size());
+		assertEquals(EndorsementMode.ANTIENDORSED, ends3.get(0).getMode());
+		assertEquals(0, mockedAppender.messages.size());
+	}
+	
 
+	
+	
 }
