@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+import static org.apache.logging.log4j.Level.ERROR;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -101,7 +102,7 @@ class TestUtils {
 		logAppMessage(logger, message, true);
 		assertEquals(1, mockedAppender.messages.size());
 		String logMessage = mockedAppender.messages.get(0);
-System.out.println("logMessage: " + logMessage);
+//System.out.println("logMessage: " + logMessage);
 		assertTrue(logMessage.startsWith(message));
 		// TODO: Statement below not true. Consider two digit dates!
 		// The date/time value should have the same length no matter what.
@@ -120,9 +121,19 @@ System.out.println("logMessage: " + logMessage);
 		assertEquals(message.length(), logMessage.length());
 	}
 	@Test
-	@Disabled
+	@Disabled  // Testing too difficult here.
 	void testLogAppErrorCount() {
 		String logFilePath = "./src/test/java/test-log-file.log";
+	}
+	@Test
+	void testLogLines() {
+		String linesAsStrings = """
+          Line #1
+          Line #2
+          Line #3""";
+		String [] linesAsElements = linesAsStrings.split("\n");
+		logLines(logger, ERROR, "Test heading:", linesAsElements);
+		assertEquals(4, mockedAppender.messages.size());
 	}
 	@Test
 	void testLoadGoodPropertiesFile() {

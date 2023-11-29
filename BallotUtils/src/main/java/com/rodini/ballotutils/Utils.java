@@ -143,7 +143,20 @@ public class Utils {
 			logAppMessage(logger, String.format("Error count: %d", errors), false);
 		}
 	}
-	
+	/**
+	 * logLines - log the lines at the desired level.
+	 * 
+	 * @param logger logger object to use.
+	 * @param level level to log at.
+	 * @param heading heading for the lines to follow.
+	 * @param lines lines to log.
+	 */
+	public static void logLines(Logger logger, Level level, String heading, String [] lines) {
+		logger.log(level, heading);
+		for (int i = 0; i < lines.length; i++) {
+			logger.log(level, lines[i]);
+		}
+	}
 	/**
 	 * loadProperties loads the program's properties from a Java properties file.
 	 * 
