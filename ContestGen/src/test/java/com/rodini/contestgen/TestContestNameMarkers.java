@@ -22,7 +22,6 @@ class TestContestNameMarkers {
 			
 	@BeforeEach
 	void setUp() throws Exception {
-		ContestGen.COUNTY="chester";
 		int index = 0;
 		for (String format: testContestNameFormats) {
 			testContestNamePatterns[index] = Utils.compileRegex(format);
@@ -45,6 +44,7 @@ class TestContestNameMarkers {
 	
 	@Test
 	void testLoadFromResources() {
+	    ContestGen.COUNTY = "chester";
 		ContestNameMarkers.initialize("./src/test/java/Chester-General-2021.properties");
 		Pattern [] patterns = ContestNameMarkers.getContestNamePatterns();
 		assertEquals(testContestNamePatterns.length, patterns.length);

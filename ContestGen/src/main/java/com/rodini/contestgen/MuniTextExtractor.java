@@ -67,24 +67,25 @@ public class MuniTextExtractor {
 				logger.error(msg);
 			}
 		}
-		// necessary due to anomolies in VS ballot construction.
-		if (!text.isBlank() && !text.endsWith(ContestGen.WRITE_IN)) {
-			text = text + ContestGen.WRITE_IN;
-		}
+		// Code below considered harmful.
+//		// necessary due to anomolies in VS ballot construction.
+//		if (!text.isBlank() && !text.endsWith(ContestGen.WRITE_IN)) {
+//			text = text + ContestGen.WRITE_IN;
+//		}
 		return text;
 	}
 	/**
 	 * extract "rips" the contest(s) text from the municipal ballot text.
 	 * @return a MunicipalContestsExtractor object.
 	 */
-	MuniContestsExtractor extract() {
+	MuniContestsQuestionsExtractor extract() {
 		String page1Text = "";
 		String page2Text = "";
 		page1Text = extractPageText(MuniTextMarkers.getPage1Pattern(), 1);
 		if (MuniTextMarkers.getPageCount() == 2) {
 			page2Text = extractPageText(MuniTextMarkers.getPage2Pattern(), 2);
 		}
-		return new MuniContestsExtractor(muniName, page1Text, page2Text);
+		return new MuniContestsQuestionsExtractor(muniName, page1Text, page2Text);
 	}
 	/**
 	 * getMuniName returns the municipality name.

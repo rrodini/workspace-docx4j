@@ -81,7 +81,7 @@ class TestMuniTextExtractor {
 					"Inspector Of Elections\n005 Atglen"
 				};
 		MuniTextExtractor mte = new MuniTextExtractor("050 Atglen", muniRawText);
-		MuniContestsExtractor mce = mte.extract();
+		MuniContestsQuestionsExtractor mce = mte.extract();
 		String page1Text = mce.getMuniPage1Text();
 		String page2Text = mce.getMuniPage2Text();
 		
@@ -113,7 +113,7 @@ class TestMuniTextExtractor {
 			};
 		MuniTextExtractor mte = new MuniTextExtractor("010 Avondale", muniRawText);
 		mte.extract();
-		MuniContestsExtractor mce = mte.extract();
+		MuniContestsQuestionsExtractor mce = mte.extract();
 		String page1Text = mce.getMuniPage1Text();
 		String page2Text = mce.getMuniPage2Text();
 		// assert existence of first and last contest on page 1.
@@ -136,7 +136,7 @@ class TestMuniTextExtractor {
 					"culpa qui officia deserunt mollit anim id est laborum.";
 		String expected = "no match for municipal page.";
 		MuniTextExtractor mte = new MuniTextExtractor("010 Avondale", muniRawText);
-		MuniContestsExtractor mce = mte.extract();
+		MuniContestsQuestionsExtractor mce = mte.extract();
 		String page1Text = mce.getMuniPage1Text();
 		// Expect BAD EXTRACT text
 		assertTrue(page1Text.startsWith("BAD EXTRACT"));

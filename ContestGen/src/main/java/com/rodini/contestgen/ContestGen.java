@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -72,7 +73,8 @@ public class ContestGen {
 	static Properties props;
 	static MuniContestNames muniContestNames;
 	static MuniContestNames commonContestNames;
-	
+	static MuniReferendums muniReferendums;
+	static MuniRetentions muniRetentions;
 	
 	/** 
 	 * main entry point for program. Check for necessary ENV variables.
@@ -96,11 +98,13 @@ public class ContestGen {
 		genMuniBallots(mteList);
 		
 		
-		MuniContestNames muniContestNames;
 		List<MuniContestNames> mcnList = new ArrayList<> ();
 		for (MuniTextExtractor mte: mteList) {
-			MuniContestsExtractor mce = mte.extract();
-			muniContestNames = mce.extract();
+			MuniContestsQuestionsExtractor mce = mte.extract();
+			mce.extract();
+			muniContestNames = mce.getMuniContestNames();
+			muniReferendums  = mce.getMuniReferendums();
+			muniRetentions   = mce.getMuniRetentions();
 			// TODO: test if name is unique (as it should be, except for "356 E Marlborough S"
 			// 
 			String muniName = muniContestNames.getMuniName();
@@ -111,13 +115,14 @@ public class ContestGen {
 				commonContestNames = commonContestNames.intersect(muniContestNames);
 			}
 			// generate municipality contests
-			genMuniContests(muniName, muniContestNames.get());
+			genMuniContestsAndQuestions(muniName, muniContestNames.get());
 			mcnList.add(muniContestNames);
 		}
+		// TODO: Death of common_contests.txt ?
 		// generate common contests.
-		genMuniContests("common", commonContestNames.get());
+		//genMuniCommonContests("common", commonContestNames.get());
 		// generate a summary report.
-		genBallotReport(mcnList);
+		genSummaryReport(mcnList);
 		Utils.logAppErrorCount(logger);
 		Utils.logAppMessage(logger, "End of ContestGen app.", true);
 	}
@@ -194,6 +199,10 @@ public class ContestGen {
 		MuniTextMarkers.initialize(propsFilePath);
 		// validate ContestNameMarkers values
 		ContestNameMarkers.initialize(propsFilePath);
+		// validate ReferendumMarkers values
+		ReferendumMarkers.initialize(propsFilePath);
+		// validate RetentionMarkers values
+		RetentionMarkers.initialize(propsFilePath);
 	}
 	/**
 	 * GenMuniBallots generates the ballot file for each municipality.
@@ -217,35 +226,55 @@ public class ContestGen {
 		}
 	}
 	
+	static void genMuniContests(FileWriter cf, String muniName) throws IOException{
+		cf.write("Contests\n");
+		for (ContestName mcn: muniContestNames.get()) {
+			String contestName = mcn.getName();
+			contestName = contestName.replaceAll("\n", "\\\\\\n");
+			cf.write(String.format("%s,%d%n", contestName, mcn.getFormat()));
+		}	
+	}
+	static void genMuniReferendums(FileWriter cf, String muniName) throws IOException {
+		if (muniReferendums.get().size() == 0) {
+			return;
+		}
+		cf.write("Referendums\n");
+		for (Referendum ref: muniReferendums.get()) {
+			String refQuestion = ref.getRefQuestion();
+			refQuestion = refQuestion.replaceAll("\n", "\\\\\\n");
+			cf.write(String.format("%s%n", refQuestion));
+		}	
+	}
+	static void genMuniRetentions(FileWriter cf, String muniName) throws IOException {
+		if (muniRetentions.get().size() == 0) {
+			return;
+		}
+		cf.write("Retentions\n");
+		for (Retention ret: muniRetentions.get()) {
+			String officeName = ret.getOfficeName();
+			String judgeName = ret.getJudgeName();
+			officeName = officeName.replaceAll("\n", "\\\\\\n");
+			judgeName = judgeName.replaceAll("\n", "\\\\\\n");
+			cf.write(String.format("%s,%s%n", officeName, judgeName));
+		}	
+	}
 	/**
 	 * genMuniContests generates the contests file for the municipality.
 	 * 
 	 * @param muniName municipality name
 	 * @param cnList list of contest names w/ formats.
 	 */
-	static void genMuniContests(String muniName, List<ContestName> cnList) {
-		if (env == TEST) {
-			for (ContestName mcn: cnList) {
-				String contestName = mcn.getName();
-				contestName = contestName.replaceAll("\n", "\\\\\\n");
-				System.out.printf("%s: %s, %d%n", muniName, contestName, mcn.getFormat());
-			}
-		} else {
-			// PRODUCTION
-			String contestFilePath = outContestPath + File.separator + muniName + CONTESTS_FILE;
-			String msg = String.format("writing file: %s", contestFilePath);
-			System.out.println(msg);
-			logger.info(msg);
-			try (FileWriter contestsFile = new FileWriter(contestFilePath, false);) {
-				for (ContestName mcn: cnList) {
-					String contestName = mcn.getName();
-					contestName = contestName.replaceAll("\n", "\\\\\\n");
-					contestsFile.write(String.format("%s,%d%n", contestName, mcn.getFormat()));
-				}
-	
-			} catch (IOException e) {
-				logger.error(e.getMessage());
-			}
+	static void genMuniContestsAndQuestions(String muniName, List<ContestName> cnList) {
+		String contestFilePath = outContestPath + File.separator + muniName + CONTESTS_FILE;
+		String msg = String.format("writing file: %s", contestFilePath);
+		System.out.println(msg);
+		logger.info(msg);
+		try (FileWriter contestsFile = new FileWriter(contestFilePath, false);) {
+			genMuniContests(contestsFile, muniName);
+			genMuniReferendums(contestsFile, muniName);
+			genMuniRetentions(contestsFile, muniName);
+		} catch (IOException e) {
+			logger.error(e.getMessage());
 		}
 	}
 	/**
@@ -254,57 +283,94 @@ public class ContestGen {
 	 * 
 	 * 
 	 */
-	static void genBallotReport(List<MuniContestNames> mcnList) {
+	static void genSummaryReport(List<MuniContestNames> mcnList) {
 		// try with resources will close the output file.
 		try (PrintWriter pw = new PrintWriter(new File(outContestPath + File.separator + SUMMARY_FILE_NAME))) {
-			String line = "Ballot Summary Report";
+			String line = "Summary Report (Ballot/Referendum/Retention)";
 			System.out.println(line);
 			pw.println(line);
-//			logger.info(line);
-			line = String.format("Precinct count: %s", mcnList.size());
-			System.out.println(line);
-			logger.log(ATTN, line);
-			pw.println(line);
-//			logger.info(line);
-			// determine how many unique ballots
-			//   ContestsText  Municipalities w/ same ContestsText
-			//       |                 |
-			Map  <String,      List<String>> uniqueBallots = new HashMap<>();
-			for (MuniContestNames mcn: mcnList) {
-				String muniContestsText = mcn.getMuniContestsText();
-				String muniName = mcn.getMuniName();
-				if (!uniqueBallots.containsKey(muniContestsText)) {
-					uniqueBallots.put(muniContestsText, new ArrayList<String>());
-				}
-				List<String> muniNames = uniqueBallots.get(muniContestsText);
-				muniNames.add(muniName);
-			}
-			line = String.format("Unique ballot count: %s", uniqueBallots.keySet().size());
-			System.out.println(line);
-			pw.println(line);
-//			logger.info(line);
-			line = String.format("Precincts with identical ballots:");
-			System.out.println(line);
-			pw.println(line);
-//			logger.info(line);
-			Set<String> ballotKeys = uniqueBallots.keySet();
-			int i = 0;
-			for (String ballotKey: ballotKeys) {
-				String muniNameList = String.join(",", uniqueBallots.get(ballotKey));
-				line = String.format("Ballot %2d: %s", i, muniNameList);
-				System.out.println(line);
-				pw.println(line);
-//				logger.info(line);
-				i++;
-			}
+			genBallotReport(pw, mcnList);
+			genReferendumReport(pw, ReferendumFactory.getReferendums());
+			genRetentionReport(pw, RetentionFactory.getRetentions());
 			pw.close();
-			
 		} catch (IOException ex) {
 			String msg = String.format("IOException writing ballot summary report: %s", ex.getMessage());			
 			logger.error(msg);
 			System.out.println(msg);
 		}
 		
+	}
+	static void genBallotReport(PrintWriter pw, List<MuniContestNames> mcnList) {
+		String line = "Ballot Summary";
+		System.out.println(line);
+		pw.println(line);
+		line = String.format("Precinct count: %s", mcnList.size());
+		System.out.println(line);
+		logger.log(ATTN, line);
+		pw.println(line);
+		// determine how many unique ballots
+		//   ContestsText  Municipalities w/ same ContestsText
+		//       |                 |
+		Map  <String,      List<String>> uniqueBallots = new HashMap<>();
+		for (MuniContestNames mcn: mcnList) {
+			String muniContestsText = mcn.getMuniContestsText();
+			String muniName = mcn.getMuniName();
+			if (!uniqueBallots.containsKey(muniContestsText)) {
+				uniqueBallots.put(muniContestsText, new ArrayList<String>());
+			}
+			List<String> muniNames = uniqueBallots.get(muniContestsText);
+			muniNames.add(muniName);
+		}
+		line = String.format("Unique ballot count: %s", uniqueBallots.keySet().size());
+		System.out.println(line);
+		pw.println(line);
+		line = String.format("Precincts with identical ballots:");
+//		System.out.println(line);
+		pw.println(line);
+		Set<String> ballotKeys = uniqueBallots.keySet();
+		int i = 0;
+		for (String ballotKey: ballotKeys) {
+			String muniNameList = String.join(",", uniqueBallots.get(ballotKey));
+			line = String.format("Ballot %2d: %s", i, muniNameList);
+//			System.out.println(line);
+			pw.println(line);
+			i++;
+		}
+	}
+	
+	static void genReferendumReport(PrintWriter pw, List<Referendum> refList) {
+		String line = "Referendum Summary";
+		System.out.println(line);
+		pw.println(line);
+		line = String.format("Unique referendum questions: %d", refList.size());
+		System.out.println(line);
+		logger.log(ATTN, line);
+		pw.println(line);
+		for (int i = 0; i < refList.size(); i++) {
+			Referendum ref = refList.get(i);
+			line = String.format("Referendum %d:", i);
+			pw.println(line);
+			// refQuestion text seems to end w. \n
+			pw.print(ref.getRefQuestion());
+			List<String> muniNoList = ref.getMuniNoList();
+			String listAsString = muniNoList.stream().collect(Collectors.joining(","));
+			pw.println(line + " precincts: " + listAsString);
+		}
+	}
+	
+	static void genRetentionReport(PrintWriter pw, List<Retention> retList) {
+		String line = "Retention Summary";
+		System.out.println(line);
+		pw.println(line);
+		line = String.format("Unique retention questions: %d", retList.size());
+		System.out.println(line);
+		logger.log(ATTN, line);
+		pw.println(line);
+		for (int i = 0; i < retList.size(); i++) {
+			Retention ret = retList.get(i);
+			line = String.format("Retention %d: %s", i, ret.getJudgeName());
+			pw.println(line);
+		}
 	}
 
 }

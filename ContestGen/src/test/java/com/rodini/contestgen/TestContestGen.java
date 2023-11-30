@@ -25,7 +25,7 @@ class TestContestGen {
 	    logger = (Logger)LogManager.getLogger(ContestGen.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
-
+	    ContestGen.COUNTY = "chester";
 	}
 
 	@AfterAll
@@ -110,6 +110,7 @@ class TestContestGen {
 				"./contests",
 				"./ballots"
 		};
+		ContestGen.COUNTY = "chester";
 		ContestGen.initialize(args);
 		assertTrue(ContestGen.props != null);
 	}

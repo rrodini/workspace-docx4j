@@ -18,6 +18,7 @@ class TestMuniTextMarkers {
 	
 	@BeforeEach
 	void setUp() throws Exception {
+	    ContestGen.COUNTY = "chester";
 	}
 
 	@AfterEach

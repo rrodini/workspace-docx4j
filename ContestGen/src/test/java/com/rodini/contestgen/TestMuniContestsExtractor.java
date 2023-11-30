@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class TestMuniContestsExtractor {
 	private static MockedAppender mockedAppender;
 	private static Logger logger;
-	private MuniContestsExtractor mce;
+	private MuniContestsQuestionsExtractor mce;
 	
 	String contestsText =						// sample from 2021 General Election
 			"Justice of the Supreme Court\n" +
@@ -150,11 +150,14 @@ class TestMuniContestsExtractor {
 	 */
 	@BeforeAll
 	static void setupClass() {
+		Pattern [] testContestNamePatterns; 
+
 	    mockedAppender = new MockedAppender();
 	    mockedAppender.start();
-	    logger = (Logger)LogManager.getLogger(MuniContestsExtractor.class);
+	    logger = (Logger)LogManager.getLogger(MuniContestsQuestionsExtractor.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
+	    ContestGen.COUNTY = "chester";
 	}
 
 	@AfterAll
@@ -168,7 +171,7 @@ class TestMuniContestsExtractor {
 	    ContestNameMarkers.initialize("./src/test/java/Chester-General-2021.properties");
 	    ContestGen.COUNTY="Chester";
 	    ContestGen.WRITE_IN="Write-in\n";
-		mce = new MuniContestsExtractor("Atglen", contestsText, "");
+		mce = new MuniContestsQuestionsExtractor("Atglen", contestsText, "");
 	}
 
 	@AfterEach
@@ -179,7 +182,8 @@ class TestMuniContestsExtractor {
 	public void testExtract1() {
 	System.out.printf("testExtract1:%n");
 	System.out.printf("WRITE_IN: %s%n", ContestGen.WRITE_IN);
-		MuniContestNames muniContestNames = mce.extract();
+		mce.extract();
+		MuniContestNames muniContestNames = mce.getMuniContestNames();
 		List<ContestName> contestNames = muniContestNames.get();
 		assertEquals(16, contestNames.size());
 		List<String> names = new ArrayList<>();

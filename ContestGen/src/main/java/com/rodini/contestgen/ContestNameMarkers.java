@@ -14,7 +14,7 @@ import com.rodini.ballotutils.Utils;
 
 /**
  * 
- * ContestNameMarkers - 
+ * ContestNameMarkers gets the regexes used to extract contest names from ballot text.
  */
 public class ContestNameMarkers {
 	static final Logger logger = LogManager.getLogger(ContestNameMarkers.class);
