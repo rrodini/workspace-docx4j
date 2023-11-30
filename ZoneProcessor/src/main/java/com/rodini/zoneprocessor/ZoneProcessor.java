@@ -48,7 +48,7 @@ public class ZoneProcessor {
 		Zone zone = ZoneFactory.findOrCreate(normalZoneNo, zoneName);
 		Set<String> muniNoKeys = muniNoMap.keySet();
 		if (muniNoKeys.contains(normalPrecinctNo)) {
-			logger.error(String.format("duplicate precinct no. %s", normalPrecinctNo));
+			logger.info(String.format("duplicate precinct no. %s", normalPrecinctNo));
 		} else {
 			muniNoMap.put(normalPrecinctNo, zone);
 		}
@@ -63,33 +63,41 @@ public class ZoneProcessor {
 			logger.error(String.format("CSV line #%d more than 4 fields", lineNo));
 			return;
 		}
+		String field0 = "";
+		String field1 = "";
+		String field2 = "";
+		String field3 = "";
 		for (int i=0; i < fields.length; i++) {
 			switch (i) {
 			case 0:
 				// precinct no. - should be unique.
-				if (fields[0].isBlank() || fields[0].length() > 3) {
-					logger.error(String.format("CSV line #%d precinct no. %s has error", lineNo, fields[0]));
+				field0 = fields[0].trim();
+				if (field0.isBlank() || field0.length() > 3) {
+					logger.error(String.format("CSV line #%d precinct no. %s has error", lineNo, field0));
 					return;
 				}
 				break;
 			case 1:
 				// precinct name - not used since name may change.
+				field1 = fields[1].trim();
 				break;
 			case 2:
 				// zone name - expect many duplicates.
-				if (fields[2].isBlank()) {
-					logger.error(String.format("CSV line #%d zone name %s has error", lineNo, fields[2]));
+				field2 = fields[2].trim();
+				if (field2.isBlank()) {
+					logger.error(String.format("CSV line #%d zone name %s has error", lineNo, field2));
 					return;
 				}
 				break;
 			case 3:
 				// zone no. - expect many duplicates.
-				if (fields[3].isBlank() || fields[3].length() > 2) {
-					logger.error(String.format("CSV line #%d zone no. %s has error", lineNo, fields[3]));
+				field3 = fields[3].trim();
+				if (field3.isBlank() || field3.length() > 2) {
+					logger.error(String.format("CSV line #%d zone no. %s has error", lineNo, field3));
 					return;
 				}
-				// notice the change in field order.
-				processLine(fields[0], fields[1], fields[3], fields[2]);
+				// notice the change in field2 order.
+				processLine(field0, field1, field3, field2);
 				break;
 			}			
 		}
@@ -101,8 +109,11 @@ public class ZoneProcessor {
 		// skip the header line by starting at 1.
 		for (int i = 1; i < csvLines.length; i++) {
 			String csvLine = csvLines[i];
-			String [] fields = csvLine.split(",");
-			processData(i+1,fields);
+			// Comment lines start with #.
+			if (!csvLine.startsWith("#")) {
+				String[] fields = csvLine.split(",");
+				processData(i + 1, fields);
+			}
 		}
 	}
 	// zoneOwnsPrecinct is needed for semantic checks in other programs.

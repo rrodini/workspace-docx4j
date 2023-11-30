@@ -81,6 +81,8 @@ class TestGenMuniMap {
 	@Test
 	void testMuniMapDuplicateCsv() {
 		String csvText = Utils.readTextFile("./src/test/java/test-duplicate.csv");
+		// Duplicate precinct # no longer an ERROR (11/24/2023)
+	    logger.setLevel(Level.INFO);
 		ZoneProcessor.processCSVText(csvText);
 		assertEquals(1, mockedAppender.messages.size());
 		Map<String, Zone> muniNoMap = ZoneProcessor.getPrecinctZoneMap();
