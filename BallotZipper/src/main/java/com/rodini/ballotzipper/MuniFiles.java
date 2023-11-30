@@ -43,7 +43,7 @@ public class MuniFiles {
 	void checkSize(List<String> fileNames) {
 		int size = fileNames.size();
 		if (size < 3 || size > 3) {
-			logger.error(String.format("fileNames should have size %d but has size %d.", LISTSIZE, size));
+			logger.info(String.format("fileNames should have size %d but has size %d.", LISTSIZE, size));
 		}
 	}
 	// Check that the files have the correct extension
@@ -89,7 +89,7 @@ public class MuniFiles {
 	}
 	// Log an error if there's a file with a duplicated extension.
 	void logDuplicateExt(String ext, String fileName) {
-		logger.error(String.format("duplicate %s file: %s", ext, fileName));
+		logger.info(String.format("duplicate %s file: %s", ext, fileName));
 	}
 	// Standard toString() method
 	public String toString() {

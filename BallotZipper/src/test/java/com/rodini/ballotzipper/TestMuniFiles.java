@@ -69,8 +69,9 @@ class TestMuniFiles {
 		MuniFiles muniFiles = new MuniFiles(files);
 		assertEquals(files.get(0), muniFiles.getDocxFile());
 		assertEquals(files.get(1), muniFiles.getPdfFile());
-		assertEquals(1, mockedAppender.messages.size());
-		assertTrue(mockedAppender.messages.get(0).startsWith("fileNames should have size 3 but has size 2."));
+		assertEquals(0, mockedAppender.messages.size());
+		// No longer error  11/29/2023
+//		assertTrue(mockedAppender.messages.get(0).startsWith("fileNames should have size 3 but has size 2."));
 	}
 	@Test
 	// File list too long
@@ -79,12 +80,13 @@ class TestMuniFiles {
 		MuniFiles muniFiles = new MuniFiles(files);
 		assertEquals(files.get(0), muniFiles.getDocxFile());
 		assertEquals(files.get(1), muniFiles.getPdfFile());
-		assertEquals(3, mockedAppender.messages.size());
-		assertTrue(mockedAppender.messages.get(0).startsWith("fileNames should have size 3 but has size 4."));
-		String error1 = mockedAppender.messages.get(1);
-		assertEquals(error1, "duplicate " + ".docx" + " file: " + files.get(0));
-		String error2 = mockedAppender.messages.get(2);
-		assertEquals(error2, "duplicate " + ".pdf" + " file: "  + files.get(1));
+		assertEquals(0, mockedAppender.messages.size());
+		// No longer error 11/29/2023
+//		assertTrue(mockedAppender.messages.get(0).startsWith("fileNames should have size 3 but has size 4."));
+//		String error1 = mockedAppender.messages.get(1);
+//		assertEquals(error1, "duplicate " + ".docx" + " file: " + files.get(0));
+//		String error2 = mockedAppender.messages.get(2);
+//		assertEquals(error2, "duplicate " + ".pdf" + " file: "  + files.get(1));
 	}
 	@Test
 	// Test toString()
