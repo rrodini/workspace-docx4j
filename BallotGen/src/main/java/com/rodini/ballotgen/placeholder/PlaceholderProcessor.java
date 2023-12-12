@@ -14,6 +14,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.P;
 import org.docx4j.wml.Text;
+import org.docx4j.wml.ContentAccessor;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -236,20 +237,27 @@ public class PlaceholderProcessor {
 	}
 	/**
 	 * replaceContent replaces the placeholder paragraph with a new "value" paragraph.
+	 * Note: Must remove the placeholder value in all cases.
 	 * 
 	 * @param ph Placeholder object.
-	 * @param contentList new content to replace placeholder paragraph (P).
+	 * @param contentList new content to replace placeholder paragraph (P). Maybe empty.
 	 */
 	public void replaceContent(Placeholder ph, List<P> contentList) {
 		PlaceholderLocation loc = ph.getLoc();		
 		P replaceParagraph = ph.getReplaceParagraph();
-		List<Object> oldContentList = getContent(loc);
+		// Replaced by lines below.
+//		List<Object> oldContentList = getContent(loc);
+//		List<Object> oldContentList = replaceParagraph.getParent().getContent();
+		Object parent = replaceParagraph.getParent();
+		List<Object> oldContentList = ((ContentAccessor)parent).getContent();
 		int replaceIndex = oldContentList.indexOf(replaceParagraph);
 		if (replaceIndex < 0) {
 			logger.error(String.format("can't insert new content for placeholder %s - replace paragraph not found", ph.getName()));
 		}
-		// Insert new content
-		oldContentList.addAll(replaceIndex, contentList);
+		if (contentList.size() > 0) {
+			// Insert new content
+			oldContentList.addAll(replaceIndex, contentList);
+		}
 		// Remove the placeholder paragraph
 		oldContentList.remove(replaceParagraph);
 	}

@@ -177,5 +177,22 @@ public class EndorsementProcessor {
 		logger.info(String.format("%s has endorsement mode: %s", candidateName, mode.toString()));
 		return mode;
 	}
-
+	/**
+	 * getZoneNoForPrecinct gets the zone # that "owns" the precinct.
+	 * @param precinctNo precinct # (e.g."005").
+	 * @return zone # (1 - 2 characters).
+	 */
+	public String getZoneNoForPrecinct(String precinctNo) {
+		Zone zone = precinctToZone.get(precinctNo);
+		return zone.getZoneNo();
+	}
+	/**
+	 * getZoneNameForPrecinct
+	 * @param precinctNo precinct # (e.g."005").
+	 * @return zone name.
+	 */
+	public String getZoneNameForPrecinct(String precinctNo) {
+		Zone zone = precinctToZone.get(precinctNo);
+		return zone.getZoneName();
+	}
 }

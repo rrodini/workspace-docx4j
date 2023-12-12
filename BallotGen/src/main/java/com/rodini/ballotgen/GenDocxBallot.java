@@ -28,15 +28,18 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.wml.BooleanDefaultTrue;
 import org.docx4j.wml.Br;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
 import org.docx4j.wml.PPr;
 import org.docx4j.wml.PPrBase;
 import org.docx4j.wml.R;
+import org.docx4j.wml.RPr;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
 import org.docx4j.wml.Text;
+import org.docx4j.wml.U;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -100,6 +103,8 @@ public class GenDocxBallot {
 	private String precinctNoName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
 	private String precinctName; // e.g. "Atglen" or "East_Whiteland_4"
 	private String precinctNo; // e.g. "005" or "750"
+	private String zoneNo;		// # of zone that "owns" precinct
+	private String zoneName;	// name of zone that "owns" precinct
 	private static final String FILE_SUFFIX = "_VS";
 	private String fileOutputPath; // generated DOCX file
 	private String formatsText;   // formats (regexes) read from properties
@@ -116,9 +121,10 @@ public class GenDocxBallot {
 	public static final String PLACEHOLDER_PRECINCT_NO = "PrecinctNo";
 	public static final String PLACEHOLDER_PRECINCT_NAME = "PrecinctName";
 	public static final String PLACEHOLDER_PRECINCT_NO_NAME = "PrecinctNoName";
-	public static final String PLACEHOLDER_ZONE_NO_CHUNK = "ZoneNo.chunk";	
+	public static final String PLACEHOLDER_ZONE_NO= "ZoneNo";	
+	public static final String PLACEHOLDER_ZONE_NAME = "ZoneName";	
 	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_REFERENDUMS, PLACEHOLDER_RETENTIONS,
-			  PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME, PLACEHOLDER_ZONE_NO_CHUNK);
+			  PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME, PLACEHOLDER_ZONE_NO, PLACEHOLDER_ZONE_NAME);
 	private static PlaceholderProcessor phProcessor;
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
@@ -138,6 +144,8 @@ public class GenDocxBallot {
 	private static String STYLEID_WRITE_IN_CANDIDATE_NAME = "WriteInCandidateName";
 	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	private static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
+	// Make separate enum if needed elsewhere.
+	enum TextStyle {BOLD, UNDERLINE}; // BOLD for retention questions, UNDERLINE for write-in candidates.
 	// These are unicode characters (also Segoe UI Symbol font)
 	private static final String whiteEllipse = "⬭";
 	private static final String blackEllipse = "⬬";
@@ -217,6 +225,8 @@ public class GenDocxBallot {
 		
 		precinctNo = precinctNoName.substring(0, 3);
 		precinctName = precinctNoName.substring(3);
+		zoneNo = endorsementProcessor.getZoneNoForPrecinct(precinctNo);
+		zoneName = endorsementProcessor.getZoneNameForPrecinct(precinctNo);
 		logger.log(ATTN, precinctNoName);
 		try {
 			Integer.parseInt(precinctNo);
@@ -429,14 +439,10 @@ public class GenDocxBallot {
 						phProcessor.replaceContent(ph, genContests());
 					} else if (name.equals(PLACEHOLDER_REFERENDUMS)) {
 						// Are there referendums?
-						if (referendumsText != null) {
-							phProcessor.replaceContent(ph, genReferendums());
-						}
+						phProcessor.replaceContent(ph, genReferendums());
 					} else if (name.equals(PLACEHOLDER_RETENTIONS)) {
 						// Are there retentions?
-						if (retentionsText != null) {
-							phProcessor.replaceContent(ph, genRetentions());
-						}
+						phProcessor.replaceContent(ph, genRetentions());
 					} else {
 						P paragraph = genPlaceholderValue(name, ph, "Normal", docx.getMainDocumentPart());
 						phProcessor.replaceContent(ph, List.of(paragraph));
@@ -470,8 +476,11 @@ public class GenDocxBallot {
 		case PLACEHOLDER_CONTESTS:
 			System.out.println("Cannot generate \"Contests\" content here");
 			break;
-		case PLACEHOLDER_ZONE_NO_CHUNK:
-			System.out.println("\"Zone#.chunk\" is TBD");
+		case PLACEHOLDER_ZONE_NO:
+			paragraph = genStyledParagraph(zoneNo, ph.getReplaceParagraph(), style, mdp);
+			break;
+		case PLACEHOLDER_ZONE_NAME:
+			paragraph = genStyledParagraph(zoneName, ph.getReplaceParagraph(), style, mdp);
 			break;
 		}	
 		return paragraph;
@@ -754,10 +763,9 @@ public class GenDocxBallot {
 		List<P> candParagraphs = new ArrayList<>();
 		P newParagraph = null;
 		String oval =  blackEllipse;
-		String text = oval + " " + name;
-		// TODO: underline just the name, not the oval
-		// Explore Word style type CHARACTER or LINKED
-		newParagraph = mdp.createStyledParagraphOfText(STYLEID_WRITE_IN_CANDIDATE_NAME, text);
+		// TODO: test this.
+//		newParagraph = mdp.createStyledParagraphOfText(STYLEID_WRITE_IN_CANDIDATE_NAME, text);
+		newParagraph = genStyledTextWithinParagraph(TextStyle.UNDERLINE, blackEllipse + " ", name, " ");
 		candParagraphs.add(newParagraph);
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
 		candParagraphs.add(newParagraph);
@@ -771,13 +779,15 @@ public class GenDocxBallot {
 	List<P> genReferendums() {
 		logger.debug("generating referendums for document");
 		List<P> referendumParagraphs = new ArrayList<>();
-		String[] referendumLines = referendumsText.split("\n");
-		Utils.logLines(logger, DEBUG, "referendumLines:", referendumLines);
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-		for (String line: referendumLines) {
-			// Each line is a referendum question
-			String refQuestion = line;
-			referendumParagraphs.addAll(genReferendum(mdp, refQuestion));
+		if (referendumsText != null) {
+			String[] referendumLines = referendumsText.split("\n");
+			Utils.logLines(logger, DEBUG, "referendumLines:", referendumLines);
+			MainDocumentPart mdp = docx.getMainDocumentPart();
+			for (String line: referendumLines) {
+				// Each line is a referendum question
+				String refQuestion = line;
+				referendumParagraphs.addAll(genReferendum(mdp, refQuestion));
+			}
 		}
 		return referendumParagraphs;
 	}
@@ -834,15 +844,17 @@ public class GenDocxBallot {
 	List<P> genRetentions() {
 		logger.debug("generating retentions for document");
 		List<P> retentionParagraphs = new ArrayList<>();
-		String[] retentionLines = retentionsText.split("\n");
-		Utils.logLines(logger, DEBUG, "retentionLines:", retentionLines);
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-		for (String line: retentionLines) {
-			// Each line is a referendum question
-			String [] elements = line.split(",");
-			String officeName = elements[0];
-			String judgeName = elements[1];
-			retentionParagraphs.addAll(genRetention(mdp, officeName, judgeName));
+		if (retentionsText != null) {
+			String[] retentionLines = retentionsText.split("\n");
+			Utils.logLines(logger, DEBUG, "retentionLines:", retentionLines);
+			MainDocumentPart mdp = docx.getMainDocumentPart();
+			for (String line: retentionLines) {
+				// Each line is a referendum question
+				String [] elements = line.split(",");
+				String officeName = elements[0];
+				String judgeName = elements[1];
+				retentionParagraphs.addAll(genRetention(mdp, officeName, judgeName));
+			}
 		}
 		return retentionParagraphs;
 	}
@@ -874,8 +886,14 @@ public class GenDocxBallot {
 	/**
 	 * genRetentionParagraphs generates the paragraphs of the retention questions.
 	 * 
+	 * @param mdp MainDocumentPart.
+	 * @param officeName Judgeship office name.
+	 * @param judgeName Judge up for retention.
+	 * @param question Retention question.
+	 * 
+	 * @return list of paragraphs.
 	 */
-	List<P> genRetentionParagraphs(MainDocumentPart mdp, String officeName, String judgeName, String text) {
+	List<P> genRetentionParagraphs(MainDocumentPart mdp, String officeName, String judgeName, String question) {
 		P newParagraph;
 		List<P> retParagraphs = new ArrayList<>();
 		String style = STYLEID_CONTEST_TITLE;
@@ -885,10 +903,33 @@ public class GenDocxBallot {
 		retParagraphs.add(newParagraph);
 		style = STYLEID_NORMAL;
 		// TODO: find the judge name and use a BOLD font.
-		newParagraph = mdp.createStyledParagraphOfText(style, text);
+//		newParagraph = mdp.createStyledParagraphOfText(style, question);
+		newParagraph = genRetentionQuestionParagraph(judgeName, question);
 		retParagraphs.add(newParagraph);
 		retParagraphs.addAll(genYesNoParagraphs(mdp, judgeName));
 		return retParagraphs;
+	}
+	/**
+	 * genRetentionQuestionParagraph generates the retention question with the judge's name bolded.
+	 * Notes: The judge's name is assumed to be within the retention question.
+	 * 
+	 * @param mdp MainDocumment part.
+	 * @param judgeName judge's name
+	 * @param question retention question.
+	 * 
+	 * @return paragraph P.
+	 */
+	P genRetentionQuestionParagraph(String judgeName, String question) {
+		P newParagraph = null;
+		int index = question.indexOf(judgeName);
+		if (index < 0) {
+			logger.error(String.format("judge: %s not found in retention question: %s", judgeName, question));
+			return newParagraph;
+		}
+		String questionStart = question.substring(0, index);
+		String questionEnd = question.substring(index + judgeName.length());
+		newParagraph = genStyledTextWithinParagraph(TextStyle.BOLD, questionStart, judgeName, questionEnd);
+		return newParagraph;
 	}
 	/**
 	 * genYesNoParagraphs generates the paragraphs for the YES/NO recommendations
@@ -992,13 +1033,71 @@ public class GenDocxBallot {
 		    if (pStyle != null) {
 		        style = pStyle.getVal();
 		    } else {
-				System.out.println("pStyle value is null - Normal style used.");
+				logger.info("pStyle value is null - Normal style used.");
 		    }
 		} else {
-			System.out.println("pPr value is null - Normal style used.");
+			logger.info("pPr value is null - Normal style used.");
 		}
 		P newParagraph = mdp.createStyledParagraphOfText(style, text);
 		return newParagraph;
 	}
-
+	/**
+	 * genStyledTextWithinParagraph generates a paragraph of text wherein just some of the
+	 * text has one of TextStyle (e.g. BOLD) styles.
+	 * Notes: Java code generated by DOCX4J Word plugin. Modified by RAR.
+	 * 
+	 * @param textStyle see TextStyle.
+	 * @param unstyledText1 Normal text.
+	 * @param styledText styled text.
+	 * @param unstyledText2 More Normal text.
+	 * @return P object.
+	 */
+	P genStyledTextWithinParagraph(TextStyle textStyle, String unstyledText1, String styledText,
+			String unstyledText2) {
+		org.docx4j.wml.ObjectFactory wmlObjectFactory = new ObjectFactory();
+		P p = wmlObjectFactory.createP();
+		// Create object for r
+		R r = wmlObjectFactory.createR();
+		p.getContent().add(r);
+		// Create object for t (wrapped in JAXBElement)
+		Text text = wmlObjectFactory.createText();
+		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(text);
+		r.getContent().add(textWrapped);
+		text.setValue(unstyledText1);
+		text.setSpace("preserve");
+		// Create object for r
+		R r2 = wmlObjectFactory.createR();
+		p.getContent().add(r2);
+		// Create object for t (wrapped in JAXBElement)
+		Text text2 = wmlObjectFactory.createText();
+		JAXBElement<org.docx4j.wml.Text> textWrapped2 = wmlObjectFactory.createRT(text2);
+		r2.getContent().add(textWrapped2);
+		text2.setValue(styledText);
+		// Create object for rPr
+		RPr rpr = wmlObjectFactory.createRPr();
+		r2.setRPr(rpr);
+		if (textStyle == TextStyle.BOLD) {	
+			// Create object for b
+			BooleanDefaultTrue booleandefaulttrue = wmlObjectFactory.createBooleanDefaultTrue();
+			rpr.setB(booleandefaulttrue);
+			// Create object for bCs
+			BooleanDefaultTrue booleandefaulttrue2 = wmlObjectFactory.createBooleanDefaultTrue();
+			rpr.setBCs(booleandefaulttrue2);
+		} else if (textStyle == TextStyle.UNDERLINE) {
+            // Create object for u
+            U u = wmlObjectFactory.createU(); 
+            rpr.setU(u); 
+            u.setVal(org.docx4j.wml.UnderlineEnumeration.SINGLE);
+		}
+		// Create object for r
+		R r3 = wmlObjectFactory.createR();
+		p.getContent().add(r3);
+		// Create object for t (wrapped in JAXBElement)
+		Text text3 = wmlObjectFactory.createText();
+		JAXBElement<org.docx4j.wml.Text> textWrapped3 = wmlObjectFactory.createRT(text3);
+		r3.getContent().add(textWrapped3);
+		text3.setValue(unstyledText2);
+		text3.setSpace("preserve");
+		return p;
+	}
 }
