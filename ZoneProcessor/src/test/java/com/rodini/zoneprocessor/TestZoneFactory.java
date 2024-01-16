@@ -25,7 +25,7 @@ class TestZoneFactory {
 	    mockedAppender.start();
 	    logger = (Logger)LogManager.getLogger(ZoneFactory.class);
 	    logger.addAppender(mockedAppender);
-	    logger.setLevel(Level.WARN);
+	    logger.setLevel(Level.ERROR);
 	}
 
 	@AfterAll
@@ -47,22 +47,25 @@ class TestZoneFactory {
 
 	@Test
 	void testOneZone() {
-		String zoneNo = "01";
-		String zoneName = "Generic Zone One"; 
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo, zoneName);
+		String zoneNo = "03";
+		String zoneName = "Generic Zone Three"; 
+		String zoneLogoPath = "./zone-logo-03.jpg"; 
+		Zone zone1 = ZoneFactory.findOrCreate(zoneNo, zoneName, zoneLogoPath);
 		Map<String, Zone> map = ZoneFactory.getZones();
 		Set<String> keys = map.keySet();
 		assertEquals(1, keys.size());
-		assertEquals(zone1, map.get(zoneNo));	
+		assertEquals(zone1, map.get(zoneNo));
 	}
 	@Test
 	void testTwoZones() {
-		String zoneNo1 = "01";
-		String zoneName1 = "Generic Zone One"; 
-		String zoneNo2 = "02";
-		String zoneName2 = "Generic Zone Two"; 
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1);
-		Zone zone2 = ZoneFactory.findOrCreate(zoneNo2, zoneName2);
+		String zoneNo1 = "03";
+		String zoneName1 = "Generic Zone Three"; 
+		String zoneLogoPath1 = "./zone-logo-03.jpg"; 
+		String zoneNo2 = "06";
+		String zoneName2 = "Generic Zone Six"; 
+		String zoneLogoPath2 = "./zone-logo-06.jpg"; 
+		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1);
+		Zone zone2 = ZoneFactory.findOrCreate(zoneNo2, zoneName2, zoneLogoPath2);
 		Map<String, Zone> map = ZoneFactory.getZones();
 		Set<String> keys = map.keySet();
 		assertEquals(2, keys.size());
@@ -71,28 +74,17 @@ class TestZoneFactory {
 	}
 	@Test
 	void testDuplicateZones() {
-		String zoneNo1 = "01";
-		String zoneName1 = "Generic Zone One"; 
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1);
-		Zone zone2 = ZoneFactory.findOrCreate(zoneNo1, zoneName1);
-		Map<String, Zone> map = ZoneFactory.getZones();
-		Set<String> keys = map.keySet();
-		assertEquals(1, keys.size());
-		assertEquals(zone1, map.get(zoneNo1));	
-	}
-	@Test
-	void testMisspelledNames() {
-		String zoneNo1 = "01";
-		String zoneName1 = "Generic Zone One";
-		String zoneName2 = "Generic Zone OnX";
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1);
-		Zone zone2 = ZoneFactory.findOrCreate(zoneNo1, zoneName2);
+		String zoneNo1 = "03";
+		String zoneName1 = "Generic Zone Three"; 
+		String zoneLogoPath1 = "./zone-logo-03.jpg"; 
+		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1);
+		Zone zone2 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1);
 		Map<String, Zone> map = ZoneFactory.getZones();
 		Set<String> keys = map.keySet();
 		assertEquals(1, keys.size());
 		assertEquals(zone1, map.get(zoneNo1));	
 		assertEquals(1, mockedAppender.messages.size());
 		String message = mockedAppender.messages.get(0);
-		assertEquals("zoneName " + zoneName2 + " differs from "+ zoneName1, message);		
+		assertEquals("zoneNo 03 is duplicated.", message);		
 	}
 }

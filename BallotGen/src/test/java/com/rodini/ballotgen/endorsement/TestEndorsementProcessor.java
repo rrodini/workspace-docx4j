@@ -17,13 +17,20 @@ import com.rodini.zoneprocessor.ZoneProcessor;
 class TestEndorsementProcessor {
 //	Taken from 2023 zone realignment spreadsheet
 	String precinctZoneCSVText = 
-		"precinct,name,zone name,zone #\n" +
-		"5,ATGLEN,Honeybrook Elverson,2\n" +
-		"220,ELVERSON,Honeybrook Elverson,2\n" +
-		"65,CHARLESTOWN,Great Valley,13\n" +
-		"350,MALVERN,Great Valley,13\n" +
-		"770,WILLISTOWN N-1,Great Valley,13\n" +
-		"775,WILLISTOWN N-2,Great Valley,13";
+	"""
+	Zones
+	#zone #,zone name,zone logo path
+	2,Honeybrook Elverson Dems,./src/test/java/zone-logo-02.jpg
+	13,Great Valley Dems,./src/test/java/zone-logo-13.jpg
+	Precincts
+	#precinct #,precinct name,zone #
+	5,ATGLEN,2
+	220,ELVERSON,2
+	65,CHARLESTOWN,13
+	350,MALVERN,13
+	770,WILLISTOWN N-1,13
+	775,WILLISTOWN N-2,13
+	""";
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -31,7 +38,7 @@ class TestEndorsementProcessor {
 
 	@AfterEach
 	void tearDown() throws Exception {
-		ZoneProcessor.clearMuniNoMap();
+		ZoneProcessor.clearPrecinctZoneMap();
 		EndorsementFactory.clearCandidateEndorsements();
 	}
 	@Test

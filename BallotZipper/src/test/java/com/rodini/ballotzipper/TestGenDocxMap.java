@@ -13,7 +13,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.rodini.zoneprocessor.PrecinctFactory;
 import com.rodini.zoneprocessor.ZoneFactory;
+import com.rodini.zoneprocessor.ZoneProcessor;
 /**
  * uses: test-dir-01
  * 
@@ -45,6 +47,8 @@ class TestGenDocxMap {
 	void setUp() throws Exception {
 	    mockedAppender.messages.clear();
 		ZoneFactory.clearZones();
+		PrecinctFactory.clearPrecincts();
+		ZoneProcessor.clearPrecinctZoneMap();
 		GenDocxMap.clearDocxNoMap();
 	}
 

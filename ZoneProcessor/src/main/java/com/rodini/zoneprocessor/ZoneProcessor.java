@@ -3,6 +3,8 @@ package com.rodini.zoneprocessor;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -12,12 +14,15 @@ import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
 
-/** 
- * ZoneProcessor class generates the precinctZone data structure and also generates zone objects 
- * in the process. This map will later be aligned with the DocxNoMap.
+/**
+ * ZoneProcessor class generates the precinctZone data structure and also
+ * generates Zone and Precinct objects in the process.
  * 
- * Note: User of this module must read the zone CSV file and then call 
- * processCSVText() method.
+ * Notes: 
+ * 1) Clients of this module must read the zone CSV file and then call
+ *    processCSVText() method.
+ * 2) As of v. 1.5.x BallotGen and BallotZipper are clients.
+ * 3) muniNo (municipality #) and precinctNo (precinct #) are the same.
  * 
  * @author Bob Rodini
  *
@@ -25,111 +30,112 @@ import com.rodini.ballotutils.Utils;
 public class ZoneProcessor {
 	static final Logger logger = LogManager.getLogger(ZoneProcessor.class);
 
-	// Municipality No (key) Zone (value)
-	// 020                   7
-	//                       Bradford
-	//                       muniFiles(020), muniFiles(021), ...
-	private static final Map<String, Zone> muniNoMap = new TreeMap<>();
-	
-	
+	// PrecinctNo (key) Zone object(value)
+	// 020              Zone7
+	private static final Map<String, Zone> precinctZoneMap = new TreeMap<>();
+
 	// Disable constructor
 	private ZoneProcessor() {
 	}
-	// Process valid data from single CSV line.
-	static void processLine(String precinctNo, String precinctName, String zoneNo, String zoneName) {
-		// Precinct No must be 3 characters.
-		String normalPrecinctNo = Utils.normalizeMuniNo(Integer.parseInt(precinctNo));
-		// Zone No must be 2 characters.
-		String normalZoneNo = Utils.normalizeZoneNo(Integer.parseInt(zoneNo));
-		logger.debug(String.format("precinctNo: %s precinctName: %s zoneNo: %s zoneName: %s",
-				normalPrecinctNo, precinctName, normalZoneNo, zoneName));
-//		System.out.printf("precinctNo: %s precinctName: %s zoneNo: %s zoneName: %s%n",
-//				normalPrecinctNo, precinctName, normalZoneNo, zoneName);
-		Zone zone = ZoneFactory.findOrCreate(normalZoneNo, zoneName);
-		Set<String> muniNoKeys = muniNoMap.keySet();
-		if (muniNoKeys.contains(normalPrecinctNo)) {
-			logger.info(String.format("duplicate precinct no. %s", normalPrecinctNo));
-		} else {
-			muniNoMap.put(normalPrecinctNo, zone);
-		}
-	}
-	// Process data from single CSV line.
-	static void processData(int lineNo, String [] fields) {
-		if (fields.length < 4) {
-			logger.error(String.format("CSV line #%d fewer than 4 fields", lineNo));
-			return;
-		}
-		if (fields.length > 4) {
-			logger.error(String.format("CSV line #%d more than 4 fields", lineNo));
-			return;
-		}
-		String field0 = "";
-		String field1 = "";
-		String field2 = "";
-		String field3 = "";
-		for (int i=0; i < fields.length; i++) {
-			switch (i) {
-			case 0:
-				// precinct no. - should be unique.
-				field0 = fields[0].trim();
-				if (field0.isBlank() || field0.length() > 3) {
-					logger.error(String.format("CSV line #%d precinct no. %s has error", lineNo, field0));
-					return;
-				}
-				break;
-			case 1:
-				// precinct name - not used since name may change.
-				field1 = fields[1].trim();
-				break;
-			case 2:
-				// zone name - expect many duplicates.
-				field2 = fields[2].trim();
-				if (field2.isBlank()) {
-					logger.error(String.format("CSV line #%d zone name %s has error", lineNo, field2));
-					return;
-				}
-				break;
-			case 3:
-				// zone no. - expect many duplicates.
-				field3 = fields[3].trim();
-				if (field3.isBlank() || field3.length() > 2) {
-					logger.error(String.format("CSV line #%d zone no. %s has error", lineNo, field3));
-					return;
-				}
-				// notice the change in field2 order.
-				processLine(field0, field1, field3, field2);
-				break;
-			}			
-		}
-	}
+
 	// Process the input CSV text.
+	/** 
+	 * processCSVText processed the contents of the precinct-zone CVS file into zone objects
+	 * and Precinct objects.  It relies on its client to read the file from disk.
+	 * 
+	 * @param csvText contents of CSV file.
+	 */
 	public static void processCSVText(String csvText) {
+		// Don't miss the last line of the precinctsText!
+		if (!csvText.endsWith("\n")) {
+			csvText += "\n";
+		}
 		logger.debug("Processing CSV text");
-		String [] csvLines = csvText.split("\n");
-		// skip the header line by starting at 1.
-		for (int i = 1; i < csvLines.length; i++) {
-			String csvLine = csvLines[i];
-			// Comment lines start with #.
-			if (!csvLine.startsWith("#")) {
-				String[] fields = csvLine.split(",");
-				processData(i + 1, fields);
+		// Since precincts-zones CSV is hard-coded, this regex can be hard-coded.
+		Pattern pattern = Pattern
+				.compile("(?mi)^Zones$\n(?<zonesdata>((.*\n)*))^Precincts$\n(?<precinctsdata>((.*\n)*))");
+		Matcher matcher = pattern.matcher(csvText);
+		if (!matcher.find()) {
+			Utils.logFatalError("precincts-zones CSV file does not match format");
+		}
+		String zonesText = matcher.group("zonesdata");
+		String precinctsText = matcher.group("precinctsdata");
+		ZoneDataProcessor.processZonesText(zonesText);
+		PrecinctDataProcessor.processPrecinctsText(precinctsText);
+		checkZones();
+		checkPrecincts();
+	}
+	/**
+	 * checkZones checks that each zone has at least one precinct.
+	 */
+	private static void checkZones() {
+		Set<String> zoneKeys = ZoneFactory.getZones().keySet();
+		Map<String, Precinct> precinctMap = PrecinctFactory.getPrecincts();
+		Set<String> precinctKeys = precinctMap.keySet();
+		for (String zoneNo: zoneKeys) {
+			boolean foundPrecinct = false;
+//			System.out.printf("zoneNo: %s%n", zoneNo);
+			for (String precinctNo: precinctKeys) {
+				Precinct precinct = precinctMap.get(precinctNo);
+//				System.out.printf("precinctNo: %s%n", precinctNo);
+				if (precinct.getZoneNo().equals(zoneNo)) {
+//					System.out.printf("precinctNo: %s belongs to zoneNo: %s%n", precinctNo, zoneNo);
+					foundPrecinct = true;
+					break;
+				}
+			}
+			if (!foundPrecinct) {
+				logger.error(String.format("zone: %s has no precincts.", zoneNo));
 			}
 		}
 	}
-	// zoneOwnsPrecinct is needed for semantic checks in other programs.
+	/**
+	 * checkPrecincts checks that each precinct belongs to a zone.
+	 * As a side-effect it creates the precinctZoneMap.
+	 */
+	private static void checkPrecincts() {
+		Map<String, Zone> zoneMap = ZoneFactory.getZones();
+		Set<String> zoneKeys = zoneMap.keySet();
+		Map<String, Precinct> precinctMap = PrecinctFactory.getPrecincts();
+		Set<String> precinctKeys = precinctMap.keySet();
+		for (String precinctNo: precinctKeys) {
+			Precinct precinct = precinctMap.get(precinctNo);
+			String zoneNo = precinct.getZoneNo();
+			if (zoneKeys.contains(zoneNo)) {
+				Zone zone = zoneMap.get(zoneNo);
+				precinctZoneMap.put(precinctNo, zone);
+			} else {
+				logger.error(String.format("precinct: %s has no zone.", precinctNo));
+			}
+		}
+	}
+	/**
+	 * zoneOwnsPrecinct checks that the given zone "owns" the given precinct.
+	 * 
+	 * @param zoneNo zone identity.
+	 * @param precinctNo precinct identity.
+	 * @return true => zone "owns" precinct.
+	 */
 	public static boolean zoneOwnsPrecinct(String zoneNo, String precinctNo) {
-		Zone zone = muniNoMap.get(precinctNo);
+		Zone zone = precinctZoneMap.get(precinctNo);
 		if (zone == null) {
 			return false;
 		}
 		return zone.getZoneNo().equals(zoneNo);
 	}
-	// Return the map to clients.
+	/** 
+	 * getPrecinctZoneMap returns this map to clients.
+	 * @return 
+	 */
 	public static Map<String, Zone> getPrecinctZoneMap() {
-		return muniNoMap;
+		return precinctZoneMap;
 	}
+
 	// Used only for testing
-	public static void clearMuniNoMap() {
-		muniNoMap.clear();
+	public static void clearPrecinctZoneMap() {
+		precinctZoneMap.clear();
+		// Must clear these too.
+		PrecinctFactory.clearPrecincts();
+		ZoneFactory.clearZones();
 	}
 }

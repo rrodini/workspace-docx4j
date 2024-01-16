@@ -10,10 +10,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import com.rodini.ballotutils.Utils;
 import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.ZoneFactory;
+import com.rodini.zoneprocessor.PrecinctFactory;
 /**
 /**
  * Uses: test-dir-01.csv   test-dir-01
@@ -48,14 +50,15 @@ class TestGenZipFiles {
 	void setUp() throws Exception {
 	    mockedAppender.messages.clear();
 		ZoneFactory.clearZones();
-		ZoneProcessor.clearMuniNoMap();
+		PrecinctFactory.clearPrecincts();
+		ZoneProcessor.clearPrecinctZoneMap();
 		GenDocxMap.clearDocxNoMap();
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
+	//@Disabled
 	@Test
 	void testDir01() {
 		String [] args = {"./src/test/java/test-dir-01.csv", "./src/test/java/test-dir-01", "./src/test/java/test-dir-01"};
@@ -78,6 +81,7 @@ class TestGenZipFiles {
 //		assertTrue(mockedAppender.messages.contains("duplicate precinct no. 010"));
 		assertTrue(mockedAppender.messages.contains("DOCX precinct 014 lacks CSV precinct"));
 	}
+	//@Disabled
 	@Test
 	void testDir03() {
 		String [] args = {"./src/test/java/test-dir-03.csv", "./src/test/java/test-dir-03", "./src/test/java/test-dir-03"};

@@ -68,7 +68,7 @@ public class BallotZipper {
 		Utils.logAppMessage(logger, message, false);
 		Initialize.initialize(args);
 		// Process CSV file into two data structures
-		//  muniNoMap (TreeMap) key: MuniNo (String) value: zone (Zone object)
+		//  precinctZoneMap (TreeMap) key: MuniNo (String) value: zone (Zone object)
 		//  zoneMap (TreeMap) key: zone no. (String) value: zone (Zone Object)		
 		String csvText = Utils.readTextFile(Initialize.csvFilePath);
 		ZoneProcessor.processCSVText(csvText);

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import com.rodini.ballotutils.Utils;
 /**
@@ -22,7 +23,7 @@ import com.rodini.ballotutils.Utils;
  * @author Bob Rodini
  *
  */
-class TestGenMuniMap {
+class TestZoneProcessor {
 
 	private static MockedAppender mockedAppender;
 	private static Logger logger;
@@ -33,7 +34,6 @@ class TestGenMuniMap {
 	    mockedAppender.start();
 	    logger = (Logger)LogManager.getLogger(ZoneProcessor.class);
 	    logger.addAppender(mockedAppender);
-	    logger.setLevel(Level.ERROR);
 	}
 
 	@AfterAll
@@ -46,47 +46,64 @@ class TestGenMuniMap {
 	@BeforeEach
 	void setUp() throws Exception {
 	    mockedAppender.messages.clear();
+	    logger.setLevel(Level.ERROR);
 		ZoneFactory.clearZones();
-		ZoneProcessor.clearMuniNoMap();
+		PrecinctFactory.clearPrecincts();
+		ZoneProcessor.clearPrecinctZoneMap();
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
+	//@Disabled
 	@Test
-	void testMuniMapGoodCsv() {
+	void testPrecinctZoneMapGoodCsv() {
 		String csvText = Utils.readTextFile("./src/test/java/test-good.csv");
+		ZoneProcessor.processCSVText(csvText);
+		assertEquals(0, mockedAppender.messages.size());
+		Map<String, Zone> precinctZoneMap = ZoneProcessor.getPrecinctZoneMap();
+		assertEquals(3, precinctZoneMap.keySet().size());
+		// Note that zoneNo and precinctNo are normalized.
+		assertEquals(true, ZoneProcessor.zoneOwnsPrecinct("03", "005"));
+		assertEquals(true, ZoneProcessor.zoneOwnsPrecinct("08", "010"));
+		assertEquals(true, ZoneProcessor.zoneOwnsPrecinct("06", "014"));
+	}
+	//@Disabled
+	@Test
+	void testPrecinctZoneMapBadCsv() {
+		String csvText = Utils.readTextFile("./src/test/java/test-bad.csv");
+		ZoneProcessor.processCSVText(csvText);
+		// size == 2 since ZoneProcessor errors are monitored.
+		assertEquals(2, mockedAppender.messages.size());
+		// Errors:
+		// precinct CSV line #2 precinct no. 0005 has error
+		// precinct CSV line #3 precinct no.  has error
+		// precinct CSV line #4 fewer than 3 fields
+		// precinct CSV line #5 more than 3 fields
+		// precinct CSV line #7 fewer than 3 fields
+		// precinct CSV line #8 more than 3 fields
+		// precinct: 010 has no zone.
+		// precinct: 017 has no zone.
+	}
+	//@Disabled
+	@Test
+	void testPrecinctZoneMapDuplicateCsv() {
+		// Need to log the PrecinctFactory class but can't switch.
+		logger = (Logger)LogManager.getLogger(PrecinctFactory.class);
+		logger.setLevel(Level.INFO);
+		String csvText = Utils.readTextFile("./src/test/java/test-duplicate.csv");
+		// Duplicate precinct # no longer an ERROR (11/24/2023)
 		ZoneProcessor.processCSVText(csvText);
 		assertEquals(0, mockedAppender.messages.size());
 		Map<String, Zone> muniNoMap = ZoneProcessor.getPrecinctZoneMap();
 		assertEquals(3, muniNoMap.keySet().size());
 	}
+	//@Disabled
 	@Test
-	void testMuniMapBadCsv() {
-		String csvText = Utils.readTextFile("./src/test/java/test-bad.csv");
+	void testPrecinctZoneMap2024() {
+		System.out.println("Start 2024 precinct-zone CSV");
+		String csvText = Utils.readTextFile("./src/test/java/test-precinct-zone-2024.csv");
 		ZoneProcessor.processCSVText(csvText);
-		assertEquals(7, mockedAppender.messages.size());
-		// Errors:
-		// CSV line #2 precinct no. 0005 has error
-		// CSV line #3 precinct no.  has error
-		// CSV line #4 fewer than 4 fields
-		// CSV line #5 zone name  has error
-		// CSV line #7 fewer than 4 fields
-		// CSV line #8 more than 4 fields
-		// CSV line #9 zone no. 600 has error
-		Map<String, Zone> muniNoMap = ZoneProcessor.getPrecinctZoneMap();
-		assertEquals(1, muniNoMap.keySet().size());
+		System.out.println("End 2024 precinct-zone CSV");
 	}
-	@Test
-	void testMuniMapDuplicateCsv() {
-		String csvText = Utils.readTextFile("./src/test/java/test-duplicate.csv");
-		// Duplicate precinct # no longer an ERROR (11/24/2023)
-	    logger.setLevel(Level.INFO);
-		ZoneProcessor.processCSVText(csvText);
-		assertEquals(1, mockedAppender.messages.size());
-		Map<String, Zone> muniNoMap = ZoneProcessor.getPrecinctZoneMap();
-		assertEquals(3, muniNoMap.keySet().size());
-	}
-	
 }

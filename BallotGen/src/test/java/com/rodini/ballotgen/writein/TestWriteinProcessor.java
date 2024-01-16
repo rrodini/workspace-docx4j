@@ -29,7 +29,7 @@ class TestWriteinProcessor {
 	
 	@AfterEach
 	void tearDown() throws Exception {
-		ZoneProcessor.clearMuniNoMap();
+		ZoneProcessor.clearPrecinctZoneMap();
 		WriteinFactory.clearPrecinctWriteins();
 	}
 	@Test

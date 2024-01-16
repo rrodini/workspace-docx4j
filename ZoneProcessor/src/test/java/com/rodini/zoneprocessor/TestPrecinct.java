@@ -2,13 +2,11 @@ package com.rodini.zoneprocessor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TestZone {
+class TestPrecinct {
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -17,12 +15,12 @@ class TestZone {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
+	
 	@Test
 	void testConstructor() {
-		Zone zone = new Zone("03", "Generic zone","./zone-logo-03.jpg");
-		assertEquals("03", zone.getZoneNo());
-		assertEquals("Generic zone", zone.getZoneName());
-		assertEquals("./zone-logo-03.jpg", zone.getZoneLogoPath());
+		Precinct precinct = new Precinct("005", "Generic precinct","03");
+		assertEquals("005", precinct.getPrecinctNo());
+		assertEquals("Generic precinct", precinct.getPrecinctName());
+		assertEquals("03", precinct.getZoneNo());
 	}	
 }

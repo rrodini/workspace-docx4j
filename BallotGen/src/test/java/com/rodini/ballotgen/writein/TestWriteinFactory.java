@@ -47,7 +47,7 @@ class TestWriteinFactory {
 	void tearDown() throws Exception {
 		logger.removeAppender(mockedAppender);
 		mockedAppender.stop();
-		ZoneProcessor.clearMuniNoMap();
+		ZoneProcessor.clearPrecinctZoneMap();
 		WriteinFactory.clearPrecinctWriteins();
 	}
 	@Test

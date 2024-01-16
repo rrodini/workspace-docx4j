@@ -1,4 +1,10 @@
-precinct no,precinct name,zone name,zone no
-5,ATGLEN,OXGrove,3
-10,AVONDALE,KAD,8
-20,BIRMINGHAM 1,Thornbury,6
+Zones
+#zone no,zone name,zone logo path
+3,OXGrove,./src/test/java/zone-logo-03.jpg
+6,Thornbury,./src/test/java/zone-logo-06.jpg
+8,KAD,./src/test/java/zone-logo-08.jpg
+Precincts
+#precinct no,precinct name,zone name,zone no
+5,ATGLEN,3
+10,AVONDALE,8
+20,BIRMINGHAM 1,6
