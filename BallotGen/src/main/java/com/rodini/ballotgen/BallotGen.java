@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rodini.ballotgen.common.GenDocxBallot;
 import com.rodini.ballotgen.common.Initialize;
 import com.rodini.ballotgen.endorsement.Endorsement;
 import com.rodini.ballotutils.Utils;

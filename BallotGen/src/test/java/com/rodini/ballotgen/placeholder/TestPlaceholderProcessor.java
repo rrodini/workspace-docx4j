@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import com.rodini.ballotgen.common.MockedAppender;
 
+import static com.rodini.ballotgen.common.GenDocxBallot.*;
 import static com.rodini.ballotgen.placeholder.PlaceholderLocation.*;
-import static com.rodini.ballotgen.GenDocxBallot.*;
 
 
 class TestPlaceholderProcessor {

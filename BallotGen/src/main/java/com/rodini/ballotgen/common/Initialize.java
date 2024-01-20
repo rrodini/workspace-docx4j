@@ -56,9 +56,9 @@ public class Initialize {
 	public static ENVIRONMENT env;			// TEST vs. PRODUCTION
 	public static Properties ballotGenProps;
 	public static Properties contestGenProps;
-	private static Map<String, Zone> precinctToZoneMap;
-	        static Map<String, List<Endorsement>> candidateEndorsements;
-	        static Map <String,List<Writein>> precinctWriteins;
+		   static Map<String, Zone> precinctToZoneMap;
+	       static Map<String, List<Endorsement>> candidateEndorsements;
+	       static Map <String,List<Writein>> precinctWriteins;
 	public static EndorsementProcessor endorsementProcessor;
 	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
@@ -273,7 +273,6 @@ public class Initialize {
 			logger.info(String.format("%s does not exist: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 			logger.info("Cannot endorse at the zone/precinct level.");
 		} else {
-			logger.info(String.format("%s: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 			precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
 		}
 		ZoneProcessor.processCSVText(precinctZoneCSVText);

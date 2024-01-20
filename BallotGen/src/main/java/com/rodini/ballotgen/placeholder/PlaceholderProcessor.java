@@ -1,5 +1,8 @@
 package com.rodini.ballotgen.placeholder;
 
+import static com.rodini.ballotgen.common.GenDocxBallot.PLACEHOLDER_CONTESTS;
+import static com.rodini.ballotgen.common.GenDocxBallot.PLACEHOLDER_REFERENDUMS;
+import static com.rodini.ballotgen.common.GenDocxBallot.PLACEHOLDER_RETENTIONS;
 import static com.rodini.ballotgen.placeholder.PlaceholderLocation.*;
 
 import java.util.ArrayList;
@@ -9,6 +12,7 @@ import org.docx4j.TraversalUtil;
 import org.docx4j.TraversalUtil.CallbackImpl;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.JaxbXmlPart;
+import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -21,10 +25,6 @@ import org.docx4j.wml.ContentAccessor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_CONTESTS;
-import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_REFERENDUMS;
-import static com.rodini.ballotgen.GenDocxBallot.PLACEHOLDER_RETENTIONS;
 
 /**
  * PlaceholderProcessor classes does these functions
@@ -100,9 +100,9 @@ public class PlaceholderProcessor {
 	 */
 	private Placeholder createPlaceholder(PlaceholderLocation loc, JaxbXmlPart part, String placeholderName) {
 		Placeholder ph = null;
+		logger.info("Finding placeholder for: " + placeholderName);
 		P paragraph = findParagraphByPlaceholder(part, placeholderName);
 		if (paragraph != null) {
-			//logger.info("Creating placeholder: " + placeholderName);
 			ph = new Placeholder(placeholderName, loc, paragraph);
 		}
 		return ph;
@@ -213,27 +213,25 @@ public class PlaceholderProcessor {
 		}
 	}
 	/**
-	 * getContent get the content of a document part.
-	 * Note:
-	 * - need this to do replacement.
+	 * getLocPart get the part corresponding to the location value
 	 * 
-	 * @param loc which document part.
-	 * @return content of that part.
+	 * @param loc Placeholder location.
+	 * @return Part corresponding to that location.
 	 */
-	private List<Object> getContent(PlaceholderLocation loc) {
-		List<Object> content = null;
+	public Part getLocPart(PlaceholderLocation loc) {
+		Part part = null;
 		switch (loc) {
 		case HEADER:
-			content = headerPart.getContent();
+			part = headerPart;
 			break;
 		case BODY:
-			content = bodyPart.getContent();
+			part = bodyPart;
 			break;
 		case FOOTER:
-			content = footerPart.getContent();
+			part = footerPart;
 			break;
 		}
-		return content;
+		return part;
 	}
 	/**
 	 * replaceContent replaces the placeholder paragraph with a new "value" paragraph.
@@ -243,11 +241,8 @@ public class PlaceholderProcessor {
 	 * @param contentList new content to replace placeholder paragraph (P). Maybe empty.
 	 */
 	public void replaceContent(Placeholder ph, List<P> contentList) {
-		PlaceholderLocation loc = ph.getLoc();		
+		//PlaceholderLocation loc = ph.getLoc();		
 		P replaceParagraph = ph.getReplaceParagraph();
-		// Replaced by lines below.
-//		List<Object> oldContentList = getContent(loc);
-//		List<Object> oldContentList = replaceParagraph.getParent().getContent();
 		Object parent = replaceParagraph.getParent();
 		List<Object> oldContentList = ((ContentAccessor)parent).getContent();
 		int replaceIndex = oldContentList.indexOf(replaceParagraph);
@@ -261,8 +256,4 @@ public class PlaceholderProcessor {
 		// Remove the placeholder paragraph
 		oldContentList.remove(replaceParagraph);
 	}
-	
-	
-
-	
 }

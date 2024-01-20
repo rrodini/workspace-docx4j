@@ -30,7 +30,7 @@ public class Placeholder {
 		this.name = name;
 		this.replaceParagraph = replaceParagraph;
 		this.loc = loc;
-		logger.debug("Placeholder created: " + toString());
+		logger.info("Placeholder created: " + toString());
 	}
 	/**
 	 * getNane gets name.

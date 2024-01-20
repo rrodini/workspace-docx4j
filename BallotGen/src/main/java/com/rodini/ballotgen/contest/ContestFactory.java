@@ -137,7 +137,6 @@ public class ContestFactory {
 		}
 		if (contest == Contest.GENERIC_CONTEST) {
 			String msg = String.format("COULD NOT GENERATE CONTEST FOR: %s", contestName);
-			System.out.println(msg);
 			logger.error(msg);
 		}
 		return contest;

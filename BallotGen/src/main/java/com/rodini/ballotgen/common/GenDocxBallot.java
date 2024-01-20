@@ -1,16 +1,12 @@
-package com.rodini.ballotgen;
+package com.rodini.ballotgen.common;
 
 import static com.rodini.ballotgen.contest.ContestFileLevel.COMMON;
 import static com.rodini.ballotgen.contest.ContestFileLevel.MUNICIPAL;
-import static com.rodini.ballotgen.endorsement.EndorsementMode.*;
-import static java.util.stream.Collectors.joining;
+import static com.rodini.ballotgen.endorsement.EndorsementMode.ENDORSED;
+import static com.rodini.ballotutils.Utils.ATTN;
+import static org.apache.logging.log4j.Level.DEBUG;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,38 +14,21 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.docx4j.Docx4J;
-import org.docx4j.TraversalUtil;
-import org.docx4j.TraversalUtil.CallbackImpl;
-import org.docx4j.XmlUtils;
-import org.docx4j.openpackaging.contenttype.ContentTypes;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
-import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-import org.docx4j.wml.BooleanDefaultTrue;
-import org.docx4j.wml.Br;
-import org.docx4j.wml.ObjectFactory;
-import org.docx4j.wml.P;
-import org.docx4j.wml.PPr;
-import org.docx4j.wml.PPrBase;
-import org.docx4j.wml.R;
-import org.docx4j.wml.RPr;
-import org.docx4j.wml.Style;
-import org.docx4j.wml.Styles;
-import org.docx4j.wml.Text;
-import org.docx4j.wml.U;
-
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import static org.apache.logging.log4j.Level.DEBUG;
+import org.docx4j.Docx4J;
+import org.docx4j.openpackaging.contenttype.ContentTypes;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.wml.P;
+import org.docx4j.wml.Style;
+import org.docx4j.wml.Styles;
 
-import com.rodini.ballotgen.common.ElectionType;
-import com.rodini.ballotgen.common.Initialize;
 import com.rodini.ballotgen.contest.Candidate;
 import com.rodini.ballotgen.contest.Contest;
 import com.rodini.ballotgen.contest.ContestFactory;
@@ -59,14 +38,13 @@ import com.rodini.ballotgen.contest.GeneralCandidate;
 import com.rodini.ballotgen.contest.PrimaryCandidate;
 import com.rodini.ballotgen.endorsement.EndorsementMode;
 import com.rodini.ballotgen.endorsement.EndorsementProcessor;
-import com.rodini.ballotgen.placeholder.PlaceholderProcessor;
+import com.rodini.ballotgen.generate.GenDocx;
 import com.rodini.ballotgen.placeholder.Placeholder;
+import com.rodini.ballotgen.placeholder.PlaceholderProcessor;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
-import static com.rodini.ballotutils.Utils.ATTN;
-
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
+import com.rodini.zoneprocessor.Zone;
+import com.rodini.zoneprocessor.ZoneProcessor;
 /**
  * GenDocxBallot is the workhorse class that produces a new Word file
  * based on inputs.  Those inputs are:
@@ -123,29 +101,31 @@ public class GenDocxBallot {
 	public static final String PLACEHOLDER_PRECINCT_NO_NAME = "PrecinctNoName";
 	public static final String PLACEHOLDER_ZONE_NO= "ZoneNo";	
 	public static final String PLACEHOLDER_ZONE_NAME = "ZoneName";	
+	public static final String PLACEHOLDER_ZONE_LOGO = "ZoneLogo";	
 	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_REFERENDUMS, PLACEHOLDER_RETENTIONS,
-			  PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME, PLACEHOLDER_ZONE_NO, PLACEHOLDER_ZONE_NAME);
+			  PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME,
+			  PLACEHOLDER_ZONE_NO, PLACEHOLDER_ZONE_NAME, PLACEHOLDER_ZONE_LOGO);
 	private static PlaceholderProcessor phProcessor;
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
 	// so when the template is loaded the existence of the styles is checked.
 	// If style is not found "Normal" style is used.
-	private static String STYLEID_NORMAL = "Normal";
-	private static String STYLEID_CONTEST_TITLE = "ContestTitle";
-	private static String STYLEID_CONTEST_GENERIC_TITLE = "ContestGenericTitle";
-	private static String STYLEID_CONTEST_INSTRUCTIONS = "ContestInstructions";
-	private static String STYLEID_CONTEST_GENERIC_INSTRUCTIONS = "ContestGenericInstructions";
-	private static String STYLEID_CANDIDATE_NAME = "CandidateName";
-	private static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
-	private static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
-	private static String STYLEID_ENDORSED_CANDIDATE_PARTY = "EndorsedCandidateParty";
-	private static String STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "AntiEndorsedCandidateName";
-	private static String STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY = "AntiEndorsedCandidateParty";
-	private static String STYLEID_WRITE_IN_CANDIDATE_NAME = "WriteInCandidateName";
-	private static String STYLEID_BOTTOM_BORDER = "BottomBorder";
-	private static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
+	public static String STYLEID_NORMAL = "Normal";
+	public static String STYLEID_CONTEST_TITLE = "ContestTitle";
+	public static String STYLEID_CONTEST_GENERIC_TITLE = "ContestGenericTitle";
+	public static String STYLEID_CONTEST_INSTRUCTIONS = "ContestInstructions";
+	public static String STYLEID_CONTEST_GENERIC_INSTRUCTIONS = "ContestGenericInstructions";
+	public static String STYLEID_CANDIDATE_NAME = "CandidateName";
+	public static String STYLEID_CANDIDATE_PARTY = "CandidateParty";
+	public static String STYLEID_ENDORSED_CANDIDATE_NAME = "EndorsedCandidateName";
+	public static String STYLEID_ENDORSED_CANDIDATE_PARTY = "EndorsedCandidateParty";
+	public static String STYLEID_ANTI_ENDORSED_CANDIDATE_NAME = "AntiEndorsedCandidateName";
+	public static String STYLEID_ANTI_ENDORSED_CANDIDATE_PARTY = "AntiEndorsedCandidateParty";
+	public static String STYLEID_WRITE_IN_CANDIDATE_NAME = "WriteInCandidateName";
+	public static String STYLEID_BOTTOM_BORDER = "BottomBorder";
+	public static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
 	// Make separate enum if needed elsewhere.
-	enum TextStyle {BOLD, UNDERLINE}; // BOLD for retention questions, UNDERLINE for write-in candidates.
+	public enum TextStyle {BOLD, UNDERLINE}; // BOLD for retention questions, UNDERLINE for write-in candidates.
 	// These are unicode characters (also Segoe UI Symbol font)
 	private static final String whiteEllipse = "⬭";
 	private static final String blackEllipse = "⬬";
@@ -225,9 +205,15 @@ public class GenDocxBallot {
 		
 		precinctNo = precinctNoName.substring(0, 3);
 		precinctName = precinctNoName.substring(3);
+
+		boolean precinctInMap = Initialize.precinctToZoneMap.keySet().contains(precinctNo);
+		if (!precinctInMap) {
+			logger.error(String.format("precinct # %s is not in precinctToZoneMap", precinctNo));
+		}
 		zoneNo = endorsementProcessor.getZoneNoForPrecinct(precinctNo);
 		zoneName = endorsementProcessor.getZoneNameForPrecinct(precinctNo);
 		logger.log(ATTN, precinctNoName);
+		System.out.println("Generating: " + precinctNoName);
 		try {
 			Integer.parseInt(precinctNo);
 		} catch (NumberFormatException e) {
@@ -235,7 +221,6 @@ public class GenDocxBallot {
 			precinctNo = "000";
 		}
 		fileOutputPath = pathName + File.separator + precinctNoName + ".docx";
-		System.out.printf("Generating %s%n", precinctNoName + ".docx");
 		logger.info(String.format("fileOutputPath: %s", fileOutputPath));
 		WordprocessingMLPackage dotx = null;
 		try {
@@ -454,6 +439,8 @@ public class GenDocxBallot {
 	/**
 	 * genPlaceholderValue generates a paragraph that represents a simple placeholder value.
 	 * The value is known at the time the ballot for the precinct is generated.
+	 * Note:
+	 * 1) This is called by genHeader and genFooter, but not by genBody.
 	 * 
 	 * @param name of placeholder
 	 * @param ph a "found" placeholder.  Need to get paragraph (P) reference.
@@ -465,61 +452,51 @@ public class GenDocxBallot {
 		P paragraph = null;
 		switch (name) {
 		case PLACEHOLDER_PRECINCT_NO:
-			paragraph = genStyledParagraph(precinctNo, ph.getReplaceParagraph(), style, mdp);
+			paragraph = GenDocx.genStyledParagraph(precinctNo, ph.getReplaceParagraph(), style, mdp);
 			break;
 		case PLACEHOLDER_PRECINCT_NAME:
-			paragraph = genStyledParagraph(precinctName, ph.getReplaceParagraph(), style, mdp);
+			paragraph = GenDocx.genStyledParagraph(precinctName, ph.getReplaceParagraph(), style, mdp);
 			break;
 		case PLACEHOLDER_PRECINCT_NO_NAME:
-			paragraph = genStyledParagraph(precinctNoName.replace("_", " "), ph.getReplaceParagraph(), style, mdp);
+			paragraph = GenDocx.genStyledParagraph(precinctNoName.replace("_", " "), ph.getReplaceParagraph(), style, mdp);
 			break;
 		case PLACEHOLDER_CONTESTS:
-			System.out.println("Cannot generate \"Contests\" content here");
+			logger.error("Cannot generate \"Contests\" content here");
+			break;
+		case PLACEHOLDER_REFERENDUMS:
+			logger.error("Cannot generate \"Referendums\" content here");
+			break;
+		case PLACEHOLDER_RETENTIONS:
+			logger.error("Cannot generate \"Retentions\" content here");
 			break;
 		case PLACEHOLDER_ZONE_NO:
-			paragraph = genStyledParagraph(zoneNo, ph.getReplaceParagraph(), style, mdp);
+			paragraph = GenDocx.genStyledParagraph(zoneNo, ph.getReplaceParagraph(), style, mdp);
 			break;
 		case PLACEHOLDER_ZONE_NAME:
-			paragraph = genStyledParagraph(zoneName, ph.getReplaceParagraph(), style, mdp);
+			paragraph = GenDocx.genStyledParagraph(zoneName, ph.getReplaceParagraph(), style, mdp);
+			break;
+		case PLACEHOLDER_ZONE_LOGO:
+			// Notes:
+			// The precinct-zone CSV file must be correct. In particular,
+			// the file path to the zone logo must be correct relative to 
+			// the directory from which ballogen program is run.
+			Zone zone = Initialize.precinctToZoneMap.get(precinctNo);
+			String zoneLogoPath = zone.getZoneLogoPath();
+			// pass sourcePart as last parameter
+			paragraph = GenDocx.genImageParagraph(zoneLogoPath, docx, phProcessor.getLocPart(ph.getLoc()));
 			break;
 		}	
 		return paragraph;
 	}
 
 	/**
-	 * genWmlChunk demonstrates the technique of generating
-	 * a big chunk of content using Word, then exporting the .xml
-	 * using the DOCX4J word add-in, then importing the .xml file.
-	 * 
-	 * WARNING: Export/import does not work with graphics, hyperlinks, etc.
-	 */
-	void genWmlChunk(String wmlFileName) {
-		String text = "";
-		try (FileInputStream inStream = new FileInputStream(Initialize.RESOURCE_PATH + wmlFileName);) {
-			text = new String(inStream.readAllBytes(), StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			logger.error("error reading xml chunk: " + wmlFileName);
-		}
-		Object o = null;
-		try {
-			o = XmlUtils.unmarshalString(text);
-		} catch (JAXBException e) {
-			logger.error("can't convert xml to part");
-		}
-		org.docx4j.wml.Body body = ((org.docx4j.wml.Document) o).getBody();
-		List<Object> contents = body.getContent();
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-		for (Object content: contents) {
-			mdp.addObject(content);
-		}
-	}
-	/**
 	 * genBallotInstructions generates the ballot instructions provided by Voter Services.
 	 * Note: Not used but a useful technique.
 	 */
 	/* private */
 	void genBallotInstructions() {
-		genWmlChunk("ballot_instructions.wml");
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		GenDocx.genWmlChunk(mdp, "ballot_instructions.wml");
 	}
 	/**
 	 * genContests uses the contestsText to generate each "contest group"
@@ -550,11 +527,12 @@ public class GenDocxBallot {
 			// Is there a "page break" in the ballot?
 			// Test if a pseudo contest box should be generated.
 			List<P> contestParagraphs = contestName.equals(Initialize.PAGE_BREAK)?
-					  genPageBreak(docx.getMainDocumentPart())
+					  GenDocx.genPageBreak(docx.getMainDocumentPart())
 					: genContest(ballotFactory, contestName, contestFormat);
 			// Insert column break after contest?
 			if (i+1 == Initialize.columnBreaks[j]) {
-				P columnBreakParagraph = genColumnBreakParagraph();
+				MainDocumentPart mdp = docx.getMainDocumentPart();
+				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
 				contestParagraphs.add(columnBreakParagraph);
 				j++;
 			}
@@ -765,7 +743,7 @@ public class GenDocxBallot {
 		String oval =  blackEllipse;
 		// TODO: test this.
 //		newParagraph = mdp.createStyledParagraphOfText(STYLEID_WRITE_IN_CANDIDATE_NAME, text);
-		newParagraph = genStyledTextWithinParagraph(TextStyle.UNDERLINE, blackEllipse + " ", name, " ");
+		newParagraph = GenDocx.genStyledTextWithinParagraph(TextStyle.UNDERLINE, blackEllipse + " ", name, " ");
 		candParagraphs.add(newParagraph);
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
 		candParagraphs.add(newParagraph);
@@ -928,7 +906,7 @@ public class GenDocxBallot {
 		}
 		String questionStart = question.substring(0, index);
 		String questionEnd = question.substring(index + judgeName.length());
-		newParagraph = genStyledTextWithinParagraph(TextStyle.BOLD, questionStart, judgeName, questionEnd);
+		newParagraph = GenDocx.genStyledTextWithinParagraph(TextStyle.BOLD, questionStart, judgeName, questionEnd);
 		return newParagraph;
 	}
 	/**
@@ -972,132 +950,5 @@ public class GenDocxBallot {
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
 		yesNoParagraphs.add(newParagraph);
 		return yesNoParagraphs;
-	}
-	/**
-	 * genPageBreak generates the pseudo contest name "PAGE BREAK" using
-	 * the wording in the property PAGE_BREAK_WORDING (e.g. "See other side of ballot")
-	 * @param mdp MainDocumentPart from DOCX4J API.
-	 * @return list of new paragraphs.
-	 */
-	List<P> genPageBreak(MainDocumentPart mdp) {
-		List<P> pageBreakParagraphs = new ArrayList<>();
-		// Test the property value here
-		if (Initialize.PAGE_BREAK_DISPLAY) {
-			logger.info("generating page break");
-			P newParagraph;
-			// first paragraph
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
-			pageBreakParagraphs.add(newParagraph);
-			// Draw a border line as a separator
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
-			// last paragraph
-			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
-		}
-		return pageBreakParagraphs;
-	}
-	/** 
-	 * genColumnBreakParagraph generates a column break object tree.
-	 * This can be used to "post-format" the columns after a human evaluation as to where
-	 * a column break should be injected.
-	 * @return paragraph effecting a column break
-	 */
-	P genColumnBreakParagraph() {
-		logger.info("generating column break");
-		org.docx4j.wml.ObjectFactory wmlObjectFactory = new ObjectFactory();
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-        // Create object for p
-        P p = mdp.createStyledParagraphOfText(STYLEID_COLUMN_BREAK_PARAGRAPH,null);
-        // Create object for r
-        R r = wmlObjectFactory.createR(); 
-        p.getContent().add(r); 
-        // Create object for br
-        Br br = wmlObjectFactory.createBr(); 
-        r.getContent().add(br); 
-        br.setType(org.docx4j.wml.STBrType.COLUMN);
-        return p;
-	}
-	/**
-	 * genStyledParagraph generates a single paragraph containing the text.
-	 * 
-	 * @param text of paragraph.
-	 * @param oldParagraph placeholder paragraph (P).
-	 * @param defaultStyle style to use is oldParagraph has no style.
-	 * @param mdp MainDocumentPart.
-	 * @return new paragraph.
-	 */
-	P genStyledParagraph(String text, P oldParagraph, String defaultStyle, MainDocumentPart mdp) {		
-		PPr pPr = oldParagraph.getPPr();
-		String style = defaultStyle;
-		if (pPr != null) {
-		    PPrBase.PStyle pStyle = pPr.getPStyle();
-		    if (pStyle != null) {
-		        style = pStyle.getVal();
-		    } else {
-				logger.info("pStyle value is null - Normal style used.");
-		    }
-		} else {
-			logger.info("pPr value is null - Normal style used.");
-		}
-		P newParagraph = mdp.createStyledParagraphOfText(style, text);
-		return newParagraph;
-	}
-	/**
-	 * genStyledTextWithinParagraph generates a paragraph of text wherein just some of the
-	 * text has one of TextStyle (e.g. BOLD) styles.
-	 * Notes: Java code generated by DOCX4J Word plugin. Modified by RAR.
-	 * 
-	 * @param textStyle see TextStyle.
-	 * @param unstyledText1 Normal text.
-	 * @param styledText styled text.
-	 * @param unstyledText2 More Normal text.
-	 * @return P object.
-	 */
-	P genStyledTextWithinParagraph(TextStyle textStyle, String unstyledText1, String styledText,
-			String unstyledText2) {
-		org.docx4j.wml.ObjectFactory wmlObjectFactory = new ObjectFactory();
-		P p = wmlObjectFactory.createP();
-		// Create object for r
-		R r = wmlObjectFactory.createR();
-		p.getContent().add(r);
-		// Create object for t (wrapped in JAXBElement)
-		Text text = wmlObjectFactory.createText();
-		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(text);
-		r.getContent().add(textWrapped);
-		text.setValue(unstyledText1);
-		text.setSpace("preserve");
-		// Create object for r
-		R r2 = wmlObjectFactory.createR();
-		p.getContent().add(r2);
-		// Create object for t (wrapped in JAXBElement)
-		Text text2 = wmlObjectFactory.createText();
-		JAXBElement<org.docx4j.wml.Text> textWrapped2 = wmlObjectFactory.createRT(text2);
-		r2.getContent().add(textWrapped2);
-		text2.setValue(styledText);
-		// Create object for rPr
-		RPr rpr = wmlObjectFactory.createRPr();
-		r2.setRPr(rpr);
-		if (textStyle == TextStyle.BOLD) {	
-			// Create object for b
-			BooleanDefaultTrue booleandefaulttrue = wmlObjectFactory.createBooleanDefaultTrue();
-			rpr.setB(booleandefaulttrue);
-			// Create object for bCs
-			BooleanDefaultTrue booleandefaulttrue2 = wmlObjectFactory.createBooleanDefaultTrue();
-			rpr.setBCs(booleandefaulttrue2);
-		} else if (textStyle == TextStyle.UNDERLINE) {
-            // Create object for u
-            U u = wmlObjectFactory.createU(); 
-            rpr.setU(u); 
-            u.setVal(org.docx4j.wml.UnderlineEnumeration.SINGLE);
-		}
-		// Create object for r
-		R r3 = wmlObjectFactory.createR();
-		p.getContent().add(r3);
-		// Create object for t (wrapped in JAXBElement)
-		Text text3 = wmlObjectFactory.createText();
-		JAXBElement<org.docx4j.wml.Text> textWrapped3 = wmlObjectFactory.createRT(text3);
-		r3.getContent().add(textWrapped3);
-		text3.setValue(unstyledText2);
-		text3.setSpace("preserve");
-		return p;
 	}
 }
