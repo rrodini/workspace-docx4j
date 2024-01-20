@@ -9,6 +9,10 @@ import com.rodini.ballotutils.Utils;
  * ZoneDataProcessor processes the zone lines of the precincts-zones CSV file
  * into zone objects.
  * 
+ * Notes:
+ * 1) the CSV input file must not be edited by Excel since Excel embeds invisible
+ *    UTF8 character at the beginning of the file.
+ * 
  * @author Bob Rodini
  */
 public class ZoneDataProcessor {
@@ -58,12 +62,14 @@ public class ZoneDataProcessor {
 				field2 = fields[2].trim();
 				if (field2.isBlank()) {
 					logger.error(String.format("CSV line #%d zone logo path %s is blank", lineNo, field2));
-					return;
+					// Error should not prevent creation of zone object.
+					//return;
 				}
 				boolean exists = Utils.checkFileExists(field2);
 				if (!exists) {
 					logger.error(String.format("CSV line #%d zone logo path %s invalid", lineNo, field2));
-					return;
+					// Error should not prevent creation of zone object.
+					//return;
 				}
 				processLine(field0, field1, field2);
 				break;

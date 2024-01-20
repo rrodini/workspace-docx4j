@@ -3,6 +3,7 @@
   <groupId>com.rodini</groupId>
   <artifactId>zone-processor</artifactId>
   <version>1.5.0</version>
+  <packaging>jar</packaging>
   <name>Zone Processor</name>
   <description>Provide and API for mapping precinct# to zone, and zone's list of precincts.</description>
   <build>

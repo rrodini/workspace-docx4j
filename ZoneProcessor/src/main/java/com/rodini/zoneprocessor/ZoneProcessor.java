@@ -50,10 +50,16 @@ public class ZoneProcessor {
 		if (!csvText.endsWith("\n")) {
 			csvText += "\n";
 		}
-		logger.debug("Processing CSV text");
+		logger.debug(String.format("Processing csvText:\n%s", csvText));
+		if (csvText.isEmpty()) {
+			Utils.logFatalError("precincts-zones CSV file is empty.");
+		}
+//		String regex = "(?mi)^Zones$\n(?<zonesdata>((.*\n)*))^Precincts$\n(?<precinctsdata>((.*\n)*))";
+		String regex = "(?mi)^Zones$\\n(?<zonesdata>((.*\\n)*))^Precincts$\\n(?<precinctsdata>((.*\\n)*))";
+		logger.debug("Regex: " + regex);
 		// Since precincts-zones CSV is hard-coded, this regex can be hard-coded.
 		Pattern pattern = Pattern
-				.compile("(?mi)^Zones$\n(?<zonesdata>((.*\n)*))^Precincts$\n(?<precinctsdata>((.*\n)*))");
+				.compile(regex);
 		Matcher matcher = pattern.matcher(csvText);
 		if (!matcher.find()) {
 			Utils.logFatalError("precincts-zones CSV file does not match format");
