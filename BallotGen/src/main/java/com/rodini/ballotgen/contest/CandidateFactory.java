@@ -52,6 +52,7 @@ public class CandidateFactory {
 //			Arrays.asList(Utils.getPropValue(ballotGenProps, TICKET_CONTEST_NAMES).split(","));
 	
 //	private static final List<String> namesOfLocalContests = List.of(
+//			"PRESIDENT OF THE UNITED STATES"   // not exactly local but no region line beneath
 //			"AUDITOR",
 //			"CONSTABLE",
 //			"DEMOCRATIC COUNTY COMMISSIONER",
@@ -77,6 +78,7 @@ public class CandidateFactory {
 	// This results in the candidate name being followed by their county of residence.
 	// Yet another anomaly in a primary ballot.
 //	private static final List<String> namesOfLocalContestsExceptions = List.of(
+//			"AUDITOR GENERAL",
 //			"SCHOOL DIRECTOR OCTORARA REGION 1",
 //			"SCHOOL DIRECTOR UNIONVILLE CHADDS FORD REGION C",
 //			"SCHOOL DIRECTOR TWIN VALLEY REGION 2",
@@ -148,7 +150,7 @@ public class CandidateFactory {
 		return local;
 	}
 	/**
-	 * isTicketContest uses the pre-defined list ot ticket contests to determine
+	 * isTicketContest uses the pre-defined list oF ticket contests to determine
 	 * if this contest is a ticket.
 	 * @param contestName office name
 	 * @return true => yes

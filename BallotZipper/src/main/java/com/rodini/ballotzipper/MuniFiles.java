@@ -53,7 +53,7 @@ public class MuniFiles {
 		boolean havePdf = false;
 		for (int i = 0; i < fileNames.size(); i++) {
 			String fileName = fileNames.get(i);
-			String ext = fileName.substring(fileName.indexOf("."), fileName.length());
+			String ext = fileName.substring(fileName.lastIndexOf("."), fileName.length());
 			switch (ext) {
 			case DOCX:
 				if (haveDocx) {

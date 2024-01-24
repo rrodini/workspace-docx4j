@@ -3,6 +3,7 @@ package com.rodini.ballotgen.common;
 import static com.rodini.ballotgen.contest.ContestFileLevel.COMMON;
 import static com.rodini.ballotgen.contest.ContestFileLevel.MUNICIPAL;
 import static com.rodini.ballotgen.endorsement.EndorsementMode.ENDORSED;
+import static com.rodini.ballotgen.endorsement.EndorsementMode.UNENDORSED;
 import static com.rodini.ballotutils.Utils.ATTN;
 import static org.apache.logging.log4j.Level.DEBUG;
 
@@ -196,8 +197,12 @@ public class GenDocxBallot {
 		int lastSeparator = pathName.lastIndexOf(File.separator);
 		pathName = pathName.substring(0, lastSeparator);
 		logger.info(String.format("pathName: %s fileName: %s", pathName, fileName));
-		String[] fileElements = fileName.split("\\.");
-		precinctNoName = fileElements[0];
+// OLD - doesn't work if name contains a period like Kennett Sq.
+//		String[] fileElements = fileName.split("\\.");
+//		precinctNoName = fileElements[0];
+// NEW - next two lines.
+		int lastDot = fileName.lastIndexOf(".");
+		precinctNoName = fileName.substring(0, lastDot);
 		// if suffix was added, then remove it.
 		if (precinctNoName.endsWith(FILE_SUFFIX)) {
 			precinctNoName = precinctNoName.substring(0, precinctNoName.length() - FILE_SUFFIX.length());
@@ -648,7 +653,7 @@ public class GenDocxBallot {
 		String oval = "";
 		String candName = cand.getName();
 		EndorsementMode mode = endorsementProcessor.getEndorsementMode(candName, contestName, cand.getParty(), precinctNo);
-		if (mode == ENDORSED) {
+		if (mode == ENDORSED || mode == UNENDORSED ) {
 			endorsedCandidates.merge(candName.toUpperCase(), 1, (prev, inc) -> prev + inc);
 		}
 		oval = mode == ENDORSED ? blackEllipse : whiteEllipse;
