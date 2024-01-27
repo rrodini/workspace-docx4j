@@ -8,30 +8,63 @@ else
   echo -e "\nBALLOTGEN_VERSION environment variable not defined -- Quitting.\n"
   exit 0
 fi
-
+# List of binaries
 RELEASE_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/SampleBallotGen-${BALLOTGEN_VERSION}
-CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
-BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
-BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
-BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
-TABREPLACER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
+CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen/target
+CONTESTGEN="contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
+BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen/target
+BALLOTGEN="ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
+BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer/target
+BALLOTNAMER="ballot-namer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
+BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper/target
+BALLOTZIPPER="ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
+# TABREPLACER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer/target
+# TABREPLACER="tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
+TEXTCLEANER_FOLDER=/Users/robert/git/workspace-docx4j/TextCleaner/target
+TEXTCLEANER="text-cleaner-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
+
+# copy_file - copy FILE1 to FILE2 only if it is newer.
+copy_file() {
+  if [ $1 -nt $2 ]
+  then
+  cp -v $1 $2
+  fi
+}
 
 # do all work in the release folder
 cd "$RELEASE_FOLDER" || exit
 
-echo "copying contestgen binary"
-cp -v "${CONTESTGEN_FOLDER}/target/contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" contestgen/
+# CONTESTGEN
+FILE1="${CONTESTGEN_FOLDER}/$CONTESTGEN"
+FILE2="contestgen/$CONTESTGEN"
+copy_file $FILE1 $FILE2
 
-echo "copying ballotgen binary"
-cp -v "${BALLOTGEN_FOLDER}/target/ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotgen/
+# BALLOTGEN
+FILE1="${BALLOTGEN_FOLDER}/$BALLOTGEN"
+FILE2="ballotgen/$BALLOTGEN"
+copy_file $FILE1 $FILE2
 
-echo "copying ballotnamer binary"
-cp -v "${BALLOTNAMER_FOLDER}/target/ballot-namer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotnamer/
+# BALLOTNAMER
+FILE1="${BALLOTNAMER_FOLDER}/$BALLOTNAMER"
+FILE2="ballotnamer/$BALLOTNAMER"
+copy_file $FILE1 $FILE2
 
-echo "copying ballotzipper binary"
-cp -v "${BALLOTZIPPER_FOLDER}/target/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
+# BALLOTZIPPER
+FILE1="${BALLOTZIPPER_FOLDER}/$BALLOTZIPPER"
+FILE2="ballotzipper/$BALLOTZIPPER"
+copy_file $FILE1 $FILE2
 
-echo "copying tabreplacer binary"
-cp -v "${TABREPLACER_FOLDER}/target/tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" tabreplacer/
+# TABREPLACER
+# FILE1="${TABREPLACER_FOLDER}/$TABREPLACER"
+# FILE2="tabreplacer/$TABREPLACER"
+# copy_file $FILE1 $FILE2
+
+
+#echo "copying textcleaner binary"
+#cp -v "${TEXTCLEANER_FOLDER}/target/text-cleaner-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" textcleaner/
+# TEXTCLEANER
+FILE1="${TEXTCLEANER_FOLDER}/$TEXTCLEANER"
+FILE2="textcleaner/$TEXTCLEANER"
+copy_file $FILE1 $FILE2
 
 echo "DONE."

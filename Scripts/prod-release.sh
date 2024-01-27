@@ -18,7 +18,7 @@ CONTESTGEN_FOLDER=${DEV_RELEASE_FOLDER}/contestgen
 BALLOTGEN_FOLDER=${DEV_RELEASE_FOLDER}/ballotgen
 BALLOTNAMER_FOLDER=${DEV_RELEASE_FOLDER}/ballotnamer
 BALLOTZIPPER_FOLDER=${DEV_RELEASE_FOLDER}/ballotzipper
-TABREPLACER_FOLDER=${DEV_RELEASE_FOLDER}/tabreplacer
+TEXTCLEANER_FOLDER=${DEV_RELEASE_FOLDER}/textcleaner
 PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBox
 
 # do all work in the parent folder
@@ -42,10 +42,6 @@ cd "${RELEASE_FOLDER}"
 #   /resources
 # /ballotzipper
 #   /resources
-# /bucks-contests
-# /bucks-input
-# /bucks-output
-# /bucks-zip
 # /chester-contests
 # /chester-input
 # /chester-output
@@ -54,7 +50,7 @@ cd "${RELEASE_FOLDER}"
 #  /resources
 # /logs
 # /PDFBOX
-# /tabreplacer
+# /textcleaner
 #  /resources
   
 echo "Creating ballotgen folder"
@@ -81,12 +77,6 @@ echo "Creating ballotzipper/resources folder"
 mkdir resources
 cd ..
 
-echo "Creating Bucks Co. folders"
-mkdir bucks-contests
-mkdir bucks-input
-mkdir bucks-output
-mkdir bucks-zip
-
 echo "Creating Chester Co. folders"
 mkdir chester-contests
 mkdir chester-input
@@ -107,18 +97,17 @@ mkdir logs
 echo "Creating PDFBOX folder"
 mkdir PDFBOX
 
-echo "Creating tabreplacer folder"
-mkdir tabreplacer
-cd tabreplacer
+echo "Creating textcleaner folder"
+mkdir textcleaner
+cd textcleaner
 
-echo "Creating tabreplacer/resources folder"
+echo "Creating textcleaner/resources folder"
 mkdir resources
 cd ..
  
 echo "folder structure creating...Now moving files..."
 
 echo "copying contestgen files and resources"
-
 cp "${CONTESTGEN_FOLDER}/contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" contestgen/
 cp -a "${CONTESTGEN_FOLDER}"/resources/. contestgen/resources/
 
@@ -134,9 +123,9 @@ echo "copying ballotzipper files and resources"
 cp "${BALLOTZIPPER_FOLDER}/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
 cp -a "${BALLOTZIPPER_FOLDER}"/resources/. ballotzipper/resources/
 
-echo "copying tabreplacer files and resources"
-cp "${TABREPLACER_FOLDER}/tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
-cp -a "${TABREPLACER_FOLDER}"/resources/. tabreplacer/resources/
+echo "copying textcleaner files and resources"
+cp "${TEXTCLEANER_FOLDER}/text-cleaner-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" textcleaner/
+cp -a "${TEXTCLEANER_FOLDER}"/resources/. textcleaner/resources/
 
 echo "copying PDFBox files and resources"
 cp "${PDFBOX_FOLDER}/pdfbox-app-2.0.25.jar" PDFBOX/
