@@ -79,14 +79,18 @@ public class Utils {
 				"ATTN", ATTN
 				);
 		// get logging level from JVM argument
-		String strLevel = System.getProperty(JVM_LOG_LEVEL, "ERROR").toUpperCase();
+		String strLevel = System.getProperty(JVM_LOG_LEVEL, "DEFAULT").toUpperCase();
 		Level level = logLevels.get(strLevel);
-		// echo out for the world to see.
-		System.out.printf("log4jLevel: %s%n", level);
-		if (level == null) {
-			level = ERROR;
+		if (level != null) {
+			org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,level);
+		} else {
+			// use the current logger's level
+			level = logger.getLevel();
 		}
-		org.apache.logging.log4j.core.config.Configurator.setLevel(loggerName,level);
+		// echo out for the world to see.
+		String logMsg = String.format("log4jLevel: %s", level.toString());
+		System.out.println(logMsg);
+		logger.log(ATTN, logMsg);
 	}
 	/**
 	 * logAppMessage - logs an application message at ATTN level. An application message is typically logged
@@ -258,7 +262,10 @@ public class Utils {
 		try {
 			textLines = Files.readAllLines(Path.of(textFilePath));
 		} catch (IOException e) {
-			logFatalError("cannot read file: " + textFilePath);
+			logFatalError(String.format("cannot read file: %s reason: %s", textFilePath, e.getMessage()));
+		}
+		if (textLines == null) {
+			logFatalError(String.format("cannot read file : %s contents contain non UTF-8 character", textFilePath));
 		}
  		String text = textLines.stream().collect(joining("\n"));
  		return text;

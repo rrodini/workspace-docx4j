@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -206,17 +207,19 @@ public class ContestGen {
 	}
 	/**
 	 * GenMuniBallots generates the ballot file for each municipality.
+	 * 
+	 * Notes:
+	 * 1) must generate names with dash, e.g. municipal-1.txt, since PDF Split does this.
 	 */
 	static void genMuniBallots(List<MuniTextExtractor> mteList) {
 		int i = 1;
 		for (MuniTextExtractor mte: mteList) {
-			String muniName = mte.getMuniName();
 			String muniBallotText = mte.getMuniText();
-			String ballotFilePath = outBallotPath + File.separator + MUNICIPAL_FILE + Integer.toString(i) + TEXT_EXT;
+			String ballotFilePath = outBallotPath + File.separator + MUNICIPAL_FILE + "-" + Integer.toString(i) + TEXT_EXT;
 			String msg = String.format("writing file: %s", ballotFilePath);
 			System.out.println(msg);
 			logger.info(msg);
-			try (FileWriter ballotFile = new FileWriter(ballotFilePath, false);) {
+			try (FileWriter ballotFile = new FileWriter(ballotFilePath, StandardCharsets.UTF_8, false);) {
 				ballotFile.write(muniBallotText);
 				
 			} catch (IOException e) {
@@ -269,7 +272,7 @@ public class ContestGen {
 		String msg = String.format("writing file: %s", contestFilePath);
 		System.out.println(msg);
 		logger.info(msg);
-		try (FileWriter contestsFile = new FileWriter(contestFilePath, false);) {
+		try (FileWriter contestsFile = new FileWriter(contestFilePath, StandardCharsets.UTF_8, false);) {
 			genMuniContests(contestsFile, muniName);
 			genMuniReferendums(contestsFile, muniName);
 			genMuniRetentions(contestsFile, muniName);

@@ -35,7 +35,7 @@ import static com.rodini.ballotutils.Utils.ATTN;
  *                       ...
  * 
  * CLI arguments: 
- * arg[0] path to directory w/ PDF and text files
+ * args[0] path to directory w/ PDF and text files
  * 
  * ENV variables:
  * BALLOTGEN_VERSION version # of Ballot Gen Software (e.g. "1.4.0")
@@ -83,8 +83,9 @@ public class BallotNamer {
 		// validate the CLI args
 		dirPath = args[0];
 		if (!Utils.checkDirExists(dirPath)) {
-				Utils.logFatalError("initialize: command line arg[0] is not a directory: " + dirPath);
+				Utils.logFatalError("initialize: command line args[0] is not a directory: " + dirPath);
 		}
+		logger.info("args[0]: " + dirPath);
 		String propsFilePath = RESOURCE_PATH + PROPS_FILE;
 		// get ballotnamer properties
 		props = Utils.loadProperties(propsFilePath);
@@ -262,17 +263,11 @@ public class BallotNamer {
 	 * @return contents of text file.
 	 */
 	static String getFileText(String fileName) {
-		logger.debug(String.format("reading lines of file: %s%n", dirPath + File.separator + fileName));
- 		List<String> fileLines = null;
-		try {
-			fileLines = Files.readAllLines(Path.of(dirPath + File.separator + fileName));
-			logger.debug(String.format("successfully read %d lines", fileLines.size()));
-		} catch (IOException e) {
-			String msg = "getFileText: can't read file: " + fileName;
-			logger.error(msg);
-		}
- 		String fileText = fileLines.stream().collect(joining("\n"));
-		logger.debug(String.format("first 100 characters of fileText: %n", fileText.substring(0, Math.min(fileText.length(), 100))));
+ 		String fileText = null;
+ 		String filePath = dirPath + File.separator + fileName;
+ 		logger.debug(String.format("reading lines of file: %s", filePath));
+		fileText = Utils.readTextFile(filePath);
+		logger.debug(String.format("first 100 characters of fileText: %s", fileText.substring(0, Math.min(fileText.length(), 100))));
  		return fileText;
 	}
 	

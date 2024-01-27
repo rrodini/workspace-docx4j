@@ -4,6 +4,7 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.stream.Collectors.joining;
 
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -68,7 +69,7 @@ public class TextCleaner {
  		if (!newFileContents.endsWith("\n")) {
  			newFileContents = newFileContents + "\n";
  		}
-		try (FileWriter newTextFile = new FileWriter(txtFilePath)) {
+		try (FileWriter newTextFile = new FileWriter(txtFilePath, StandardCharsets.UTF_8, false)) {
 			newTextFile.write(newFileContents);
 		} catch (Exception ex) {
 			Utils.logFatalError(ex.getMessage());
