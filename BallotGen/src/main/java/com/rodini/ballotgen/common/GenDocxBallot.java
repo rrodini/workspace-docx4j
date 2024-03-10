@@ -528,19 +528,27 @@ public class GenDocxBallot {
 			String [] elements = line.split(",");
 			String contestName = elements[0];
 			contestName = Contest.processContestName(contestName);
-			String contestFormat = elements[1];
-			// Is there a "page break" in the ballot?
-			// Test if a pseudo contest box should be generated.
-			List<P> contestParagraphs = contestName.equals(Initialize.PAGE_BREAK)?
-					  GenDocx.genPageBreak(docx.getMainDocumentPart())
-					: genContest(ballotFactory, contestName, contestFormat);
-			// Insert column break after contest?
-			if (i+1 == Initialize.columnBreaks[j]) {
+			List<P> contestParagraphs = new ArrayList<>();
+			// Insert column break before contest?
+			if (Initialize.columnBreaks.indexOf(contestName) >= 0) {
 				MainDocumentPart mdp = docx.getMainDocumentPart();
 				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
 				contestParagraphs.add(columnBreakParagraph);
 				j++;
 			}
+			String contestFormat = elements[1];
+			// Is there a "page break" in the ballot?
+			// Test if a pseudo contest box should be generated.
+			contestParagraphs.addAll(contestName.equals(Initialize.PAGE_BREAK)?
+					  GenDocx.genPageBreak(docx.getMainDocumentPart())
+					: genContest(ballotFactory, contestName, contestFormat));
+//			// Insert column break after contest?
+//			if (i+1 == Initialize.columnBreaks[j]) {
+//				MainDocumentPart mdp = docx.getMainDocumentPart();
+//				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
+//				contestParagraphs.add(columnBreakParagraph);
+//				j++;
+//			}
 			contestsParagraphs.addAll(contestParagraphs);
 			i++;
 		}
@@ -728,12 +736,12 @@ public class GenDocxBallot {
 			}
 		} else {
 			// Display a blank write-in line
-		//	if (Initialize.writeInDisplay) {
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, whiteEllipse + "   " + "_".repeat(16));
-			writeinParagraphs.add(newParagraph);
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
-			writeinParagraphs.add(newParagraph);
-		//	}
+			if (Initialize.writeInDisplay) {
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_NAME, whiteEllipse + "   " + "_".repeat(16));
+				writeinParagraphs.add(newParagraph);
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
+				writeinParagraphs.add(newParagraph);
+			}
 		}
 		return writeinParagraphs;
 	}

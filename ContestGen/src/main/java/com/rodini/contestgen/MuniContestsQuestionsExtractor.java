@@ -164,7 +164,8 @@ public class MuniContestsQuestionsExtractor {
 			// retention questions always on page 2.
 			extractReferendumText(muniPage2Text, muniNo);
 			extractRetentionText(muniPage2Text);
-		}	
+		}
+		// Need to sort contestNames in ballot order.
 	}
 	/**
 	 * getMuniName get the municipality name.

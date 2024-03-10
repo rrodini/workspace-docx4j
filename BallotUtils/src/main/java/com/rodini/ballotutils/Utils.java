@@ -141,7 +141,7 @@ public class Utils {
 		if (logFilePath != null) {
 			int errors = 0;
 			String logFileText = readTextFile(logFilePath);
-			Pattern pat = compileRegex(".*ERROR.*");
+			Pattern pat = compileRegex("^ERROR.*");
 			Matcher m = pat.matcher(logFileText);
 			errors = (int) m.results().count();
 			logAppMessage(logger, String.format("Error count: %d", errors), false);

@@ -62,7 +62,8 @@ public class Initialize {
 	public static EndorsementProcessor endorsementProcessor;
 	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
-	public static int [] columnBreaks = {999}; // sentinel value
+//	public static int [] columnBreaks = {999}; // sentinel value
+	public static String columnBreaks = "ZZZZ"; // sentinel value
 	public static int docxGenCount; // counter
 	
 
@@ -334,31 +335,32 @@ public class Initialize {
 			// default is contest # 999, so no harm done.
 			return;
 		}
-		String [] counts = value.split(",");
-		// Each value should be an integer
-		int i = 0;
-		int preVal = -1;
-		// Resize as per the property length + one for sentinel.
-		columnBreaks = new int[counts.length+1];
-		for (int j = 0; j < counts.length; j++) {
-			String strVal = counts[j].trim();
-			int val;
-			try {
-				val = Integer.parseInt(strVal);
-			} catch (NumberFormatException e) {
-				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
-				return;
-			}
-			if (val < preVal) {
-				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
-				return;
-			}
-			columnBreaks[i++] = val;
-			preVal = val;
-		}
-		// sentinel value
-		columnBreaks[i] = 999;
-		logger.info(String.format("%s: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
+		columnBreaks = value;
+//		String [] counts = value.split(",");
+//		// Each value should be an integer
+//		int i = 0;
+//		int preVal = -1;
+//		// Resize as per the property length + one for sentinel.
+//		columnBreaks = new int[counts.length+1];
+//		for (int j = 0; j < counts.length; j++) {
+//			String strVal = counts[j].trim();
+//			int val;
+//			try {
+//				val = Integer.parseInt(strVal);
+//			} catch (NumberFormatException e) {
+//				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
+//				return;
+//			}
+//			if (val < preVal) {
+//				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
+//				return;
+//			}
+//			columnBreaks[i++] = val;
+//			preVal = val;
+//		}
+//		// sentinel value
+//		columnBreaks[i] = 999;
+//		logger.info(String.format("%s: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 	}
 	
 	static void validatePageBreak() {

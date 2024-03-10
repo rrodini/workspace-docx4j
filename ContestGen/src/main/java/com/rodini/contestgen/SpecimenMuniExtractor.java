@@ -68,8 +68,9 @@ public class SpecimenMuniExtractor {
 				m.reset();
 				muniNames = m.results()
 						.map(ContestGen.COUNTY.equals("chester")?
-								// CHESTER 1=>id               2=>name
-								mr -> mr.group(1) + " " + mr.group(2)
+								// 2024 PRIMARY
+								// CHESTER 2=>id               3=>name
+								mr -> mr.group(2) + " " + mr.group(3)
 						     :
 						    	// BUCKS   2=>id               1=name
 						        mr -> mr.group(2) + " " + mr.group(1))
