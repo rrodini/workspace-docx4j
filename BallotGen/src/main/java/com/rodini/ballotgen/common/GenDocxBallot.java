@@ -534,7 +534,6 @@ public class GenDocxBallot {
 				MainDocumentPart mdp = docx.getMainDocumentPart();
 				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
 				contestParagraphs.add(columnBreakParagraph);
-				j++;
 			}
 			String contestFormat = elements[1];
 			// Is there a "page break" in the ballot?

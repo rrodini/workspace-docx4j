@@ -85,6 +85,7 @@ public class Initialize {
 	private static final String WRITEINS_FILE = ".write.ins.file";
 	private static final String WRITE_IN_DISPLAY = ".write.in.display";
 	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
+	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
 	public	static       String COUNTY;
 	public  static       String WRITE_IN;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
@@ -325,6 +326,15 @@ public class Initialize {
 		}
 		writeInDisplay = Boolean.parseBoolean(value);
 		logger.info(String.format("%s: %s", COUNTY + WRITE_IN_DISPLAY, value));
+	}
+	
+	static void validateColumnBreakContestName() {
+		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_NAME);
+		if (value == null) {
+			value = "";
+			return;
+		}
+		columnBreaks = value;
 	}
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
