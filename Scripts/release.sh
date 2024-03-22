@@ -17,7 +17,7 @@ CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
 BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
 BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
 BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
-TABREPLACER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
+TEXTCLEANER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
 PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBox
 SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
 
@@ -43,19 +43,21 @@ cd "${RELEASE_FOLDER}"
 #   /resources
 # /ballotzipper
 #   /resources
-# /bucks-contests
-# /bucks-input
-# /bucks-output
-# /bucks-zip
+## /bucks-contests
+## /bucks-input
+## /bucks-prep
+## /bucks-output
+## /bucks-zip
 # /chester-contests
 # /chester-input
 # /chester-output
+# /chester-prep
 # /chester-zip
 # /contestgen
 #  /resources
 # /logs
 # /PDFBOX
-# /tabreplacer
+# /textcleaner
 #  /resources
   
 echo "Creating ballotgen folder"
@@ -82,16 +84,18 @@ echo "Creating ballotzipper/resources folder"
 mkdir resources
 cd ..
 
-echo "Creating Bucks Co. folders"
-mkdir bucks-contests
-mkdir bucks-input
-mkdir bucks-output
-mkdir bucks-zip
+# echo "Creating Bucks Co. folders"
+# mkdir bucks-contests
+# mkdir bucks-input
+# mkdir bucks-output
+# mkdir bucks-prep
+# mkdir bucks-zip
 
 echo "Creating Chester Co. folders"
 mkdir chester-contests
 mkdir chester-input
 mkdir chester-output
+mkdir chester-prep
 mkdir chester-zip
 
 echo "Creating contestgen folder"
@@ -108,11 +112,11 @@ mkdir logs
 echo "Creating PDFBOX folder"
 mkdir PDFBOX
 
-echo "Creating tabreplacer folder"
-mkdir tabreplacer
-cd tabreplacer
+echo "Creating textcleaner folder"
+mkdir textcleaner
+cd textcleaner
 
-echo "Creating tabreplacer/resources folder"
+echo "Creating textcleaner/resources folder"
 mkdir resources
 cd ..
 
@@ -135,14 +139,14 @@ echo "copying ballotzipper files and resources"
 cp "${BALLOTZIPPER_FOLDER}/target/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
 cp -a "${BALLOTZIPPER_FOLDER}"/resources/. ballotzipper/resources/
 
-echo "copying tabreplacer files and resources"
-cp "${TABREPLACER_FOLDER}/target/tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
-cp -a "${TABREPLACER_FOLDER}"/resources/. tabreplacer/resources/
+echo "copying textcleaner files and resources"
+cp "${TEXTCLEANER_FOLDER}/target/tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
+cp -a "${TEXTCLEANER_FOLDER}"/resources/. textcleaner/resources/
 
 
 
 echo "copying PDFBox files and resources"
-cp "${PDFBOX_FOLDER}/pdfbox-app-2.0.25.jar" PDFBOX/
+cp "${PDFBOX_FOLDER}/pdfbox-app-3.0.2.jar" PDFBOX/
 
 echo "copying script files"
 cp -a "${SCRIPTS_FOLDER}"/. .

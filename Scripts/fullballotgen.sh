@@ -13,8 +13,8 @@
 STEP1=0
 STEP2=0
 STEP3=0
-STEP4=0
-STEP5=1
+STEP4=1
+STEP5=0
 
 # GLOBAL VARIABLES
 COUNTY_INPUT=""
@@ -53,9 +53,9 @@ run_populate_globals() {
         COUNTY_OUTPUT="./chester-output"
         COUNTY_CONTESTS="./chester-contests"
         COUNTY_ZIP="./chester-zip"
-        VOTER_SERVICES_SPECIMEN_PDF="2020_PRIMARY_DEMOCRATIC_SPECIMEN.pdf"
-        VOTER_SERVICES_SPECIMEN_TXT="2020_PRIMARY_DEMOCRATIC_SPECIMEN.txt"
-        VOTER_SERVICES_PAGES_PER_BALLOT=1
+        VOTER_SERVICES_SPECIMEN_PDF="Primary-Dems-2023.pdf"
+        VOTER_SERVICES_SPECIMEN_TXT="Primary-Dems-2023.txt"
+        VOTER_SERVICES_PAGES_PER_BALLOT=2
         PRECINCTS_ZONES_CSV="chester-2024-precincts-zones.csv"
     elif [ $BALLOTGEN_COUNTY = "bucks" ];
     then
