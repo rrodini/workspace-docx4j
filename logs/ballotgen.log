@@ -1,45 +1,46 @@
-ATTN  :logAppMessage:104 - Start of BallotGen app. Version: 1.5.0 Jan 18, 2024, 11:49:36 AM
-ATTN  :logAppMessage:104 - Ballots for: chester Co.
-INFO  Initialize:validateCommandLineArgs:118 - output  dir: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output
-INFO  Initialize:validateCommandLineArgs:119 - contest dir: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-contests
-INFO  Initialize:processBallotFiles:162 - files to process: 
+ATTN  Utils:setLoggingLevel:93 - log4jLevel: ERROR
+ATTN  :logAppMessage:108 - Start of BallotGen app. Version: 1.5.1 Mar 22, 2024, 5:47:04 PM
+ATTN  :logAppMessage:108 - Ballots for: chester Co.
+INFO  Initialize:validateCommandLineArgs:120 - output  dir: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output
+INFO  Initialize:validateCommandLineArgs:121 - contest dir: /Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-contests
+INFO  Initialize:processBallotFiles:164 - files to process: 
 [/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/005_ATGLEN_VS...t/Documents/Sample Ballot Production/SampleBallotGen-1.5.0/chester-output/860_WEST_CHESTER_7_VS.txt]
-INFO  Initialize:validateCommandLineArgs:126 - msWordTemplateFile: ./resources/Sample_Ballot_3-column_letter.dotx
-INFO  Initialize:validateElectionType:186 - election.type: General
-INFO  Initialize:validateEndorsedParty:194 - endorsed.party: Democratic
-INFO  Initialize:validateContestFileLevel:202 - contest.file.level: MUNICIPAL
-INFO  Initialize:validateFormatsText:216 - formatsText:
+INFO  Initialize:validateCommandLineArgs:128 - msWordTemplateFile: ./resources/Sample_Ballot_3-column_letter.dotx
+INFO  Initialize:validateElectionType:188 - election.type: General
+INFO  Initialize:validateEndorsedParty:196 - endorsed.party: Democratic
+INFO  Initialize:validateContestFileLevel:204 - contest.file.level: MUNICIPAL
+INFO  Initialize:validateFormatsText:218 - formatsText:
 ^%contest name%\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$
 ^%contest name%\n(?<term>^(\d Year |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$
 ^%contest name%\n(?<region>^Region [A-Z].*)\n(?<term>^(\d |Unexpired ).*)\n(?<instructions>^Vote.*)\n(?<candidates>((.*\n){1})*)^Write-in$
 ^%contest name%\n(?<instructions>^Vote(.*\n)*?Vote for ONE)\n(?<candidates>((.*\n){1})*)^Write-in$
 
-INFO  Initialize:validateContestFormats:230 - chester.contest.format.1.1: ^(?<name>(.*
+INFO  Initialize:validateContestFormats:232 - chester.contest.format.1.1: ^(?<name>(.*
 ){1,3})(?<instructions>^Vote.*)
 (?<candidates>((.*
 ){1})*)^Write-in$
-INFO  Initialize:validateContestFormats:230 - chester.contest.format.2.2: ^(?<name>(.*
+INFO  Initialize:validateContestFormats:232 - chester.contest.format.2.2: ^(?<name>(.*
 ){1,3})(?<term>^(\d Year |Unexpired ).*)
 (?<instructions>^Vote.*)
 (?<candidates>((.*
 ){1})*)^Write-in$
-INFO  Initialize:validateContestFormats:230 - chester.contest.format.3.3: ^(?<name>(.*
+INFO  Initialize:validateContestFormats:232 - chester.contest.format.3.3: ^(?<name>(.*
 ){1,3})(?<region>^Region [A-Z].*)
 (?<term>^(\d |Unexpired ).*)
 (?<instructions>^Vote.*)
 (?<candidates>((.*
 ){1})*)^Write-in$
-INFO  Initialize:validateContestFormats:230 - chester.contest.format.4.4: ^(?<name>(.*
+INFO  Initialize:validateContestFormats:232 - chester.contest.format.4.4: ^(?<name>(.*
 ){1,3})(?<instructions>^Vote(.*
 )*?Vote for ONE)
 (?<candidates>((.*
 ){1})*)^Write-in$
-INFO  Initialize:validateContestFormats:230 - chester.contest.format.5.5: null
-INFO  Initialize:validateContestFormats:235 - there are 4 contest formats in the contestgen properties file
-INFO  Initialize:validateReferendumFormat:242 - chester.ballotgen.referendum.format: null
-INFO  Initialize:validateRetentionFormat:249 - chester.ballotgen.retention.format: null
-INFO  Initialize:validatePrecinctZoneFile:270 - chester.precinct.to.zone.file: ../chester-2024-precincts-zones.csv
-ERROR Utils:checkFileExists:228 - file "../chester-2024-precincts-zones.csv" does not exist
-INFO  Initialize:validatePrecinctZoneFile:273 - chester.precinct.to.zone.file does not exist: ../chester-2024-precincts-zones.csv 
-INFO  Initialize:validatePrecinctZoneFile:274 - Cannot endorse at the zone/precinct level.
+INFO  Initialize:validateContestFormats:232 - chester.contest.format.5.5: null
+INFO  Initialize:validateContestFormats:237 - there are 4 contest formats in the contestgen properties file
+INFO  Initialize:validateReferendumFormat:244 - chester.ballotgen.referendum.format: null
+INFO  Initialize:validateRetentionFormat:251 - chester.ballotgen.retention.format: null
+INFO  Initialize:validatePrecinctZoneFile:272 - chester.precinct.to.zone.file: ../chester-2024-precincts-zones.csv
+ERROR Utils:checkFileExists:232 - file "../chester-2024-precincts-zones.csv" does not exist
+INFO  Initialize:validatePrecinctZoneFile:275 - chester.precinct.to.zone.file does not exist: ../chester-2024-precincts-zones.csv 
+INFO  Initialize:validatePrecinctZoneFile:276 - Cannot endorse at the zone/precinct level.
 ERROR Utils:logFatalError:59 - precincts-zones CSV file does not match format

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>text-cleaner</artifactId>
-	<version>1.5.0</version>
+	<version>1.5.1</version>
 	<name>TextCleaner</name>
 	<description>Takes an input txt file and cleans up text from locked PDF
 		processing.</description>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>com.rodini</groupId>
 			<artifactId>ballot-utils</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.1</version>
 		</dependency>
 	</dependencies>
 

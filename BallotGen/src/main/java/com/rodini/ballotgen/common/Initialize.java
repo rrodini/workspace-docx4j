@@ -327,7 +327,9 @@ public class Initialize {
 		writeInDisplay = Boolean.parseBoolean(value);
 		logger.info(String.format("%s: %s", COUNTY + WRITE_IN_DISPLAY, value));
 	}
-	
+	/**
+	 * validateColumnBreakContestNAME reads/displays the COlUMN_BREAK_CONTEST_NAME property value.
+	 */
 	static void validateColumnBreakContestName() {
 		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_NAME);
 		if (value == null) {
@@ -335,9 +337,12 @@ public class Initialize {
 			return;
 		}
 		columnBreaks = value;
+		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaks));
 	}
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
+	 * Note:
+	 * - DO NOT USE: Superseded by COlUMN_BREAK_CONTEST_COUNT property value.
 	 */
 	static void validateColumnBreakContestCount() {
 		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_COUNT);
@@ -429,7 +434,8 @@ public class Initialize {
 		// create the write-in processor
 		writeinProcessor = new WriteinProcessor(precinctWriteins);
 		validateWriteInDisplay();
-		validateColumnBreakContestCount();
+//		validateColumnBreakContestCount();
+		validateColumnBreakContestName();
 		validatePageBreak();
 		validateTicketAndLocalContestNames();
 	}
