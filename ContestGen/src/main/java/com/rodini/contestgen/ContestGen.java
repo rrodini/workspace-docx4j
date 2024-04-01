@@ -11,11 +11,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 //import org.slf4j.Logger;
@@ -76,6 +78,12 @@ public class ContestGen {
 	static MuniContestNames commonContestNames;
 	static MuniReferendums muniReferendums;
 	static MuniRetentions muniRetentions;
+	// muniTotalCount accumulates info for genCountReport
+	static Map<Integer, List<String>> muniTotalCount = new TreeMap<>();
+	//             |            |
+	//          Sum of     List of muniNames
+	//          Contests+  with same sum
+	//          Refs+Rets
 	
 	/** 
 	 * main entry point for program. Check for necessary ENV variables.
@@ -115,8 +123,12 @@ public class ContestGen {
 			} else {
 				commonContestNames = commonContestNames.intersect(muniContestNames);
 			}
-			// generate municipality contests
+			// generate municipality contests and questions
 			genMuniContestsAndQuestions(muniName, muniContestNames.get());
+			updateTotalMuniCount(muniName,
+					muniContestNames.contestNames.size(),
+					muniReferendums.get().size(),
+					muniRetentions.get().size());
 			mcnList.add(muniContestNames);
 		}
 		// TODO: Death of common_contests.txt ?
@@ -126,6 +138,26 @@ public class ContestGen {
 		genSummaryReport(mcnList);
 		Utils.logAppErrorCount(logger);
 		Utils.logAppMessage(logger, "End of ContestGen app.", true);
+	}
+	/** 
+	 * updateTotalMuniCount maintains the running list of counts (sums)
+	 * for each municipality for the summary report.
+	 * Notes:
+	 * - the municipality names must be sorted later.
+	 * 
+	 * @param muniName municipality name
+	 * @param contestCount # of contests
+	 * @param refCount # of referendums
+	 * @param retCount # of retentions
+	 */
+	static void updateTotalMuniCount(String muniName, int contestCount, int refCount, int retCount) {
+		int total = contestCount + refCount + retCount;
+		List<String> muniList = muniTotalCount.get(total);
+		if (muniList == null) {
+			muniList = new ArrayList<>();
+		}
+		muniList.add(muniName);
+		muniTotalCount.put(total, muniList);
 	}
 	/**
 	 * initialize the application attempting to FAIL EARLY if possible.
@@ -229,6 +261,12 @@ public class ContestGen {
 		}
 	}
 	
+	/**
+	 * genMuniContests generates the contests for the municipality.
+	 * 
+	 * @param cf FileWriter object.
+	 * @param muniName municipality name.
+	 */
 	static void genMuniContests(FileWriter cf, String muniName) throws IOException{
 		cf.write("Contests\n");
 		for (ContestName mcn: muniContestNames.get()) {
@@ -237,6 +275,12 @@ public class ContestGen {
 			cf.write(String.format("%s,%d%n", contestName, mcn.getFormat()));
 		}	
 	}
+	/**
+	 * genMuniReferendums generates the referendum questions for the municipality.
+	 * 
+	 * @param cf FileWriter object.
+	 * @param muniName municipality name.
+	 */
 	static void genMuniReferendums(FileWriter cf, String muniName) throws IOException {
 		if (muniReferendums.get().size() == 0) {
 			return;
@@ -248,6 +292,12 @@ public class ContestGen {
 			cf.write(String.format("%s%n", refQuestion));
 		}	
 	}
+	/**
+	 * genMuniRetentions generates the retention questions for the municipality.
+	 * 
+	 * @param cf FileWriter object.
+	 * @param muniName municipality name.
+	 */
 	static void genMuniRetentions(FileWriter cf, String muniName) throws IOException {
 		if (muniRetentions.get().size() == 0) {
 			return;
@@ -262,7 +312,7 @@ public class ContestGen {
 		}	
 	}
 	/**
-	 * genMuniContests generates the contests file for the municipality.
+	 * genMuniContestsAndQuestions generates the contests file for the municipality.
 	 * 
 	 * @param muniName municipality name
 	 * @param cnList list of contest names w/ formats.
@@ -284,7 +334,7 @@ public class ContestGen {
 	 * genBallotReport - generate a ballot summary report and determine how many
 	 * unique ballots there are.
 	 * 
-	 * 
+	 * @params mcnList list of municipal contest names.
 	 */
 	static void genSummaryReport(List<MuniContestNames> mcnList) {
 		// try with resources will close the output file.
@@ -295,6 +345,7 @@ public class ContestGen {
 			genBallotReport(pw, mcnList);
 			genReferendumReport(pw, ReferendumFactory.getReferendums());
 			genRetentionReport(pw, RetentionFactory.getRetentions());
+			genCountReport(pw);
 			pw.close();
 		} catch (IOException ex) {
 			String msg = String.format("IOException writing ballot summary report: %s", ex.getMessage());			
@@ -303,6 +354,14 @@ public class ContestGen {
 		}
 		
 	}
+	/**
+	 * genBallotReport - generate a ballot report and determine how many
+	 * unique ballots there are.
+	 * Notes:
+	 * - Only contests considered here.
+	 * 
+	 * @params mcnList list of municipal contest names.
+	 */
 	static void genBallotReport(PrintWriter pw, List<MuniContestNames> mcnList) {
 		String line = "Ballot Summary";
 		System.out.println(line);
@@ -339,8 +398,13 @@ public class ContestGen {
 			pw.println(line);
 			i++;
 		}
-	}
-	
+	}	
+	/**
+	 * genReferendumReport - generate a referendum report and determine how many
+	 * unique referendums there are.
+	 * 
+	 * @params refList list of municipal referendums.
+	 */
 	static void genReferendumReport(PrintWriter pw, List<Referendum> refList) {
 		String line = "Referendum Summary";
 		System.out.println(line);
@@ -360,7 +424,12 @@ public class ContestGen {
 			pw.println(line + " precincts: " + listAsString);
 		}
 	}
-	
+	/**
+	 * genRetentionReport - generate a retention report and determine how many
+	 * unique retentions there are.
+	 * 
+	 * @params refList list of municipal retentions.
+	 */
 	static void genRetentionReport(PrintWriter pw, List<Retention> retList) {
 		String line = "Retention Summary";
 		System.out.println(line);
@@ -375,5 +444,29 @@ public class ContestGen {
 			pw.println(line);
 		}
 	}
-
+	/**
+	 * genCountReport generates a list of precincts that have the same number (sum)
+	 * of contests, referendums, and retentions. This is to give BallotGen template
+	 * designers an idea of the variation in length of the generated DOCX files by
+	 * BallotGen regarding letter/legal size, one or two pages, etc.
+	 * 
+	 * @param pw PrintWriter for the report.
+	 */
+	static void genCountReport(PrintWriter pw) {
+		String line = "Precinct contest/referendum/retention count:";
+		System.out.println(line);
+		pw.println(line);
+		logger.log(ATTN, line);
+		// Now sort the list for readability
+		Set<Integer> keySet = muniTotalCount.keySet();
+		for (Integer total: keySet) {
+			List<String> muniList = muniTotalCount.get(total);
+			Collections.sort(muniList);
+			line = total.toString() + ": ";
+			String muniNames = muniList.stream()
+					.collect(Collectors.joining(","));
+			line += muniNames;
+			pw.println(line);
+		}
+	}
 }
