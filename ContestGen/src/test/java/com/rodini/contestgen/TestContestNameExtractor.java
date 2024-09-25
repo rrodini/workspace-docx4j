@@ -63,19 +63,6 @@ class TestContestNameExtractor {
 					"Write-in\n" +
 					"Write-in\n" +
 					"Write-in\n";
-	private static String contestText5 =
-					"Member Of Council\n" +  // <= two lines 
-					"Atglen Borough\n" +
-					"Region A\n" +           // bogus (not in real ballot)
-					"Unexpired 4 Year Term\n" +		  // term
-					"Vote for no more than THREE\n" + // instructions
-					"Charles H. Palmer Jr\n" +
-					"Republican\n" +
-					"Joshua Glick\n" +
-					"Republican\n" +
-					"Write-in\n" +
-					"Write-in\n" +
-					"Write-in\n";
 	private static String contestText6 =
 			"Justice of the Supreme Court\n" +    // <= one line
 					//"Vote for ONE\n" +          // NO MATCH
@@ -148,24 +135,16 @@ class TestContestNameExtractor {
 		int format = cne.match(contestText3);
 		String name = cne.getContestName();
 		//System.out.printf("name: %s format: %d%n", name, format);
-		assertEquals(2, format);
-		assertEquals("Treasurer", name);
+		assertEquals(1, format);
+		assertEquals("Treasurer\n4 Year Term", name);
 	}
 	@Test	//@DisplayName("test for contest name of 2 lines format 2")
 	void testContestMatch4() {
 		int format = cne.match(contestText4);
 		String name = cne.getContestName();
 		//System.out.printf("name: %s format: %d%n", name, format);
-		assertEquals(2, format);
-		assertEquals("Member Of Council\nAtglen Borough", name);
-	}
-	@Test
-	void testContestMatch5() {
-		int format = cne.match(contestText5);
-		String name = cne.getContestName();
-		//System.out.printf("name: %s format: %d%n", name, format);
-		assertEquals(3, format);
-		assertEquals("Member Of Council\nAtglen Borough", name);
+		assertEquals(1, format);
+		assertEquals("Member Of Council\nAtglen Borough\nUnexpired 4 Year Term", name);
 	}
 	@Test
 	void testContestMatch6() {

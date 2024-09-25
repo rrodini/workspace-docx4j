@@ -101,6 +101,9 @@ public class GenDocx {
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
 			// last paragraph
 			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
+			// 9/7/2024 - generate a column break too
+			newParagraph = genColumnBreakParagraph(mdp);
+			pageBreakParagraphs.add(newParagraph);
 		}
 		return pageBreakParagraphs;
 	}

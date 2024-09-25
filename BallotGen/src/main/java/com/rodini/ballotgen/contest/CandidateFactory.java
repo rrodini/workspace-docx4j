@@ -269,12 +269,19 @@ public class CandidateFactory {
 		for (int i = 0; i < lineCount; i=i+4) {
 			Party party = null;
 			String topName = lines[i].trim();
+			String linePartyStr = "";
 			String partyStr = "";
 			if (i+1 < lineCount) {
-				partyStr = lines[i+1].trim();
+				linePartyStr = lines[i+1].trim();
+				partyStr = linePartyStr;
 //System.out.printf("candidate party: %s length: %d%n",partyStr,partyStr.length());
+				if (linePartyStr.startsWith("President, ")) {
+					// 2024 Presidential Election - "President, Democratic"
+					// Must remove office name.
+					partyStr = linePartyStr.substring(11);
+				}
 				party = Party.toEnum(partyStr);
-				createGeneralCandidate(topName, party, partyStr, false);
+				createGeneralCandidate(topName, party, linePartyStr, false);
 			} else {
 				logger.error(String.format("top of ticket candidate %s is missing party line", topName));
 				break;

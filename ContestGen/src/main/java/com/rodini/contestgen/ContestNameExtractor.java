@@ -73,9 +73,18 @@ public class ContestNameExtractor {
 	 */
 	public int match(String contestText) {
 		int count = cnPatterns.length;
+//		// the regexes are ordered simplest to most complex.
+//		// start at complex and work down.
+//		for (int i = count - 1; i >= 0; i--) {
+//			m = cnPatterns[i].matcher(contestText);
+//			if (m.find()) {
+//				// return one-relative value.
+//				return i + 1;
+//			}
+//		}
 		// the regexes are ordered simplest to most complex.
-		// start at complex and work down.
-		for (int i = count - 1; i >= 0; i--) {
+		// start at simple and work up.
+		for (int i = 0; i < count; i++) {
 			m = cnPatterns[i].matcher(contestText);
 			if (m.find()) {
 				// return one-relative value.

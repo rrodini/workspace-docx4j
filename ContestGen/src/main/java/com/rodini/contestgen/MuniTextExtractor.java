@@ -53,8 +53,8 @@ public class MuniTextExtractor {
 			if (!fullTextExposed) {
 				msg = String.format("muniText: %s%n", muniText);
 				fullTextExposed = true;
+				logger.error(msg);
 			}
-			logger.error(msg);
 			// Previously this condition was FATAL ERROR
 			//Utils.logFatalError(msg);
 			// Now return a recognizable string for later processing.
@@ -82,8 +82,12 @@ public class MuniTextExtractor {
 		String page1Text = "";
 		String page2Text = "";
 		page1Text = extractPageText(MuniTextMarkers.getPage1Pattern(), 1);
+		logger.debug(String.format("page1Text: %n%s", page1Text));
 		if (MuniTextMarkers.getPageCount() == 2) {
 			page2Text = extractPageText(MuniTextMarkers.getPage2Pattern(), 2);
+			logger.debug(String.format("page2Text: %n%s", page2Text));
+		} else {
+			logger.debug("page2Text NOT extracted since muniTextPageCount!=2");
 		}
 		return new MuniContestsQuestionsExtractor(muniName, page1Text, page2Text);
 	}

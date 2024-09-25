@@ -155,7 +155,7 @@ public class MuniContestsQuestionsExtractor {
 	public void extract() {
 		// extract from page 1
 		extractContestText(muniPage1Text);
-		if (!muniPage2Text.isBlank()) {
+		if (!muniPage2Text.isBlank() && !muniPage2Text.startsWith("BAD EXTRACT")) {
 			// write page-break
 			extractPageBreak();
 			// extract from page 2

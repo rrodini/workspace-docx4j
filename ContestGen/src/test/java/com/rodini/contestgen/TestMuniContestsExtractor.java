@@ -193,7 +193,7 @@ class TestMuniContestsExtractor {
 		}
 		assertTrue(names.contains("Justice of the Supreme Court"));
 		assertTrue(names.contains("Judge of the\nCourt of Common Pleas"));
-		assertTrue(names.contains("School Director\nOctorara Region 1"));
+		assertTrue(names.contains("School Director\nOctorara Region 1\nUnexpired 2 Year Term"));
 		assertTrue(names.contains("Inspector Of Elections\n005 Atglen"));
 	}
 }
