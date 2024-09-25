@@ -797,7 +797,10 @@ public class GenDocxBallot {
 		Pattern compiledRegex = Utils.compileRegex(regex);	
 		Matcher m = compiledRegex.matcher(ballotText);
 		if (m.find() ) {
-			referendumParagraphs = genReferendumParagraphs(mdp, refQuestion, m.group("text"));
+			// 09/20/2024 remove \n from referendum text
+			String text = m.group("text");
+			String newText = text.replace('\n', ' ');
+			referendumParagraphs = genReferendumParagraphs(mdp, refQuestion, newText);
 		} else {
 			logger.error(String.format("no match for ref. question %s", refQuestion));
 		}

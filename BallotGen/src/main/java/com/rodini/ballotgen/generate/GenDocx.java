@@ -3,7 +3,7 @@ package com.rodini.ballotgen.generate;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_BOTTOM_BORDER;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_COLUMN_BREAK_PARAGRAPH;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_CONTEST_TITLE;
-
+import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_ANTI_ENDORSED_CANDIDATE_NAME;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -94,7 +94,7 @@ public class GenDocx {
 		if (Initialize.PAGE_BREAK_DISPLAY) {
 			logger.info("generating page break");
 			P newParagraph;
-			// first paragraph
+			// first paragraph at bottom
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
 			pageBreakParagraphs.add(newParagraph);
 			// Draw a border line as a separator
@@ -103,6 +103,12 @@ public class GenDocx {
 			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
 			// 9/7/2024 - generate a column break too
 			newParagraph = genColumnBreakParagraph(mdp);
+			pageBreakParagraphs.add(newParagraph);
+			// new paragraph at top
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
+			pageBreakParagraphs.add(newParagraph);
+			// Draw a border line as a separator
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
 			pageBreakParagraphs.add(newParagraph);
 		}
 		return pageBreakParagraphs;
@@ -244,9 +250,10 @@ public class GenDocx {
 		Inline inline = null;
 		try {
 			imagePart = BinaryPartAbstractImage.createImagePart(docx, sourcePart, bytes);
+			// 09/20/2024 added 6th parameter to size zone logo.
 			inline = imagePart.createImageInline("ZoneLogo", "ZoneLogo", 
 					 docx.getDrawingPropsIdTracker().generateId(),
-					 1, false);
+					 1, false, 1000);
 			logger.info("generated imagePart using sourcePart: " + sourcePart);
 		} catch (Docx4JException e) {
 			logger.error("Docx4JException generating imagePart message: " + e.getMessage());
