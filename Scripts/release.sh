@@ -17,7 +17,7 @@ CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
 BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
 BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
 BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
-TEXTCLEANER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
+#TEXTCLEANER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
 PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBox
 SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
 
@@ -43,11 +43,6 @@ cd "${RELEASE_FOLDER}"
 #   /resources
 # /ballotzipper
 #   /resources
-## /bucks-contests
-## /bucks-input
-## /bucks-prep
-## /bucks-output
-## /bucks-zip
 # /chester-contests
 # /chester-input
 # /chester-output

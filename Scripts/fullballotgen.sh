@@ -13,7 +13,7 @@
 STEP1=0
 STEP2=0
 STEP3=0
-STEP4=1
+STEP4=0
 STEP5=0
 
 # GLOBAL VARIABLES
@@ -53,8 +53,10 @@ run_populate_globals() {
         COUNTY_OUTPUT="./chester-output"
         COUNTY_CONTESTS="./chester-contests"
         COUNTY_ZIP="./chester-zip"
-        VOTER_SERVICES_SPECIMEN_PDF="Primary-Dems-2023.pdf"
-        VOTER_SERVICES_SPECIMEN_TXT="Primary-Dems-2023.txt"
+        VOTER_SERVICES_SPECIMEN_PDF="2024_General_Election-VS.pdf"
+        VOTER_SERVICES_SPECIMEN_TXT="2024_General_Election-VS.txt"
+        # VOTER_SERVICES_SPECIMEN_PDF="005_ATGLEN_VS.pdf"
+        # VOTER_SERVICES_SPECIMEN_TXT="005_ATGLEN_VS.txt"
         VOTER_SERVICES_PAGES_PER_BALLOT=2
         PRECINCTS_ZONES_CSV="chester-2024-precincts-zones.csv"
     elif [ $BALLOTGEN_COUNTY = "bucks" ];
@@ -78,20 +80,23 @@ function run_echo_county() {
 # extract the text from a single PDF file.
 function run_PDF_extract() {
     printf '%s\n' "Extracting text from $1"
-    java -jar ./PDFBOX/pdfbox-app-2.0.25.jar ExtractText -encoding UTF-8  "$1"
+#    java -jar ./PDFBOX/pdfbox-app-2.0.25.jar ExtractText -encoding UTF-8  "$1"
+    java -jar ./PDFBOX/pdfbox-app-3.0.2.jar export:text -encoding UTF-8  -i="$1"
 }
 # extract text from all files in folder.
 function run_PDF_extract_in_folder() {
     for FILE in ./$1/*; do 
         echo "Extracting: $FILE"; 
-        java -jar ./PDFBOX/pdfbox-app-2.0.25.jar ExtractText -encoding UTF-8  "$FILE"
+#        java -jar ./PDFBOX/pdfbox-app-2.0.25.jar ExtractText -encoding UTF-8  "$FILE"
+        java -jar ./PDFBOX/pdfbox-app-3.0.2.jar export:text -encoding UTF-8  -i="$1"
     done
 }
 # split the large PDF into municipal PDFs.
 function run_PDF_split() {
     printf '%s\n' "Splitting ${VOTER_SERVICES_SPECIMEN_PDF} into municipal PDFs"
     cd "./${COUNTY_OUTPUT}" || exit
-    java -jar ../PDFBOX/pdfbox-app-2.0.25.jar PDFSplit -split $VOTER_SERVICES_PAGES_PER_BALLOT -outputPrefix municipal "../${COUNTY_INPUT}/${VOTER_SERVICES_SPECIMEN_PDF}"
+#    java -jar ../PDFBOX/pdfbox-app-2.0.25.jar PDFSplit -split $VOTER_SERVICES_PAGES_PER_BALLOT -outputPrefix municipal "../${COUNTY_INPUT}/${VOTER_SERVICES_SPECIMEN_PDF}"
+    java -jar ../PDFBOX/pdfbox-app-3.0.2.jar split  -split $VOTER_SERVICES_PAGES_PER_BALLOT -outputPrefix municipal  -i="../${COUNTY_INPUT}/${VOTER_SERVICES_SPECIMEN_PDF}"
     cd .. || exit
 }
 # replace the tabs on all text files in folder (parameter).
