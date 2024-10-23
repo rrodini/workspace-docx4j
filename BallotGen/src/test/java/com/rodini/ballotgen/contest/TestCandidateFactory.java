@@ -14,8 +14,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations.*;
+//import org.mockito.Mock;
+//import org.mockito.MockitoAnnotations.*;
 
 import com.rodini.ballotgen.common.MockedAppender;
 import com.rodini.ballotgen.common.Initialize;
