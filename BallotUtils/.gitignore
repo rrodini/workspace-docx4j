@@ -1,5 +1,6 @@
 ### General
 *.DS_Store
+doc/
 codemr/
 ../logs/
 
