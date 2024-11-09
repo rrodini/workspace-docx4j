@@ -3,10 +3,12 @@ package com.rodini.ballotgen.common;
 import static com.rodini.ballotgen.common.Initialize.LOCAL_CONTEST_EXCEPTION_NAMES;
 import static com.rodini.ballotgen.common.Initialize.TICKET_CONTEST_NAMES;
 import static com.rodini.ballotgen.common.Initialize.ballotGenProps;
+import static com.rodini.ballotgen.common.BallotReportParser.parseBallotReport;
+import static com.rodini.ballotgen.common.BallotGenOutput.*;
+
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +53,9 @@ public class Initialize {
 	public static String formatsText;		// read from properties file
 	public static String referendumFormat;		// read from properties file
 	public static String retentionFormat;		// read from properties file
-	public static String msWordTemplateFile = "";	// MS Word template file
+	public static String msWordPrecinctTemplateFile = "";	// MS Word precinct template file
+	public static String msWordUniqueTemplateFile = "";	    // MS Word unique template file
+	// 10/29/24 - contestLevel not used.  Kept solely for backward compatibility.
 	public static ContestFileLevel contestLevel; 	// e.g. COMMON or MUNICIPAL
 	public static ENVIRONMENT env;			// TEST vs. PRODUCTION
 	public static Properties ballotGenProps;
@@ -62,9 +66,11 @@ public class Initialize {
 	public static EndorsementProcessor endorsementProcessor;
 	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
-//	public static int [] columnBreaks = {999}; // sentinel value
+	public static boolean pageBreakDisplay;
 	public static String columnBreaks = "ZZZZ"; // sentinel value
-	public static int docxGenCount; // counter
+	public static BallotGenOutput ballotGenOutput;
+	public static List<String> uniqueFirstBallotFile; // ballot file that triggers unique_ballot_xx.docx
+	public static Map<Integer, List<String>> uniqueBallotFiles; // precinctNoNames that belong to a unique ballot.
 	
 
 //	ATTENTION: Within Eclipse you must put ./resources in the dependencies
@@ -75,9 +81,11 @@ public class Initialize {
 //	Property names - must match names within ballotgen.properties
 	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WORD_TEMPLATE_DEFAULT = ".word.template.default";
+	private static final String PROP_WORD_TEMPLATE_UNIQUE = ".word.template.unique";
 	private static final String PROP_CONTEST_FORMAT_PREFIX = ".contest.format";
 	private static final String PROP_REFERENDUM_FORMAT = ".ballotgen.referendum.format";
 	private static final String PROP_RETENTION_FORMAT = ".ballotgen.retention.format";
+	
 	private static final String CONTEST_FILE_LEVEL = "contest.file.level";
 	public  static final String COMMON_CONTESTS_FILE = "common_contests.txt";
 	private static final String PRECINCT_TO_ZONE_FILE = ".precinct.to.zone.file";
@@ -89,7 +97,6 @@ public class Initialize {
 	public	static       String COUNTY;
 	public  static       String WRITE_IN;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
-	public  static       boolean PAGE_BREAK_DISPLAY;
 	public  static       String PAGE_BREAK_WORDING;
 	public  static final String TICKET_CONTEST_NAMES = "ticket.contest.names";
 	public  static final String LOCAL_CONTEST_NAMES = "local.contest.names";
@@ -97,6 +104,9 @@ public class Initialize {
 	public  static       List<String> namesOfTicketContests;
 	public  static       List<String> namesOfLocalContests;
 	public  static       List<String> namesOfLocalContestsExceptions;
+	public  static	     BallotGenOutput ballotgenOutput = PRECINCT;  // Default to PRECINCT ballots
+	public  static final String BALLOTGEN_OUTPUT = "ballotgen.output";
+	public  static final String BALLOT_SUMMARY_FILE = "Ballot_Summary.txt";
 
 	/**
 	 * validateCommandLineArgs checks that there are at least 2 CLI args
@@ -124,8 +134,10 @@ public class Initialize {
 		processBallotFiles(ballotFilePath);
 		ballotContestsPath = args[1];
 		processBallotContests(ballotContestsPath);
-		msWordTemplateFile = Utils.getPropValue(ballotGenProps, COUNTY + PROP_WORD_TEMPLATE_DEFAULT);
-		logger.info("msWordTemplateFile: " + msWordTemplateFile);
+		msWordPrecinctTemplateFile = Utils.getPropValue(ballotGenProps, COUNTY + PROP_WORD_TEMPLATE_DEFAULT);
+		msWordUniqueTemplateFile = Utils.getPropValue(ballotGenProps, COUNTY + PROP_WORD_TEMPLATE_UNIQUE);
+		logger.info("msWordPrecinctTemplateFile: " + msWordPrecinctTemplateFile);
+		logger.info("msWordUniqueTemplateFile: " + msWordUniqueTemplateFile);
 	}
 	/**
 	 * processBallotFiles take the CLI argument and process it into
@@ -250,19 +262,24 @@ public class Initialize {
 		retentionFormat = Utils.getPropValue(contestGenProps, propName);
 		logger.info(String.format("%s: %s", propName, retentionFormat));
 	}
+	static void validateWordTemplate(String templateFile, String which) {
+		if (templateFile.isEmpty()) {
+			Utils.logFatalError(String.format("MS Word %s template file not specified (blank)", which));
+		}
+		if (!Files.exists(Path.of(templateFile))) {
+			Utils.logFatalError(String.format("MS Word %s template file does not exist: %s", which, templateFile));
+		}
+		if (!templateFile.endsWith(".dotx")) {
+			Utils.logFatalError(String.format("MS Word %s template file should end with \"dotx\": %s", which, templateFile));
+		}
+	}
+	
 	/**
-	 * validateWordTemplate validates the existence of the Word template file.
+	 * validateWordTemplates validates the existence of the Word template files.
 	 */
-	static void validateWordTemplate() {
-		if (msWordTemplateFile.isEmpty()) {
-			Utils.logFatalError("MS Word template file not specified (blank)");
-		}
-		if (!Files.exists(Path.of(msWordTemplateFile))) {
-			Utils.logFatalError("MS Word template file does not exist: " + msWordTemplateFile);
-		}
-		if (!msWordTemplateFile.endsWith(".dotx")) {
-			Utils.logFatalError("MS Word template file should end with \"dotx\": " + msWordTemplateFile);
-		}
+	static void validateWordTemplates() {
+		validateWordTemplate(msWordPrecinctTemplateFile, "PRECINCT");
+		validateWordTemplate(msWordUniqueTemplateFile, "UNIQUE");
 	}
 	/**
 	 * validatePrecinctZoneFile validates the existence of the zones to precincts file.
@@ -342,7 +359,7 @@ public class Initialize {
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
 	 * Note:
-	 * - DO NOT USE: Superseded by COlUMN_BREAK_CONTEST_COUNT property value.
+	 * - OBSOLETE: Superseded by COlUMN_BREAK_CONTEST_COUNT property value.
 	 */
 	static void validateColumnBreakContestCount() {
 		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_COUNT);
@@ -379,13 +396,13 @@ public class Initialize {
 	}
 	
 	static void validatePageBreak() {
-		boolean display = false;
+		boolean display = true;
 		String strDisplay = ballotGenProps.getProperty("page.break.display");
 		if (strDisplay != null) {
 			display = Boolean.valueOf(strDisplay);
 		}
-		PAGE_BREAK_DISPLAY = display;
-		logger.info(String.format("%s: %s", "PAGE_BREAK_DISPLAY", Boolean.toString(display)));
+		pageBreakDisplay = display;
+		logger.info(String.format("%s: %s", "pageBreakDisplay", Boolean.toString(display)));
 		String value = ballotGenProps.getProperty("page.break.wording");
 		if (value == null) {
 			value = "Page Break";
@@ -405,6 +422,25 @@ public class Initialize {
 		contestNames = Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_EXCEPTION_NAMES);
 		namesOfLocalContestsExceptions = Arrays.asList(contestNames.split(","));
 	}
+	static void validateBallotGenOutput() {
+		String propValue;
+		propValue = Utils.getPropValue(ballotGenProps, BALLOTGEN_OUTPUT);
+		ballotGenOutput = BallotGenOutput.toEnum(propValue);
+		if (ballotGenOutput == null) {
+			ballotGenOutput = PRECINCT;
+		}
+	}
+	/**
+	 * validateBallotReport ensures that the Ballot_Report.txt file exists.
+	 */
+	static void validateBallotReport() {
+		String ballotSummaryPath = Initialize.ballotContestsPath + File.separator + BALLOT_SUMMARY_FILE;
+		if (!Utils.checkFileExists(ballotSummaryPath)) {
+			Utils.logFatalError("Can't find file: " + ballotSummaryPath);
+		}
+		// Report is there, so parse it.
+		BallotReportParser.parseBallotReport(ballotSummaryPath);
+	}
 	
 	/**
 	 * start begins the initialization process.
@@ -416,7 +452,7 @@ public class Initialize {
 		env = ENVIRONMENT.valueOf(Utils.getPropValue(ballotGenProps, "environment"));
 		contestLevel = ContestFileLevel.valueOf(Utils.getPropValue(ballotGenProps, CONTEST_FILE_LEVEL));
 		validateCommandLineArgs(args);
-		validateWordTemplate();
+		validateWordTemplates();
 		// very little validation here.
 		validateElectionType();
 		validateEndorsedParty();
@@ -428,6 +464,7 @@ public class Initialize {
 		validatePrecinctZoneFile();
 		validateEndorsementsFile();
 		validateWriteinsFile();
+		validateBallotGenOutput();
 		// create the endorsement processor
 		endorsementProcessor  = new EndorsementProcessor(elecType, endorsedParty,
 				candidateEndorsements, precinctToZoneMap);
@@ -438,6 +475,7 @@ public class Initialize {
 		validateColumnBreakContestName();
 		validatePageBreak();
 		validateTicketAndLocalContestNames();
+		validateBallotReport();
 	}
 	
 	

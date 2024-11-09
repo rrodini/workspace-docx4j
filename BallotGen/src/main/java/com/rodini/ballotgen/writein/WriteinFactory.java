@@ -50,7 +50,7 @@ public class WriteinFactory {
 			int zoneNo, int [] precinctNos) {
 		// turn int [] to List of strings representing precinct nos.
 		List<String> muniNoList = Arrays.stream(precinctNos)
-				.mapToObj(i -> Utils.normalizeMuniNo(i))
+				.mapToObj(i -> Utils.normalizePrecinctNo(i))
 				.collect(toList());
 		Writein writein = new Writein(candName, contestName, zoneNo, muniNoList);
 		for (String muniNo: muniNoList) {
@@ -147,7 +147,7 @@ public class WriteinFactory {
 		//String zoneStr = normalizeNo(zoneNo, 2);
 		String zoneStr = Utils.normalizeZoneNo(zoneNo);
 		for (int i = 0; i < precinctNos.length; i ++) {
-			String precinctStr = Utils.normalizeMuniNo(precinctNos[i]);
+			String precinctStr = Utils.normalizePrecinctNo(precinctNos[i]);
 			if (!ZoneProcessor.zoneOwnsPrecinct(zoneStr, precinctStr)) {
 				logger.error(String.format("CSV line #%d rejected. Zone %s doesn't own Precinct %s",lineNo, zoneStr, precinctStr));
 			} else {

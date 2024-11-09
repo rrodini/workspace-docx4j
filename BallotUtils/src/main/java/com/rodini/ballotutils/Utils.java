@@ -47,11 +47,11 @@ public class Utils {
 	static final String JVM_LOG_LEVEL = "log.level";
 	// Custom log4j level. Should always be logged.
 	public final static Level ATTN = Level.forName("ATTN", 90);
-	static final int ZONE_STR_LEN = 2; 	// Normalized zoneNo is two digits
-	static final int MUNI_STR_LEN = 3;	// Normalized muniNo is three digits
+	private static final int ZONE_STR_LEN = 2; 	// Normalized zoneNo is two digits
+	private static final int PRECINCT_NO_STR_LEN = 3;	// Normalized precinctNo is three digits
 	
 	/** 
-	 * Log a fatal error and stop program.
+	 * Log a fatal error and stop the program.
 	 * @param msg message to display / log.
 	 */
 	public static void logFatalError(String msg) {
@@ -60,8 +60,9 @@ public class Utils {
 		System.exit(1);	// non-zero exit code means fatal error
 	}
 	// just for log4j
-	/** setLoggingLevel sets the logging LOG4J level dynamically. It
-	 *  uses a non-public LOG4J API but seems to work.
+	/** 
+	 * setLoggingLevel sets the logging LOG4J level dynamically. It
+	 *  uses a non-public LOG4J API which seems to work.
 	 *  
 	 *  This method is typically called at program start in order to
 	 *  set the level of the root logger.
@@ -92,13 +93,21 @@ public class Utils {
 		System.out.println(logMsg);
 		logger.log(ATTN, logMsg);
 	}
+	//@formatter: off
 	/**
 	 * logAppMessage - logs an application message at ATTN level. An application message is typically logged
-	 * at application startup or shutdown.
-	 * @logger logger to use.
+	 * at application startup or shutdown. Typical usage below:
+	 * {@snippet :
+	 * 	String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
+	 *  String msg = String.format("Start of BallotGen app. Version: %s", version);
+	 *  Utils.logAppMessage(logger, msg, true);
+	 * }
+	 * 
+	 * @param logger logger to use.
 	 * @param msg message to log.
 	 * @param addTime true => add date/time to the msg.
 	 */
+	//@formatter: on
 	public static void logAppMessage(Logger logger, String msg, boolean addTime) {
 		String dateTime = "";
 		if (addTime) {
@@ -111,7 +120,7 @@ public class Utils {
 	/**
 	 * getLogFilePath queries the LOG4J API to get the name of the log file for
 	 * the application. This code only works due to the convention that the appender
-	 * is given the name "BallotGen" in all ballot gen applications.
+	 * is given the name "BallotGen" in all ballot generation applications.
 	 * 
 	 * @param logger Logger object.
 	 * @return null or log file path.
@@ -133,6 +142,9 @@ public class Utils {
 	/**
 	 * logAppErrorCount logs the number of ERROR messages written to the log file.
 	 * It is typically called at the end of a ballot generation program.
+	 * 
+	 * Note: There is no log4j API that does this, so scan the log file for entries
+	 * that start "ERROR"
 	 * 
 	 * @param logger root logger.
 	 */
@@ -223,6 +235,7 @@ public class Utils {
 	}
 	/**
 	 * checkFileExists checks if a file exists. If it doesn't an ERROR is logged.
+	 * 
 	 * @param filePath path to the file.
 	 * @return true/false reflecting existence.
 	 */
@@ -236,6 +249,7 @@ public class Utils {
 	}
 	/**
 	 * checkDirExists checks if a directory exists. If it doesn't an ERROR is logged.
+	 * 
 	 * @param dirPath path to the file.
 	 * @return true/false reflecting existence.
 	 */
@@ -250,13 +264,18 @@ public class Utils {
 		}
 		return exists;
 	}
-	// read all the text of a file.
+	//formatter: off
 	/**
-	 * readTextFile reads an entire text file.
+	 * readTextFile reads an entire text file.  Typical usage below:
+	 * {@snippet :
+	 * // Lines of file delimited by \n characters.
+	 * precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
+	 * }
 	 * 
 	 * @param textFilePath path to txt file.
 	 * @return text file contents as a string.
 	 */
+	//formatter: on
 	public static String readTextFile(String textFilePath) {
  		List<String> textLines = null;
 		try {
@@ -309,12 +328,11 @@ public class Utils {
 	 * Typical usage:  precinct #s are length 3, zone #s are length 2.
 	 * Fatal error is recorded because these strings are used as keys throughout code.
 	 * 
-	 * 
 	 * @param no number to normalize.
 	 * @param maxlen desired length for normalized number.
 	 * @return normalized number as string.
 	 */
-	private static String normalizeNo(int no, int maxlen) {
+	public static String normalizeNo(int no, int maxlen) {
 		if (no < 0) {
 			logFatalError(String.format("can't normalize #: %d since it is negative", no));
 		}
@@ -336,13 +354,13 @@ public class Utils {
 		return normalizeNo(zoneNo, ZONE_STR_LEN);
 	}
 	/**
-	 * normalizeMuniNo normalize a precinct # to 3 digit string.
+	 * normalizePrecinctNo normalize a precinct # to 3 digit string.
 	 * 
-	 * @param muniNo precinct # to normalize.
+	 * @param precinctNo precinct # to normalize.
 	 * @return normalized precinct # string.
 	 */
-	public static String normalizeMuniNo(int muniNo) {
-		return normalizeNo(muniNo, MUNI_STR_LEN);
+	public static String normalizePrecinctNo(int precinctNo) {
+		return normalizeNo(precinctNo, PRECINCT_NO_STR_LEN);
 	}
 	/**
 	 * getDateTimeString - returns the current Date and Time as 

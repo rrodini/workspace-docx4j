@@ -30,7 +30,7 @@ import com.rodini.ballotutils.Utils;
 import static com.rodini.ballotutils.Utils.ATTN;
 /**
  * ContestGen is the program that analyzes the text of the Voter Services specimen
- * file and extracts the ballot text and municipal level contests from it. 
+ * file and extracts the ballot text and precinct level contests from it. 
  * 
  * At the end of the run the contests folder (args[1]) should be populated as follows:
  *   005_Atglen_contests.txt
@@ -107,7 +107,7 @@ public class ContestGen {
 		genMuniBallots(mteList);
 		
 		
-		List<MuniContestNames> mcnList = new ArrayList<> ();
+		List<MuniContestsQuestionsExtractor> mceList = new ArrayList<> ();
 		for (MuniTextExtractor mte: mteList) {
 			MuniContestsQuestionsExtractor mce = mte.extract();
 			mce.extract();
@@ -129,13 +129,13 @@ public class ContestGen {
 					muniContestNames.contestNames.size(),
 					muniReferendums.get().size(),
 					muniRetentions.get().size());
-			mcnList.add(muniContestNames);
+			mceList.add(mce);
 		}
 		// TODO: Death of common_contests.txt ?
 		// generate common contests.
 		//genMuniCommonContests("common", commonContestNames.get());
 		// generate a summary report.
-		genSummaryReport(mcnList);
+		genSummaryReport(mceList);
 		Utils.logAppErrorCount(logger);
 		Utils.logAppMessage(logger, "End of ContestGen app.", true);
 	}
@@ -336,13 +336,13 @@ public class ContestGen {
 	 * 
 	 * @params mcnList list of municipal contest names.
 	 */
-	static void genSummaryReport(List<MuniContestNames> mcnList) {
+	static void genSummaryReport(List<MuniContestsQuestionsExtractor> mceList) {
 		// try with resources will close the output file.
 		try (PrintWriter pw = new PrintWriter(new File(outContestPath + File.separator + SUMMARY_FILE_NAME))) {
 			String line = "Summary Report (Ballot/Referendum/Retention)";
 			System.out.println(line);
 			pw.println(line);
-			genBallotReport(pw, mcnList);
+			genBallotReport(pw, mceList);
 			genReferendumReport(pw, ReferendumFactory.getReferendums());
 			genRetentionReport(pw, RetentionFactory.getRetentions());
 			genCountReport(pw);
@@ -362,25 +362,28 @@ public class ContestGen {
 	 * 
 	 * @params mcnList list of municipal contest names.
 	 */
-	static void genBallotReport(PrintWriter pw, List<MuniContestNames> mcnList) {
+	static void genBallotReport(PrintWriter pw, List<MuniContestsQuestionsExtractor> mceList) {
 		String line = "Ballot Summary";
 		System.out.println(line);
 		pw.println(line);
-		line = String.format("Precinct count: %s", mcnList.size());
+		line = String.format("Precinct count: %s", mceList.size());
 		System.out.println(line);
 		logger.log(ATTN, line);
 		pw.println(line);
 		// determine how many unique ballots
-		//   ContestsText  Municipalities w/ same ContestsText
+		//   UniqueBallotText == Municipalities w/ same ContestsText+ReferendumsText+RetentionsText
 		//       |                 |
 		Map  <String,      List<String>> uniqueBallots = new HashMap<>();
-		for (MuniContestNames mcn: mcnList) {
-			String muniContestsText = mcn.getMuniContestsText();
-			String muniName = mcn.getMuniName();
-			if (!uniqueBallots.containsKey(muniContestsText)) {
-				uniqueBallots.put(muniContestsText, new ArrayList<String>());
+		for (MuniContestsQuestionsExtractor mce: mceList) {
+			String muniName = mce.getMuniName();
+			String muniContestsText = mce.getMuniContestNames().getMuniContestsText();	
+			String muniReferendumsText = mce.getMuniReferendums().getMuniReferendumsText();
+			String muniRetentionsText = mce.getMuniRetentions().getMuniRetentionsText();
+			String uniqueBallotText = muniContestsText + muniReferendumsText + muniRetentionsText;
+			if (!uniqueBallots.containsKey(uniqueBallotText)) {
+				uniqueBallots.put(uniqueBallotText, new ArrayList<String>());
 			}
-			List<String> muniNames = uniqueBallots.get(muniContestsText);
+			List<String> muniNames = uniqueBallots.get(uniqueBallotText);
 			muniNames.add(muniName);
 		}
 		line = String.format("Unique ballot count: %s", uniqueBallots.keySet().size());
@@ -421,7 +424,7 @@ public class ContestGen {
 			pw.print(ref.getRefQuestion());
 			List<String> muniNoList = ref.getMuniNoList();
 			String listAsString = muniNoList.stream().collect(Collectors.joining(","));
-			pw.println(line + " precincts: " + listAsString);
+			pw.println(": precincts: " + listAsString);
 		}
 	}
 	/**

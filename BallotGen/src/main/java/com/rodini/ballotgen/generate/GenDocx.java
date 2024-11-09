@@ -91,7 +91,7 @@ public class GenDocx {
 	public static List<P> genPageBreak(MainDocumentPart mdp) {
 		List<P> pageBreakParagraphs = new ArrayList<>();
 		// Test the property value here
-		if (Initialize.PAGE_BREAK_DISPLAY) {
+		if (Initialize.pageBreakDisplay) {
 			logger.info("generating page break");
 			P newParagraph;
 			// first paragraph at bottom

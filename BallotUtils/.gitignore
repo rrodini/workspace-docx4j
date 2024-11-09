@@ -6,6 +6,7 @@ codemr/
 ### Eclipse ###
 bin/
 tmp/
+doc/
 *.tmp
 *.bak
 *.swp

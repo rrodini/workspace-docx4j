@@ -266,13 +266,13 @@ class TestUtils {
 	@Test
 	void testNormalizeMuniNoGood() {
 		String expected = "047";
-		String normalized = normalizeMuniNo(47);
+		String normalized = normalizePrecinctNo(47);
 		assertEquals(expected, normalized);
 	}
 	@Test
 	@ExpectSystemExit
 	void testNormalizeMuniNoBad() {
-		String normalized = normalizeMuniNo(-1);
+		String normalized = normalizePrecinctNo(-1);
 		assertEquals(1, mockedAppender.messages.size());
 		assertTrue(mockedAppender.messages.get(0).startsWith("can't normalize #:"));
 	}
