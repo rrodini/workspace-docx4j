@@ -30,6 +30,7 @@ import org.docx4j.wml.P;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
 
+import com.rodini.ballotgen.common.BallotUtils;
 import com.rodini.ballotgen.contest.Candidate;
 import com.rodini.ballotgen.contest.Contest;
 import com.rodini.ballotgen.contest.ContestFactory;
@@ -71,8 +72,9 @@ public class GenDocxBallot {
 
 	// from constructor
 	private String dotxPath;  // path to DOTX template file
-	private String ballotTextFilePath; // path to ballot text file
-	private ContestFileLevel contestLevel; // COMMON or MUNICIPAL
+	private String ballotTextFilePath; // path to ballot text file e.g. path/750_East_Whiteland_4_VS.txt
+	private String ballotTitle; // ballot file title e.g. "750_East_Whiteland_4" or "unique_00"
+	private ContestFileLevel contestLevel; // OBSOLETE: COMMON or MUNICIPAL
 	private String ballotText; // text of ballotTextFile
 	private String contestsText; // text of contest names on this ballot
 	private String referendumsText; // text of referendum questions on this ballot
@@ -84,7 +86,6 @@ public class GenDocxBallot {
 	private String precinctNo; // e.g. "005" or "750"
 	private String zoneNo;		// # of zone that "owns" precinct
 	private String zoneName;	// name of zone that "owns" precinct
-	private static final String FILE_SUFFIX = "_VS";
 	private String fileOutputPath; // generated DOCX file
 	private String formatsText;   // formats (regexes) read from properties
 	private EndorsementProcessor endorsementProcessor;
@@ -137,15 +138,16 @@ public class GenDocxBallot {
 	 * @param contestsLevel which contests text file to use.
 	 * @param formatsText formats (regexes) to use.
 	 */
-	public GenDocxBallot(String dotxPath, String textFilePath, ContestFileLevel contestLevel,
+	public GenDocxBallot(String dotxPath, String textFilePath, String ballotTitle,
 			String formatsText, EndorsementProcessor ep, WriteinProcessor wp) {
 		this.dotxPath = dotxPath;
 		this.ballotTextFilePath = textFilePath;
-		this.contestLevel = contestLevel;
+		this.ballotTitle = ballotTitle;
+// TBD - TO BE DELETED.
+//		this.contestLevel = contestLevel;
 		this.formatsText = formatsText;
 		this.endorsementProcessor = ep;
 		this.writeinProcessor = wp;
-		Initialize.docxGenCount++;
 	}
 	/**
 	 * generate generates the contents of the docx file.
@@ -173,8 +175,8 @@ public class GenDocxBallot {
 		logger.info("end new docx file");
 	}
 	/**
-	 * initialize the class for generation of the Word docx ballot. Notes: 1. Try to
-	 * FAIL EARLY.
+	 * initialize the class for generation of the Word docx ballot. Notes:
+	 * 1. Try to FAIL EARLY.
 	 */
 	/* private */ 
 	void initialize() {
@@ -190,27 +192,13 @@ public class GenDocxBallot {
 	/* private */ 
 	void initDocxFile() {
 		File dotxFile = new File(dotxPath);
-		File textFile = new File(ballotTextFilePath);
-		String fileName = textFile.getName();
-		String pathName = textFile.getAbsolutePath();
-		// pathName includes fileName so strip out fileName
-		int lastSeparator = pathName.lastIndexOf(File.separator);
-		pathName = pathName.substring(0, lastSeparator);
-		logger.info(String.format("pathName: %s fileName: %s", pathName, fileName));
-// OLD - doesn't work if name contains a period like Kennett Sq.
-//		String[] fileElements = fileName.split("\\.");
-//		precinctNoName = fileElements[0];
-// NEW - next two lines.
-		int lastDot = fileName.lastIndexOf(".");
-		precinctNoName = fileName.substring(0, lastDot);
-		// if suffix was added, then remove it.
-		if (precinctNoName.endsWith(FILE_SUFFIX)) {
-			precinctNoName = precinctNoName.substring(0, precinctNoName.length() - FILE_SUFFIX.length());
-		}
-		
-		precinctNo = precinctNoName.substring(0, 3);
-		precinctName = precinctNoName.substring(3);
-
+		// Use pathName for output docx files.
+		String pathName = BallotUtils.getPathNameOnly(ballotTextFilePath);
+		precinctNoName = BallotUtils.getPrecinctNoName(ballotTextFilePath);
+		// Further break down precinctNoName for use as Placeholder values.
+		precinctNo = BallotUtils.getPrecinctNo(precinctNoName);
+		precinctName = BallotUtils.getPrecinctName(precinctNoName);
+// TODO - initialize uniquePrecinctNos, uniquePrecinctNames, uniquePrecinctNoNames
 		boolean precinctInMap = Initialize.precinctToZoneMap.keySet().contains(precinctNo);
 		if (!precinctInMap) {
 			logger.error(String.format("precinct # %s is not in precinctToZoneMap", precinctNo));
@@ -225,7 +213,8 @@ public class GenDocxBallot {
 			logger.error("Ballot Name doesn't start with precinct No. See: " + precinctNoName);
 			precinctNo = "000";
 		}
-		fileOutputPath = pathName + File.separator + precinctNoName + ".docx";
+		// Construct the output .docx file path here.
+		fileOutputPath = pathName + File.separator + ballotTitle + ".docx";
 		logger.info(String.format("fileOutputPath: %s", fileOutputPath));
 		WordprocessingMLPackage dotx = null;
 		try {
@@ -245,13 +234,15 @@ public class GenDocxBallot {
 	 */
 	void initContestsFileText() {
 		String contestsPath = Initialize.ballotContestsPath + File.separator;
-		if (contestLevel == COMMON) {
-			contestsPath = contestsPath + Initialize.COMMON_CONTESTS_FILE;
-		} else if (contestLevel == MUNICIPAL) {
-			contestsPath = contestsPath + precinctNoName + "_contests.txt";
-		} else {
-			Utils.logFatalError("contest file level not recognized. See: " + contestLevel.toString());
-		}
+// TBD - To Be Deleted.
+//		if (contestLevel == COMMON) {
+//			contestsPath = contestsPath + Initialize.COMMON_CONTESTS_FILE;
+//		} else if (contestLevel == MUNICIPAL) {
+		contestsPath = contestsPath + precinctNoName + "_contests.txt";
+// TBD - To Be Deleted.
+//		} else {
+//			Utils.logFatalError("contest file level not recognized. See: " + contestLevel.toString());
+//		}
 		logger.debug("Loading contests file: " + contestsPath);
 		String contestsFileText = Utils.readTextFile(contestsPath);
 		// prepare logging message

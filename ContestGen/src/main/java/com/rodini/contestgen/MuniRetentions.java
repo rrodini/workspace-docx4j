@@ -26,7 +26,7 @@ public class MuniRetentions extends MuniContestsQuestions{
 		return retentions;
 	}
 	
-	public String getMuniReferendumsText() {
+	public String getMuniRetentionsText() {
 		StringBuilder sb = new StringBuilder();
 		retentions.forEach(ret -> sb.append(ret + "\n"));
 		return sb.toString();

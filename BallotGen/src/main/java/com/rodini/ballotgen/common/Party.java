@@ -17,7 +17,11 @@ public enum Party {
 	NOAFFILIATION("No Affiliation"),
 	LEADERSHIPFORALL("Leadership for All"),
 	GREEN_PARTY("Green Party"),
-	KEYSTONE("Keystone");
+	KEYSTONE("Keystone"),
+	AMERICAN_SOLIDARITY_PARTY("American Solidarity Party"),
+	CONSTITUTION_PARTY("Constitution Party"),
+	FORWARD_PARTY("Forward Party");
+
 	
 	private static final Logger logger = LogManager.getLogger(Party.class);
 

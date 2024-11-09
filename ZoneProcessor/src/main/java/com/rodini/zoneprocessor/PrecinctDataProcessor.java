@@ -16,7 +16,7 @@ public class PrecinctDataProcessor {
 	// Process valid data from single CSV line.
 	static void processLine(String precinctNo, String precinctName, String zoneNo) {
 		// Precinct No must be 3 characters.
-		String normalPrecinctNo = Utils.normalizeMuniNo(Integer.parseInt(precinctNo));
+		String normalPrecinctNo = Utils.normalizePrecinctNo(Integer.parseInt(precinctNo));
 		// Zone No must be 2 characters.
 		String normalZoneNo = Utils.normalizeZoneNo(Integer.parseInt(zoneNo));
 		logger.debug(String.format("precinctNo: %s precinctName: %s zoneNo: %s", normalPrecinctNo, precinctName,
