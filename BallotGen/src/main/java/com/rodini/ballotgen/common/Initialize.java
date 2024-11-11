@@ -397,13 +397,13 @@ public class Initialize {
 	
 	static void validatePageBreak() {
 		boolean display = true;
-		String strDisplay = ballotGenProps.getProperty("page.break.display");
+		String strDisplay = Utils.getPropValue(ballotGenProps,"page.break.display");
 		if (strDisplay != null) {
 			display = Boolean.valueOf(strDisplay);
 		}
 		pageBreakDisplay = display;
 		logger.info(String.format("%s: %s", "pageBreakDisplay", Boolean.toString(display)));
-		String value = ballotGenProps.getProperty("page.break.wording");
+		String value = Utils.getPropValue(ballotGenProps,"page.break.wording");
 		if (value == null) {
 			value = "Page Break";
 		}

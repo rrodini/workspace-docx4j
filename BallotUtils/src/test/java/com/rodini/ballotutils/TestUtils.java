@@ -289,5 +289,33 @@ class TestUtils {
 		assertEquals(1, mockedAppender.messages.size());
 		assertTrue(mockedAppender.messages.get(0).startsWith("can't normalize #:"));
 	}
-
+	@Test
+	void testGetPrecinctNoName() {
+		String ballotTextFilePath1 = "./chester-output/750_East_Whiteland_4_VS.txt";
+		String ballotTextFilePath2 = "/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.6.0/chester-output/750_East_Whiteland_4_VS.txt";
+		String expected = "750_East_Whiteland_4";
+		assertEquals(expected, getPrecinctNoName(ballotTextFilePath1));
+		assertEquals(expected, getPrecinctNoName(ballotTextFilePath2));
+	}
+	@Test
+	void testGetPathName() {
+		String ballotTextFilePath1 = "./chester-output/750_East_Whiteland_4";
+		String ballotTextFilePath2 = "/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.6.0/chester-output/750_East_Whiteland_4_VS.txt";
+		String expected1 = "./chester-output";
+		String expected2 = "/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.6.0/chester-output";
+		assertEquals(expected1, getPathNameOnly(ballotTextFilePath1));
+		assertEquals(expected2, getPathNameOnly(ballotTextFilePath2));
+	}
+	@Test
+	void testGetPrecinctNo() {
+		String precinctNoName = "750_East_Whiteland_4";
+		String expected = "750";
+		assertEquals(expected, getPrecinctNo(precinctNoName));
+	}
+	@Test
+	void testGetPrecinctName() {
+		String precinctNoName = "750_East_Whiteland_4";
+		String expected = "East_Whiteland_4";
+		assertEquals(expected, getPrecinctName(precinctNoName));
+	}
 }

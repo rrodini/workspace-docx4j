@@ -11,8 +11,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.common.BallotUtils;
-//import com.rodini.ballotutils.Utils.*;
 import com.rodini.ballotgen.common.GenDocxBallot;
 import com.rodini.ballotgen.common.Initialize;
 import static com.rodini.ballotgen.common.BallotGenOutput.*;
@@ -78,7 +76,7 @@ public class BallotGen {
 	 */
 	private static void genPrecinctBallotFiles(String msWordTemplate) {
 		for (String ballotFile: Initialize.ballotFiles) {
-			String precinctBallotFile = BallotUtils.getPrecinctNoName(ballotFile);
+			String precinctBallotFile = Utils.getPrecinctNoName(ballotFile);
 			GenDocxBallot gdb = new GenDocxBallot(
 					msWordTemplate, 
 					ballotFile,  // ./chester-output/NNN_municipal_XYZ_VS.txt
@@ -103,7 +101,7 @@ public class BallotGen {
 		// The logic works because ballotFile names are unique across the county.
 		for (String ballotFile: Initialize.ballotFiles) {
 //System.out.printf("genUniqueBallotFiles: candidate: %s%n", ballotFile);
-			String precinctBallotFile = BallotUtils.getPrecinctNoName(ballotFile);
+			String precinctBallotFile = Utils.getPrecinctNoName(ballotFile);
 			if (Initialize.uniqueFirstBallotFile.contains(precinctBallotFile)) {
 				// TBD - set values for uniquePrecinctNos, uniquePrecinctNames, uniquePrecinctNoNames
 //System.out.printf("genUniqueBallotFiles: first match: %s%n", ballotFile);
