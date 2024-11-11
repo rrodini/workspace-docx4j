@@ -1,7 +1,5 @@
 package com.rodini.ballotgen.common;
 
-import static com.rodini.ballotgen.contest.ContestFileLevel.COMMON;
-import static com.rodini.ballotgen.contest.ContestFileLevel.MUNICIPAL;
 import static com.rodini.ballotgen.endorsement.EndorsementMode.ENDORSED;
 import static com.rodini.ballotgen.endorsement.EndorsementMode.UNENDORSED;
 import static com.rodini.ballotutils.Utils.ATTN;
@@ -30,7 +28,6 @@ import org.docx4j.wml.P;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
 
-import com.rodini.ballotgen.common.BallotUtils;
 import com.rodini.ballotgen.contest.Candidate;
 import com.rodini.ballotgen.contest.Contest;
 import com.rodini.ballotgen.contest.ContestFactory;
@@ -46,7 +43,6 @@ import com.rodini.ballotgen.placeholder.PlaceholderProcessor;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
 import com.rodini.zoneprocessor.Zone;
-import com.rodini.zoneprocessor.ZoneProcessor;
 /**
  * GenDocxBallot is the workhorse class that produces a new Word file
  * based on inputs.  Those inputs are:
@@ -193,11 +189,11 @@ public class GenDocxBallot {
 	void initDocxFile() {
 		File dotxFile = new File(dotxPath);
 		// Use pathName for output docx files.
-		String pathName = BallotUtils.getPathNameOnly(ballotTextFilePath);
-		precinctNoName = BallotUtils.getPrecinctNoName(ballotTextFilePath);
+		String pathName = Utils.getPathNameOnly(ballotTextFilePath);
+		precinctNoName = Utils.getPrecinctNoName(ballotTextFilePath);
 		// Further break down precinctNoName for use as Placeholder values.
-		precinctNo = BallotUtils.getPrecinctNo(precinctNoName);
-		precinctName = BallotUtils.getPrecinctName(precinctNoName);
+		precinctNo = Utils.getPrecinctNo(precinctNoName);
+		precinctName = Utils.getPrecinctName(precinctNoName);
 // TODO - initialize uniquePrecinctNos, uniquePrecinctNames, uniquePrecinctNoNames
 		boolean precinctInMap = Initialize.precinctToZoneMap.keySet().contains(precinctNo);
 		if (!precinctInMap) {
