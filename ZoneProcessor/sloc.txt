@@ -1,0 +1,21 @@
++------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| Package Name     | File Name                      | Type     | Blank    | JavaDoc  | Comment  | Code     | Total    |
++------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| zoneprocessor    | MockedAppender.java            | test     |        6 |        0 |        1 |       16 |       23 |
+| zoneprocessor    | Precinct.java                  | src      |        7 |        7 |        1 |       20 |       35 |
+| zoneprocessor    | PrecinctDataProcessor.java     | src      |        9 |        5 |        8 |       63 |       85 |
+| zoneprocessor    | PrecinctFactory.java           | src      |        6 |       18 |        4 |       29 |       57 |
+| zoneprocessor    | TestPrecinct.java              | test     |        6 |        0 |        0 |       20 |       26 |
+| zoneprocessor    | TestPrecinctDataProcessor.java | test     |       12 |        0 |        0 |       79 |       91 |
+| zoneprocessor    | TestPrecinctFactory.java       | test     |       10 |        0 |        1 |       79 |       90 |
+| zoneprocessor    | TestZone.java                  | test     |        7 |        0 |        0 |       21 |       28 |
+| zoneprocessor    | TestZoneDataProcessor.java     | test     |       10 |        0 |        0 |       79 |       89 |
+| zoneprocessor    | TestZoneFactory.java           | test     |       11 |        0 |        0 |       79 |       90 |
+| zoneprocessor    | TestZoneProcessor.java         | test     |       10 |        8 |       17 |       74 |      109 |
+| zoneprocessor    | Zone.java                      | src      |        6 |        6 |        1 |       20 |       33 |
+| zoneprocessor    | ZoneDataProcessor.java         | src      |        8 |       15 |       12 |       63 |       98 |
+| zoneprocessor    | ZoneFactory.java               | src      |        4 |       18 |        4 |       29 |       55 |
+| zoneprocessor    | ZoneProcessor.java             | src      |        9 |       37 |       14 |       87 |      147 |
++------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| 1 package(s)     | 15 file(s)                     | java     |      121 |      114 |       63 |      758 |     1056 |
++------------------+--------------------------------+----------+----------+----------+----------+----------+----------+

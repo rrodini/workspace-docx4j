@@ -33,10 +33,10 @@
 				<version>3.5.1</version>
 				<configuration>
 					<argLine>-javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
-					<includes>
+<!--					<includes>
 						<include>**/Test*.java</include>
 					</includes>
-				</configuration>
+-->				</configuration>
 
 			</plugin>
 			<plugin>

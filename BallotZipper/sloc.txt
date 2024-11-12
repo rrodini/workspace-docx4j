@@ -1,0 +1,15 @@
++------------------+----------------------+----------+----------+----------+----------+----------+----------+
+| Package Name     | File Name            | Type     | Blank    | JavaDoc  | Comment  | Code     | Total    |
++------------------+----------------------+----------+----------+----------+----------+----------+----------+
+| ballotzipper     | BallotZipper.java    | src      |        7 |       35 |       13 |       52 |      107 |
+| ballotzipper     | GenDocxMap.java      | src      |        5 |        7 |       16 |       52 |       80 |
+| ballotzipper     | GenZipFiles.java     | src      |       12 |       25 |       15 |       98 |      150 |
+| ballotzipper     | Initialize.java      | src      |        8 |        7 |       10 |       54 |       79 |
+| ballotzipper     | MockedAppender.java  | test     |        6 |        0 |        1 |       16 |       23 |
+| ballotzipper     | MuniFiles.java       | src      |        6 |        9 |       13 |       99 |      127 |
+| ballotzipper     | TestGenDocxMap.java  | test     |       11 |        6 |        0 |       50 |       67 |
+| ballotzipper     | TestGenZipFiles.java | test     |        9 |        9 |        7 |       73 |       98 |
+| ballotzipper     | TestMuniFiles.java   | test     |       11 |        0 |       14 |       75 |      100 |
++------------------+----------------------+----------+----------+----------+----------+----------+----------+
+| 1 package(s)     | 9 file(s)            | java     |       75 |       98 |       89 |      569 |      831 |
++------------------+----------------------+----------+----------+----------+----------+----------+----------+

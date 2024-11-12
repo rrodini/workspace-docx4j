@@ -1,0 +1,49 @@
++------------------+-----------------------------------------+----------+----------+----------+----------+----------+----------+
+| Package Name     | File Name                               | Type     | Blank    | JavaDoc  | Comment  | Code     | Total    |
++------------------+-----------------------------------------+----------+----------+----------+----------+----------+----------+
+| contestgen       | ContestGen.java                         | src      |       14 |      116 |       35 |      310 |      475 |
+| contestgen       | ContestName.java                        | src      |        3 |        6 |        0 |       19 |       28 |
+| contestgen       | ContestNameExtractor.java               | src      |       17 |       26 |       42 |       44 |      129 |
+| contestgen       | ContestNameMarkers.java                 | src      |        9 |       11 |        5 |       31 |       56 |
+| contestgen       | Environment.java                        | src      |        0 |        6 |        0 |        6 |       12 |
+| contestgen       | MockedAppender.java                     | test     |        6 |        0 |        1 |       16 |       23 |
+| contestgen       | MuniContestNames.java                   | src      |        5 |       35 |        1 |       36 |       77 |
+| contestgen       | MuniContestsQuestions.java              | src      |        7 |        8 |        0 |       16 |       31 |
+| contestgen       | MuniContestsQuestionsExtractor.java     | src      |       15 |       62 |       38 |      107 |      222 |
+| contestgen       | MuniReferendums.java                    | src      |        7 |        8 |        0 |       21 |       36 |
+| contestgen       | MuniRetentions.java                     | src      |        6 |        8 |        0 |       21 |       35 |
+| contestgen       | MuniTextExtractor.java                  | src      |        6 |       32 |       10 |       60 |      108 |
+| contestgen       | MuniTextMarkers.java                    | src      |        8 |       26 |        3 |       34 |       71 |
+| contestgen       | Referendum.java                         | src      |        8 |        9 |        0 |       41 |       58 |
+| contestgen       | ReferendumExtractor.java                | src      |        3 |       20 |        1 |       30 |       54 |
+| contestgen       | ReferendumFactory.java                  | src      |        4 |       23 |        2 |       30 |       59 |
+| contestgen       | ReferendumMarkers.java                  | src      |        7 |        6 |        3 |       20 |       36 |
+| contestgen       | Retention.java                          | src      |        4 |        9 |        0 |       31 |       44 |
+| contestgen       | RetentionExtractor.java                 | src      |        3 |       19 |        0 |       33 |       55 |
+| contestgen       | RetentionFactory.java                   | src      |        3 |       21 |        2 |       28 |       54 |
+| contestgen       | RetentionMarkers.java                   | src      |       10 |        6 |        2 |       28 |       46 |
+| contestgen       | SpecimenMuniExtractor.java              | src      |       11 |       40 |       42 |       77 |      170 |
+| contestgen       | SpecimenMuniMarkers.java                | src      |        8 |       10 |        2 |       33 |       53 |
+| contestgen       | TestContestGen.java                     | test     |       11 |        0 |        0 |      107 |      118 |
+| contestgen       | TestContestName.java                    | test     |        7 |        0 |        0 |       31 |       38 |
+| contestgen       | TestContestNameExtractor.java           | test     |       12 |        4 |        9 |      146 |      171 |
+| contestgen       | TestContestNameMarkers.java             | test     |       12 |        0 |        1 |       43 |       56 |
+| contestgen       | TestEnvironment.java                    | test     |        8 |        0 |        0 |       26 |       34 |
+| contestgen       | TestMuniContestNames.java               | test     |       11 |        0 |        2 |       55 |       68 |
+| contestgen       | TestMuniContestsExtractor.java          | test     |       12 |        4 |        0 |      183 |      199 |
+| contestgen       | TestMuniContestsQuestionsExtractor.java | test     |       11 |        0 |        4 |      247 |      262 |
+| contestgen       | TestMuniTextExtractor.java              | test     |       16 |        4 |       10 |      114 |      144 |
+| contestgen       | TestMuniTextMarkers.java                | test     |       11 |        0 |        3 |       30 |       44 |
+| contestgen       | TestReferendum.java                     | test     |        6 |        0 |        0 |       51 |       57 |
+| contestgen       | TestReferendumExtractor.java            | test     |        9 |        0 |        3 |      179 |      191 |
+| contestgen       | TestReferendumFactory.java              | test     |        4 |        0 |        0 |       50 |       54 |
+| contestgen       | TestReferendumMarkers.java              | test     |       10 |        0 |        0 |       27 |       37 |
+| contestgen       | TestRetention.java                      | test     |        5 |        0 |        0 |       36 |       41 |
+| contestgen       | TestRetentionExtractor.java             | test     |        7 |        0 |        3 |      162 |      172 |
+| contestgen       | TestRetentionMarkers.java               | test     |       10 |        0 |        0 |       36 |       46 |
+| contestgen       | TestSpecimenMuniExtractor.java          | test     |        9 |        0 |        6 |       60 |       75 |
+| contestgen       | TestSpecimenMuniMarkers.java            | test     |       10 |        0 |        3 |       25 |       38 |
+| contestgen       | TestUniqueBallotReport.java             | test     |       13 |        0 |       20 |      356 |      389 |
++------------------+-----------------------------------------+----------+----------+----------+----------+----------+----------+
+| 1 package(s)     | 43 file(s)                              | java     |      358 |      519 |      253 |     3036 |     4166 |
++------------------+-----------------------------------------+----------+----------+----------+----------+----------+----------+

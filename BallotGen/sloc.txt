@@ -1,0 +1,60 @@
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| Package Name          | File Name                     | Type     | Blank    | JavaDoc  | Comment  | Code     | Total    |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen.common      | BallotGenOutput.java          | src      |        4 |        5 |        0 |       30 |       39 |
+| ballotgen.common      | BallotReportParser.java       | src      |        6 |       15 |        4 |       34 |       59 |
+| ballotgen.common      | ENVIRONMENT.java              | src      |        0 |        6 |        0 |        6 |       12 |
+| ballotgen.common      | ElectionType.java             | src      |        6 |        0 |        2 |       27 |       35 |
+| ballotgen.common      | GenDocxBallot.java            | src      |        7 |      241 |       82 |      626 |      956 |
+| ballotgen.common      | Initialize.java               | src      |       20 |       76 |       49 |      338 |      483 |
+| ballotgen.common      | MockedAppender.java           | test     |        6 |        0 |        1 |       16 |       23 |
+| ballotgen.common      | Party.java                    | src      |        8 |        0 |        3 |       44 |       55 |
+| ballotgen.common      | TestBallotReportParser.java   | test     |        8 |        0 |        0 |       27 |       35 |
+| ballotgen.common      | TestElectionType.java         | test     |        7 |        8 |        0 |       39 |       54 |
+| ballotgen.common      | TestParty.java                | test     |        8 |        8 |        0 |       89 |      105 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen.contest     | Candidate.java                | src      |        7 |        3 |        2 |       19 |       31 |
+| ballotgen.contest     | CandidateFactory.java         | src      |       15 |       98 |       60 |      169 |      342 |
+| ballotgen.contest     | Contest.java                  | src      |        8 |       12 |        4 |       59 |       83 |
+| ballotgen.contest     | ContestFactory.java           | src      |        6 |       56 |       13 |      128 |      203 |
+| ballotgen.contest     | ContestFileLevel.java         | src      |        0 |        8 |        0 |        5 |       13 |
+| ballotgen.contest     | ContestNameCounter.java       | src      |       10 |       26 |        3 |       29 |       68 |
+| ballotgen.contest     | GeneralCandidate.java         | src      |       13 |       16 |        1 |       27 |       57 |
+| ballotgen.contest     | PrimaryCandidate.java         | src      |        3 |       26 |        0 |        4 |       33 |
+| ballotgen.contest     | TestCandidate.java            | test     |        4 |        0 |        2 |       49 |       55 |
+| ballotgen.contest     | TestCandidateFactory.java     | test     |       14 |        0 |        6 |      183 |      203 |
+| ballotgen.contest     | TestContest.java              | test     |        9 |        0 |        0 |       39 |       48 |
+| ballotgen.contest     | TestContestFactory.java       | test     |       17 |        8 |       23 |      354 |      402 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen.endorsement | Endorsement.java              | src      |        6 |        6 |        4 |       61 |       77 |
+| ballotgen.endorsement | EndorsementFactory.java       | src      |        8 |        6 |       20 |      118 |      152 |
+| ballotgen.endorsement | EndorsementMode.java          | src      |        1 |        7 |        0 |        6 |       14 |
+| ballotgen.endorsement | EndorsementProcessor.java     | src      |        9 |       78 |       17 |       94 |      198 |
+| ballotgen.endorsement | EndorsementScope.java         | src      |        0 |       10 |        0 |        6 |       16 |
+| ballotgen.endorsement | TestEndorsement.java          | test     |        9 |        0 |        0 |       45 |       54 |
+| ballotgen.endorsement | TestEndorsementFactory.java   | test     |       14 |        0 |       12 |       94 |      120 |
+| ballotgen.endorsement | TestEndorsementMode.java      | test     |        8 |        0 |        0 |       30 |       38 |
+| ballotgen.endorsement | TestEndorsementProcessor.java | test     |        6 |        0 |        9 |      111 |      126 |
+| ballotgen.endorsement | TestEndorsementScope.java     | test     |        8 |        0 |        0 |       30 |       38 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen.generate    | GenDocx.java                  | src      |        7 |       69 |       23 |      191 |      290 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen.placeholder | MockedAppender.java           | test     |        6 |        0 |        1 |       16 |       23 |
+| ballotgen.placeholder | Placeholder.java              | src      |        6 |       25 |        2 |       29 |       62 |
+| ballotgen.placeholder | PlaceholderLocation.java      | src      |        1 |        0 |        0 |        6 |        7 |
+| ballotgen.placeholder | PlaceholderProcessor.java     | src      |        7 |       73 |       13 |      166 |      259 |
+| ballotgen.placeholder | TestPlaceholder.java          | test     |        9 |        0 |        0 |       26 |       35 |
+| ballotgen.placeholder | TestPlaceholderLocation.java  | test     |        7 |        0 |        0 |       29 |       36 |
+| ballotgen.placeholder | TestPlaceholderProcessor.java | test     |       11 |        0 |        6 |      105 |      122 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen.writein     | TestWritein.java              | test     |        7 |        0 |        0 |       50 |       57 |
+| ballotgen.writein     | TestWriteinFactory.java       | test     |       15 |        0 |       12 |      115 |      142 |
+| ballotgen.writein     | TestWriteinProcessor.java     | test     |       10 |        0 |        2 |       91 |      103 |
+| ballotgen.writein     | Writein.java                  | src      |        5 |       13 |        6 |       43 |       67 |
+| ballotgen.writein     | WriteinFactory.java           | src      |       13 |        6 |       26 |      147 |      192 |
+| ballotgen.writein     | WriteinProcessor.java         | src      |        5 |       39 |        6 |       44 |       94 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| ballotgen             | BallotGen.java                | src      |       10 |       30 |       21 |      101 |      162 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
+| 7 package(s)          | 48 file(s)                    | java     |      374 |      974 |      435 |     4095 |     5878 |
++-----------------------+-------------------------------+----------+----------+----------+----------+----------+----------+
