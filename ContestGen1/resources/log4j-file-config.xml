@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="ContestGen" packages="">
+  <Appenders>
+    <File name="ContestGen" fileName="./logs/contestgen1.log">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="ERROR">
+      <AppenderRef ref="ContestGen"/>
+    </Root>
+    <Logger name="com.rodini.contestgen" > 
+    </Logger>
+    <Logger name="com.rodini.contestgen.common"> 
+    </Logger>
+    <Logger name="com.rodini.contestgen.extract"> 
+    </Logger>
+    <Logger name="com.rodini.contestgen.generate"> 
+    </Logger>
+    <Logger name="com.rodini.contestgen.model"> 
+    </Logger>
+  </Loggers>
+</Configuration>
