@@ -195,6 +195,16 @@ class TestUtils {
 //		assertTrue(mockedAppender.messages.get(1).startsWith(expected2));
 	}
 	@Test
+	void testLogProperties() {
+		String propsPath = "./src/test/java/test.properties";
+		Properties props = Utils.loadProperties(propsPath);
+		logProperties(logger, ERROR, props);
+		assertEquals(4, mockedAppender.messages.size());
+		assertEquals("Properties:", mockedAppender.messages.get(0));
+		assertEquals("propName1: propValue1", mockedAppender.messages.get(1));
+	}
+	
+	@Test
 	void textCheckFileExistsTrue() {
 		boolean exists = Utils.checkFileExists("./src/test/java/gettysburg.txt");
 		assertTrue(exists);

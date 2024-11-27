@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.time.format.DateTimeFormatter;
@@ -233,6 +234,21 @@ public class Utils {
 			logger.info("no property names starting with: " + propNamePrefix);
 		}
 		return propValues;
+	}
+	/**
+	 * logProperties log the contents of a properties file. Can be used before
+	 * or after all of the properties are validated.
+	 * 
+	 * @param logger logger to use.
+	 * @param level logging level.
+	 * @param props contents of a properties file.,
+	 */
+	public static void logProperties(Logger logger, Level level, Properties props) {
+		Set<String> propNames = props.stringPropertyNames();
+		logger.log(level, "Properties:");
+		for (String propName: propNames) {
+			logger.log(level, String.format("%s: %s", propName, props.getProperty(propName)));
+		}
 	}
 	/**
 	 * checkFileExists checks if a file exists. If it doesn't an ERROR is logged.
