@@ -509,8 +509,8 @@ public class GenDocxBallot {
 		String[] contestLines = contestsText.split("\n");
 		Utils.logLines(logger, DEBUG, "contestLines:", contestLines);
 		ContestNameCounter ballotFactory = new ContestNameCounter(ballotText);
-		int i = 0;
-		int j = 0;
+//		int i = 0;
+//		int j = 0;
 		for (String line: contestLines) {
 			String [] elements = line.split(",");
 			String contestName = elements[0];
@@ -536,7 +536,7 @@ public class GenDocxBallot {
 //				j++;
 //			}
 			contestsParagraphs.addAll(contestParagraphs);
-			i++;
+//			i++;
 		}
 		return contestsParagraphs;
 	}
@@ -756,7 +756,7 @@ public class GenDocxBallot {
 	List<P> genReferendums() {
 		logger.debug("generating referendums for document");
 		List<P> referendumParagraphs = new ArrayList<>();
-		if (referendumsText != null) {
+		if (referendumsText != null && !referendumsText.isBlank()) {
 			String[] referendumLines = referendumsText.split("\n");
 			Utils.logLines(logger, DEBUG, "referendumLines:", referendumLines);
 			MainDocumentPart mdp = docx.getMainDocumentPart();
@@ -824,7 +824,7 @@ public class GenDocxBallot {
 	List<P> genRetentions() {
 		logger.debug("generating retentions for document");
 		List<P> retentionParagraphs = new ArrayList<>();
-		if (retentionsText != null) {
+		if (retentionsText != null && !retentionsText.isBlank()) {
 			String[] retentionLines = retentionsText.split("\n");
 			Utils.logLines(logger, DEBUG, "retentionLines:", retentionLines);
 			MainDocumentPart mdp = docx.getMainDocumentPart();
