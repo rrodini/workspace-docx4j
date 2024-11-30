@@ -91,7 +91,7 @@ class TestInitializeProps {
 		assertTrue(mockedAppender.messages.get(0).startsWith("property regex.prop.missing is missing."));
 	}
 	@Test
-	@Disabled // Implement when System.exit() issue is fixed.
+//	@Disabled // Implement when System.exit() issue is fixed.
 	void testValidateRegexPropertyBad() {		
 	}
 	@Test

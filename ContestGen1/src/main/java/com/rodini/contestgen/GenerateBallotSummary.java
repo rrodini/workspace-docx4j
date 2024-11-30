@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.joining;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 //import java.util.stream.Collectors;
 import java.util.HashMap;
@@ -53,23 +54,23 @@ public class GenerateBallotSummary {
 	 * @param pw PrintWriter.
 	 * @param ballots list of Ballots.
 	 */
-	static void generateHeading(PrintWriter pw, List<Ballot> ballots) {
-		String line = "Summary Report (Ballot/Referendum/Retention)";
-		System.out.println(line);
-		pw.println(line);
-		line = "Precinct count: " + Integer.toString(ballots.size());
-		System.out.println(line);
-		pw.println(line);
+	static void generateHeading(Writer pw, List<Ballot> ballots) throws IOException {
+		String line = "Summary Report (Ballot/Referendum/Retention)\n";
+		System.out.print(line);
+		pw.write(line);
+		line = "Precinct count: " + Integer.toString(ballots.size()) + "\n";
+		System.out.print(line);
+		pw.write(line);
 	}
 	/** 
 	 * generateUniqueBallotSection writes the unique ballot section.
 	 * Each line represents a ballot that is identical across all of the listed
 	 * precinct-leve ballots.
 	 * 
-	 * @param pw PreintWriter
+	 * @param pw PrintWriter
 	 * @param ballots list of Ballots.
 	 */
-	static void generateUniqueBallotSection(PrintWriter pw, List<Ballot> ballots) {
+	static void generateUniqueBallotSection(Writer pw, List<Ballot> ballots) throws IOException {
 		//  uniqueBallotList is the data structure that determines ballot uniqueness
 		//  based on the lists of VoteFor objects that a ballot may contain.
 		//  uniqueString    List<precinctNoName>
@@ -87,19 +88,19 @@ public class GenerateBallotSummary {
 			uniqueBallotList.put(ballotString, precinctNoNameList);
 		}
 		Set<String> uniqueKeys = uniqueBallotList.keySet();
-		String line = String.format("Unique ballot count: %s", uniqueKeys.size());
-		System.out.println(line);
+		String line = String.format("Unique ballot count: %s%n", uniqueKeys.size());
+		System.out.print(line);
 		logger.log(ATTN, line);
-		pw.println(line);
-		line = String.format("Precincts with identical ballots:");
-		pw.println(line);
+		pw.write(line);
+		line = String.format("Precincts with identical ballots:%n");
+		pw.write(line);
 		// loop to generate unique ballot section
 		int count = 0;
 		for (String uniqueKey: uniqueKeys) {
 			List<String> precinctNoNameList = uniqueBallotList.get(uniqueKey);
 			String precinctNoNameString = precinctNoNameList.stream().collect(joining(","));
-			line = String.format("Ballot %3d: %s", count, precinctNoNameString);
-			pw.println(line);
+			line = String.format("Ballot %3d: %s%n", count, precinctNoNameString);
+			pw.write(line);
 			count++;
 		}
 	}
@@ -127,7 +128,7 @@ public class GenerateBallotSummary {
 	 * @param pw PrintWriter.
 	 * @param ballots list of ballots.
 	 */
-	static void generateReferendumSection(PrintWriter pw, List<Ballot> ballots) {
+	static void generateReferendumSection(Writer pw, List<Ballot> ballots) throws IOException {
 		//  question        List<precinctNo>
 		Map<String,         List<String>         > uniqueRefList = new HashMap<>();
 		// loop to populate the data structure.
@@ -142,23 +143,22 @@ public class GenerateBallotSummary {
 			precinctNoList.add(ballot.getPrecinctNo());
 			uniqueRefList.put(refString, precinctNoList);
 		}
-		String line = "Referendum Summary";
-		System.out.println(line);
-		pw.println(line);
-		line = String.format("Unique referendum questions: %d", uniqueRefList.size());
-		System.out.println(line);
+		String line = "Referendum Summary\n";
+		System.out.print(line);
+		pw.write(line);
+		line = String.format("Unique referendum questions: %d%n", uniqueRefList.size());
+		System.out.print(line);
 		logger.log(ATTN, line);
-		pw.println(line);
+		pw.write(line);
 		Set<String> refKeys = uniqueRefList.keySet();
 		int count = 0;
 		for (String refKey: refKeys) {
 			List<String> precinctNos = uniqueRefList.get(refKey);
-			line = String.format("Referendum %d:", count);
-			pw.println(line);
-			// refQuestion text seems to end w. \n
-			pw.print(refKey);
+			line = String.format("Referendum %d:%n", count);
+			pw.write(line);
+			pw.write(refKey);
 			String precinctNosString = precinctNos.stream().collect(joining(","));
-			pw.println(": precincts: " + precinctNosString);
+			pw.write(": precincts: " + precinctNosString + "\n");
 			count++;
 		}
 	}
@@ -170,7 +170,7 @@ public class GenerateBallotSummary {
 	 * @param pw PrintWriter.
 	 * @param ballots list of ballots.
 	 */
-	static void generateRetentionSection(PrintWriter pw, List<Ballot> ballots) {
+	static void generateRetentionSection(Writer pw, List<Ballot> ballots) throws IOException {
 		//  judgeName       ballot count
 		Map<String,         Integer> uniqueJudgeName = new HashMap<>();
 		// loop to populate the data structure.
@@ -188,18 +188,18 @@ public class GenerateBallotSummary {
 				uniqueJudgeName.put(judgeName, nameCount);
 			}
 		}
-		String line = "Retention Summary";
-		System.out.println(line);
-		pw.println(line);
-		line = String.format("Unique retention judge names: %d", uniqueJudgeName.size());
-		System.out.println(line);
+		String line = "Retention Summary\n";
+		System.out.print(line);
+		pw.write(line);
+		line = String.format("Unique retention judge names: %d%n", uniqueJudgeName.size());
+		System.out.print(line);
 		logger.log(ATTN, line);
-		pw.println(line);
+		pw.write(line);
 		Set<String> retKeys = uniqueJudgeName.keySet();
 		for (String retKey: retKeys) {
 			int retCount = uniqueJudgeName.get(retKey);
-			line = String.format("%s: %d", retKey, retCount);
-			pw.println(line);
+			line = String.format("%s: %d%n", retKey, retCount);
+			pw.write(line);
 		}
 	}
 }

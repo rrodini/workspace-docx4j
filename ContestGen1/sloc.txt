@@ -1,0 +1,40 @@
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| Package Name       | File Name                      | Type     | Blank    | JavaDoc  | Comment  | Code     | Total    |
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| contestgen.common  | ContestGenOutput.java          | src      |        4 |        5 |        0 |       30 |       39 |
+| contestgen.common  | Initialize.java                | src      |        6 |       56 |       21 |      111 |      194 |
+| contestgen.common  | MockedAppender.java            | test     |        6 |        0 |        1 |       16 |       23 |
+| contestgen.common  | TestInitializeCLIArgs.java     | test     |       12 |        0 |       26 |      115 |      153 |
+| contestgen.common  | TestInitializeProps.java       | test     |       13 |        0 |        2 |       89 |      104 |
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| contestgen.extract | BallotExtractor.java           | src      |        4 |       21 |        7 |       68 |      100 |
+| contestgen.extract | ContestExtractor.java          | src      |        7 |       46 |       17 |       90 |      160 |
+| contestgen.extract | MockedAppender.java            | test     |        6 |        0 |        1 |       16 |       23 |
+| contestgen.extract | PageExtractor.java             | src      |        4 |       36 |        9 |       50 |       99 |
+| contestgen.extract | ReferendumExtractor.java       | src      |        6 |       27 |        3 |       45 |       81 |
+| contestgen.extract | RetentionExtractor.java        | src      |        6 |       27 |        2 |       49 |       84 |
+| contestgen.extract | TestBallotExtractor.java       | test     |       10 |        0 |        6 |       38 |       54 |
+| contestgen.extract | TestContestExtractor.java      | test     |       15 |        4 |        7 |      316 |      342 |
+| contestgen.extract | TestPageExtractor.java         | test     |       18 |        0 |       14 |      237 |      269 |
+| contestgen.extract | TestReferendumExtractor.java   | test     |       16 |        0 |        0 |      255 |      271 |
+| contestgen.extract | TestRetentionExtractor.java    | test     |       14 |        0 |        0 |      236 |      250 |
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| contestgen.model   | Ballot.java                    | src      |       10 |       45 |        3 |       72 |      130 |
+| contestgen.model   | Contest.java                   | src      |        6 |        6 |        0 |       19 |       31 |
+| contestgen.model   | Referendum.java                | src      |        6 |        6 |        0 |       19 |       31 |
+| contestgen.model   | Retention.java                 | src      |        6 |        6 |        0 |       19 |       31 |
+| contestgen.model   | TestBallot.java                | test     |       11 |        0 |        5 |      434 |      450 |
+| contestgen.model   | TestContest.java               | test     |        8 |        0 |        0 |       36 |       44 |
+| contestgen.model   | TestReferendum.java            | test     |        8 |        0 |        0 |       44 |       52 |
+| contestgen.model   | TestRetention.java             | test     |        8 |        0 |        0 |       37 |       45 |
+| contestgen.model   | VoteFor.java                   | src      |        3 |        7 |        0 |       15 |       25 |
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| contestgen         | ContestGen1.java               | src      |        9 |       29 |        3 |       69 |      110 |
+| contestgen         | GenerateBallotFiles.java       | src      |        4 |       23 |        3 |       29 |       59 |
+| contestgen         | GenerateBallotSummary.java     | src      |        7 |       45 |       11 |      142 |      205 |
+| contestgen         | GenerateContestFiles.java      | src      |        4 |       37 |        3 |       59 |      103 |
+| contestgen         | TestGenerateBallotSummary.java | test     |       11 |        0 |        1 |      136 |      148 |
+| contestgen         | TestGenerateContestFiles.java  | test     |       14 |        0 |        1 |      115 |      130 |
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+
+| 4 package(s)       | 31 file(s)                     | java     |      262 |      426 |      146 |     3006 |     3840 |
++--------------------+--------------------------------+----------+----------+----------+----------+----------+----------+

@@ -1,5 +1,6 @@
 package com.rodini.contestgen.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.rodini.ballotutils.Utils;
@@ -32,7 +33,13 @@ public class Ballot {
 		this.rawText = rawText;
 		this.precinctNo = Utils.getPrecinctNo(precinctNoName);
 		this.precinctName = Utils.getPrecinctName(precinctNoName);
-		// remaining fields filled by further extractions.
+		// remaining fields filled by further extractions,
+		// but provide defaults.
+		this.page1Text = "";
+		this.page2Text = "";
+		contests = new ArrayList<>();
+		referendums = new ArrayList<>();
+		retentions = new ArrayList<>();
 	}
 	/**
 	 * get the precinct number and name.

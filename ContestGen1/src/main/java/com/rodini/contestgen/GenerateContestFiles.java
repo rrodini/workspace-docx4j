@@ -3,6 +3,7 @@ package com.rodini.contestgen;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class GenerateContestFiles {
 	 * @param ballot 
 	 * @throws IOException
 	 */
-	static void generateContests(FileWriter cf, Ballot ballot) throws IOException {
+	static void generateContests(Writer cf, Ballot ballot) throws IOException {
 		cf.write("Contests\n");
 		for (Contest contest: ballot.getContests()) {
 			String contestName = contest.getContestName();
@@ -73,7 +74,7 @@ public class GenerateContestFiles {
 	 * @param ballot 
 	 * @throws IOException
 	 */
-	static void generateReferendums(FileWriter cf, Ballot ballot) throws IOException {
+	static void generateReferendums(Writer cf, Ballot ballot) throws IOException {
 		cf.write("Referendums\n");
 		for (Referendum ref: ballot.getReferendums()) {
 			String refQuestion = ref.getRefQuestion();
@@ -88,7 +89,7 @@ public class GenerateContestFiles {
 	 * @param ballot 
 	 * @throws IOException
 	 */
-	static void generateRetentions(FileWriter cf, Ballot ballot) throws IOException {
+	static void generateRetentions(Writer cf, Ballot ballot) throws IOException {
 		cf.write("Retentions\n");
 		for (Retention ret: ballot.getRetentions()) {
 			String officeName = ret.getOfficeName();

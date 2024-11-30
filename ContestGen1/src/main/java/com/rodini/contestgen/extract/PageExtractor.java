@@ -38,7 +38,7 @@ public class PageExtractor {
 	 * 2. Referendum questions and retention questions are always placed on page2
 	 *     by Chesco Voter Services.
 	 *     
-	 * @param ballot Ballot objec
+	 * @param ballot Ballot object.
 	 */
 	static void extractPages(Ballot ballot) {
 		String rawText = ballot.getRawText();

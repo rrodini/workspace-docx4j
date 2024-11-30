@@ -1,5 +1,11 @@
 package com.rodini.contestgen.model;
 
+/**
+ * Retention is a simple representation of a judge retention on a ballot.
+ * 
+ * @author Bob Rodini
+ *
+ */
 public class Retention extends VoteFor{
 
 	private String officeName;

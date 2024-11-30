@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import static org.apache.logging.log4j.Level.DEBUG;
 
-import com.rodini.contestgen.common.ContestGenOutput;
 import static com.rodini.contestgen.common.ContestGenOutput.BOTH;
 import com.rodini.ballotutils.Utils;
 import com.rodini.contestgen.ContestGen1;

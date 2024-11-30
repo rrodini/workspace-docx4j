@@ -1,5 +1,11 @@
 package com.rodini.contestgen.model;
 
+/**
+ * Contest is a simple representation of a Contest (aka Office) on a ballot.
+ * 
+ * @author Bob Rodini
+ *
+ */
 public class Contest extends VoteFor {
 	String contestName;
 	int contestFormat;

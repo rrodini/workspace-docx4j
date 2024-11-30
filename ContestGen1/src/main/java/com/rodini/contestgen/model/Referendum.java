@@ -1,5 +1,11 @@
 package com.rodini.contestgen.model;
 
+/**
+ * Referendum is a simple representation of a referendum on a ballot.
+ * 
+ * @author Bob Rodini
+ *
+ */
 public class Referendum extends VoteFor {
 	String refQuestion;
 	String refText;
