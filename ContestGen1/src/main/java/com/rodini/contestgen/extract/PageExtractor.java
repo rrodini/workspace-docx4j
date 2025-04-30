@@ -6,7 +6,9 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
+import com.rodini.ballotutils.Utils;
 import com.rodini.contestgen.common.Initialize;
 import com.rodini.contestgen.model.Ballot;
 /**
@@ -48,8 +50,9 @@ public class PageExtractor {
 		String precinctNoName = ballot.getPrecinctNoName();
 		// extract page1
 		String page1Text = extractPage(precinctNoName, rawText, page1Regex, 1);
+		Utils.logLines(logger, Level.DEBUG, precinctNoName + " page1 text:", page1Text.split("\n"));
 		// ATTENTION:
-		// page2Text may be due to two reasons:
+		// page2Text may be empty due to two reasons:
 		// 1. For all ballots only page 1 have text (short ballot)
 		// 2. Some ballots have only 1 page whereas others have 2.
 		String page2Text = "";
@@ -57,6 +60,7 @@ public class PageExtractor {
 		if (pageCount == 2) {
 			page2Text = extractPage(precinctNoName, rawText, page2Regex, 2);
 		}
+		Utils.logLines(logger, Level.DEBUG, precinctNoName + " page2 text:", page2Text.split("\n"));
 		ballot.setPage1Text(page1Text);
 		ballot.setPage2Text(page2Text);
 	}

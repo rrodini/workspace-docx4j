@@ -52,14 +52,17 @@ public class ContestExtractor {
 	static void extractContests(Ballot ballot) {
 		String precinctNo = ballot.getPrecinctNo();
 		String precinctName = ballot.getPrecinctName();
+		String precinctNoName = precinctNo + "_" + precinctName;
 		List<Contest> contests = new ArrayList<>();
 		List<Contest> pageContests = null;
 		// Isolate sections of text under two assumptions:
 		// 1. each contest ends with a "Write-in" line.
 		// 2. contests can be on Page 1 or Page 2 but
 		//    are never split across two pages.
+		logger.info(String.format("page 1 contest extraction for: : %s", precinctNoName));
 		pageContests = extractPageContests(precinctNo, precinctName, ballot.getPage1Text());
 		contests.addAll(pageContests);
+		logger.info(String.format("page 2 contest extraction for: : %s", precinctNoName));
 		pageContests = extractPageContests(precinctNo, precinctName, ballot.getPage2Text());
 		if (pageContests.size()!= 0 ) {
 			// There should be a "Vote Both Sides" indicator on Voter Services specimen.

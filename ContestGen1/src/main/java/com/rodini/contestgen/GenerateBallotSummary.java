@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,13 +57,38 @@ public class GenerateBallotSummary {
 	 * @param ballots list of Ballots.
 	 */
 	static void generateHeading(Writer pw, List<Ballot> ballots) throws IOException {
-		String line = "Summary Report (Ballot/Referendum/Retention)\n";
+		// Identify the report by info within the VS specimen.
+		String electionName = extractElectionName(Initialize.specimenText, Initialize.electionNameRegex);
+//		String line = "Summary Report (Ballot/Referendum/Retention)\n";
+		String line = String.format("Summary Report: %s\n", electionName);
 		System.out.print(line);
 		pw.write(line);
 		line = "Precinct count: " + Integer.toString(ballots.size()) + "\n";
 		System.out.print(line);
 		pw.write(line);
 	}
+	/**
+	 * extractedElectionName uses a new regex to extract the name and date of the election.
+	 * Note: Added to v1.6.1.
+	 * 
+	 * @param specimenText text from voter services.
+	 * @param electionNameRegex compiled regex to get election name.
+	 * @return
+	 */
+	static String extractElectionName(String specimenText, Pattern electionNameRegex) {
+		String electionName = "";
+		if (electionNameRegex != null) {
+			Matcher match = electionNameRegex.matcher(specimenText);
+			if (!match.find()) {
+				String msg = String.format("no matches for electionname. Bad regex: %s", electionNameRegex.pattern());
+				logger.error(msg);
+			} else {
+				electionName = match.group("electionname");
+			}
+		}
+		return electionName;
+	}
+
 	/** 
 	 * generateUniqueBallotSection writes the unique ballot section.
 	 * Each line represents a ballot that is identical across all of the listed
@@ -135,13 +162,15 @@ public class GenerateBallotSummary {
 		for (Ballot ballot: ballots) {
 			List<String> precinctNoList;
 			String refString = ballot.getReferendums().stream().map(Referendum::getRefQuestion).collect(joining(""));
-			if (uniqueRefList.containsKey(refString)) {
-				precinctNoList = uniqueRefList.get(refString);
-			} else {
-				precinctNoList = new ArrayList<>();
+			if (!refString.isBlank()) {
+				if (uniqueRefList.containsKey(refString)) {
+					precinctNoList = uniqueRefList.get(refString);
+				} else {
+					precinctNoList = new ArrayList<>();
+				}
+				precinctNoList.add(ballot.getPrecinctNo());
+				uniqueRefList.put(refString, precinctNoList);
 			}
-			precinctNoList.add(ballot.getPrecinctNo());
-			uniqueRefList.put(refString, precinctNoList);
 		}
 		String line = "Referendum Summary\n";
 		System.out.print(line);

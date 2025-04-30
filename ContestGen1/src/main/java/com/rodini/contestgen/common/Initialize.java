@@ -38,6 +38,8 @@ public class Initialize {
 	public static Pattern referendumRegex;
 	public static Pattern retentionQuestionRegex;
 	public static Pattern retentionNameRegex;
+	public static Pattern electionNameRegex;
+	public static boolean precinctNoNameFileName;
 	public static String  writeIn;  	// Write-in vs. Write-In
 	public static ContestGenOutput contestGenOutput;
 
@@ -54,6 +56,8 @@ public class Initialize {
 	private static final String PROP_REFERENDUM_REGEX = ".referendum.format";
 	private static final String PROP_RETENTION_QUESTION_REGEX  = ".retention.question.format";
 	private static final String PROP_RETENTION_NAME_REGEX      = ".retention.name.format";
+	private static final String PROP_ELECTION_NAME_REGEX = ".electionNameRegex";
+	private static final String PROP_PRECINCTNONAME_FILENAME = ".precinctNoName.fileName";
 	public  static final String WRITE_IN = ".write.in";
 	private static final String CONTESTGEN_OUTPUT = ".contestgen.output";
 	/**
@@ -79,12 +83,35 @@ public class Initialize {
 		Utils.checkDirExists(outBallotPath);
 	}
 	/**
-	 * validateIntProperty looks for the given property by name and 
-	 * validates that the string value converts to an number.
+	 * validateBooleanProperty looks for the given property by name and 
+	 * validates that the string value converts to a boolean.
 	 * 
 	 * @param props Properties object
 	 * @param propName property name
-	 * @param defaultVal value to use in case conversion fails.
+	 * @param defaultVal value to use in case missing or conversion fails.
+	 * @return property value as boolean.
+	 */
+	static boolean validateBooleanProperty(Properties props, String propName, boolean defaultVal) {
+		boolean val = defaultVal;
+		String propVal = Utils.getPropValue(props, propName);
+		if (propVal == null || propVal.isBlank()) {
+			logger.error(String.format("property %s is missing.", propName));
+		} else {
+			try {
+				val = Boolean.parseBoolean(propVal);
+			} catch (NumberFormatException ex) {
+				logger.error(String.format("property %s is not a boolean. See: %s", propName, propVal));
+			}
+		}
+		return val;
+	}
+	/**
+	 * validateIntProperty looks for the given property by name and 
+	 * validates that the string value converts to a number.
+	 * 
+	 * @param props Properties object
+	 * @param propName property name
+	 * @param defaultVal value to use in case missing or conversion fails.
 	 * @return property value as int.
 	 */
 	static int validateIntProperty(Properties props, String propName, int defaultVal) {
@@ -177,6 +204,10 @@ public class Initialize {
 	    retentionQuestionRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_RETENTION_QUESTION_REGEX);
 	    // chester.retention.name.format=
 	    retentionNameRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_RETENTION_NAME_REGEX);
+	    // chester.ballotnamer.ballot.title
+	    electionNameRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_ELECTION_NAME_REGEX);
+	    // chester.precinctNoName.fileName
+	    precinctNoNameFileName = validateBooleanProperty(props, ContestGen1.COUNTY + PROP_PRECINCTNONAME_FILENAME, true);
 	    // chester.write.in=
 	    writeIn= Utils.getPropValue(props, ContestGen1.COUNTY + WRITE_IN);
 	    // chester.contestgen.output=

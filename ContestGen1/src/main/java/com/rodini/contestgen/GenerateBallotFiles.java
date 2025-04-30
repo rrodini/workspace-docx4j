@@ -42,9 +42,17 @@ public class GenerateBallotFiles {
 	public static void generate(List<Ballot> ballots) {
 		int count = 1;
 		for (Ballot ballot: ballots) {
-			String ballotFilePath = Initialize.outBallotPath + File.separator + 
-					// municipal-nn.txt
-					   ContestGen1.BALLOT_FILE + "-"  + count + ContestGen1.TEXT_EXT;
+			String precinctNoName = ballot.getPrecinctNoName();
+			String ballotFilePath = "";
+			if (Initialize.precinctNoNameFileName) {
+				// use specific name (350_MALVERN.txt)
+				ballotFilePath = Initialize.outBallotPath + File.separator + 
+						          precinctNoName + ContestGen1.TEXT_EXT;
+			} else {
+				// use generic name (municipal-nn.txt)
+				ballotFilePath = Initialize.outBallotPath + File.separator + 
+						         ContestGen1.BALLOT_FILE + "-"  + count + ContestGen1.TEXT_EXT;
+			}
 			String msg = String.format("writing file: %s", ballotFilePath);
 			logger.info(msg);
 			try (FileWriter ballotFile = new FileWriter(ballotFilePath, StandardCharsets.UTF_8, false);) {
