@@ -102,14 +102,15 @@ public class GenDocx {
 			// last paragraph
 			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
 			// 9/7/2024 - generate a column break too
-			newParagraph = genColumnBreakParagraph(mdp);
-			pageBreakParagraphs.add(newParagraph);
-			// new paragraph at top
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
-			pageBreakParagraphs.add(newParagraph);
-			// Draw a border line as a separator
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
-			pageBreakParagraphs.add(newParagraph);
+			// For one page ballots don't do this!
+//			newParagraph = genColumnBreakParagraph(mdp);
+//			pageBreakParagraphs.add(newParagraph);
+//			// new paragraph at top
+//			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
+//			pageBreakParagraphs.add(newParagraph);
+//			// Draw a border line as a separator
+//			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+//			pageBreakParagraphs.add(newParagraph);
 		}
 		return pageBreakParagraphs;
 	}

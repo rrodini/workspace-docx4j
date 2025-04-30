@@ -25,6 +25,12 @@ class TestCandidate {
 		assertEquals("Lieutenant Governor, Democratic", candidate.getTextBeneathName());
 	}
 	@Test
+	void testConstructor5() {
+		GeneralCandidate candidate = new GeneralCandidate("Clay Cauley, Jr.", Party.DEMOCRATIC, "", false);
+		assertEquals("Clay Cauley Jr.", candidate.getName());
+		assertEquals(Party.DEMOCRATIC, candidate.getParty());
+	}
+	@Test
 	void testToString1() {
 		String expected = "Joe Biden : Democratic ";
 		GeneralCandidate candidate = new GeneralCandidate("Joe Biden", Party.DEMOCRATIC, "", false);
@@ -51,5 +57,13 @@ class TestCandidate {
 		PrimaryCandidate candidate = new PrimaryCandidate("Joe Biden", Party.DEMOCRATIC, "Delaware");
 		assertEquals(expected, candidate.toString());
 		assertEquals(Party.DEMOCRATIC, candidate.getParty());
+	}
+	@Test
+	void testConstructor4() {
+		PrimaryCandidate candidate = new PrimaryCandidate("Clay Cauley, Jr.", Party.DEMOCRATIC, "London Grove Township");
+		assertEquals("Clay Cauley Jr.", candidate.getName());
+		assertEquals(Party.DEMOCRATIC, candidate.getParty());
+		assertEquals("London Grove Township", candidate.getResidence());
+		
 	}
 }

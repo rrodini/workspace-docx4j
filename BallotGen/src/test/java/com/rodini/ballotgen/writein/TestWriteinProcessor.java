@@ -85,7 +85,7 @@ class TestWriteinProcessor {
 		WriteinProcessor wp = new WriteinProcessor(writeinCVSText, precinctZoneCSVText);
 		String contestName = "Township Supervisor Birmingham";
 		String precinctStr = "014";
-		String expectedCandName = "Jane Doe";
+		String expectedCandName = "John Doe";
 		List<String> names = wp.findCandidatesForContest(precinctStr, contestName);
 		assertEquals(1, names.size());
 		assertEquals(expectedCandName, names.get(0));

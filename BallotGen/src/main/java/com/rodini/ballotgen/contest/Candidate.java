@@ -19,9 +19,20 @@ public abstract class Candidate {
 	protected Party party;
 	
 	protected Candidate(String name, Party party) {
-		this.name = name;
+		// normalize the candidate name
+		this.name = normalizeName(name);
 		this.party = party;
-	}	
+	}
+	// convert "Clay Cauley, Sr." => "Clay Cauley Sr."
+	private String normalizeName(String name) {
+		String normalizedName = name;
+		int commaIndex = name.indexOf(",");
+		if (commaIndex > 0) {
+			normalizedName = name.substring(0, commaIndex) + name.substring(commaIndex+1, name.length());
+		}
+		return normalizedName;
+	}
+	
 	public String getName() {
 		return name;
 	}

@@ -122,6 +122,7 @@ public class GenDocxBallot {
 	public static String STYLEID_WRITE_IN_CANDIDATE_NAME = "WriteInCandidateName";
 	public static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	public static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
+	public static String STYLEID_SEPARATOR_PARAGRAPH = "SeparatorParagraph";
 	// Make separate enum if needed elsewhere.
 	public enum TextStyle {BOLD, UNDERLINE}; // BOLD for retention questions, UNDERLINE for write-in candidates.
 	// These are unicode characters (also Segoe UI Symbol font)
@@ -264,12 +265,12 @@ public class GenDocxBallot {
 		int end = contestsFileText.length();
 		// is "Retentions" present?
 		if (indexRetentions >= 0) {
-			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
+			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length(), end);
 			end = indexRetentions;
 		}
 		// is "Referendums" present?
 		if (indexReferendums >= 0) {
-			referendumsText = contestsFileText.substring(indexReferendums + PLACEHOLDER_REFERENDUMS.length()+1, end);
+			referendumsText = contestsFileText.substring(indexReferendums + PLACEHOLDER_REFERENDUMS.length(), end);
 			end = indexReferendums;
 		}
 		// is "Contests" present? Should be.
@@ -348,6 +349,10 @@ public class GenDocxBallot {
 		if (!templateIdStyles.contains(STYLEID_COLUMN_BREAK_PARAGRAPH)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_COLUMN_BREAK_PARAGRAPH);
 			STYLEID_COLUMN_BREAK_PARAGRAPH = STYLEID_NORMAL;
+		}
+		if (!templateIdStyles.contains(STYLEID_SEPARATOR_PARAGRAPH)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_SEPARATOR_PARAGRAPH);
+			STYLEID_SEPARATOR_PARAGRAPH = STYLEID_NORMAL;
 		}
 	}
 	/**
@@ -568,7 +573,7 @@ public class GenDocxBallot {
 	 * @param contest contest group
 	 * @return list of new paragraphs.
 	 */
-	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {	
+	List<P> genContestParagraphs(MainDocumentPart mdp, Contest contest) {
 		List<P> contestParagraphs = new ArrayList<>();
 		// contest header: name, term, and instructions
 		List<P> headParagraphs = genContestHeader(mdp, contest);
@@ -602,7 +607,9 @@ public class GenDocxBallot {
 		}
 		newParagraph = mdp.createStyledParagraphOfText(style, contest.getInstructions());
 		headParagraphs.add(newParagraph);
-		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
+//		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
+		// 4/4/2025 Added Separator Paragraph style w/ "Keep together"
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_SEPARATOR_PARAGRAPH, null);
 		headParagraphs.add(newParagraph);
 		return headParagraphs;
 	}
@@ -740,9 +747,10 @@ public class GenDocxBallot {
 		List<P> candParagraphs = new ArrayList<>();
 		P newParagraph = null;
 		String oval =  blackEllipse;
-		// TODO: test this.
-//		newParagraph = mdp.createStyledParagraphOfText(STYLEID_WRITE_IN_CANDIDATE_NAME, text);
-		newParagraph = GenDocx.genStyledTextWithinParagraph(TextStyle.UNDERLINE, blackEllipse + " ", name, " ");
+		String text = blackEllipse + " " + name + " ";
+		newParagraph = mdp.createStyledParagraphOfText(STYLEID_WRITE_IN_CANDIDATE_NAME, text);
+		// Alternative is line below but Normal style is used.
+//		newParagraph = GenDocx.genStyledTextWithinParagraph(TextStyle.UNDERLINE, blackEllipse + " ", name, " ");
 		candParagraphs.add(newParagraph);
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_CANDIDATE_PARTY, "Write-in");
 		candParagraphs.add(newParagraph);
