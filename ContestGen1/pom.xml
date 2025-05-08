@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>contest-gen</artifactId>
-	<version>1.6.0</version>
+	<version>1.7.0</version>
 	<name>ContestGen1</name>
 	<description>ContestGen1 generates contests.txt files for BallotGen program.</description>
 	<build>
@@ -32,12 +32,32 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<argLine>-javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
-<!--					<includes>
+					<!-- syntax below loads jococo and ginsberg agents -->
+					<argLine>@{argLine} -javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
+					<includes>
 						<include>**/Test*.java</include>
 					</includes>
--->				</configuration>
+				</configuration>
 
+			</plugin>
+			<plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>0.8.13</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>report</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			                <goal>report</goal>
+			            </goals>
+			        </execution>
+			    </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -131,7 +151,7 @@
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>ballot-utils</artifactId>
-    	  <version>1.6.0</version>
+    	  <version>1.7.0</version>
 		</dependency>
 	</dependencies>
 </project>

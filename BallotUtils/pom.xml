@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>ballot-utils</artifactId>
-	<version>1.6.0</version>
+	<version>1.7.0</version>
 	<packaging>jar</packaging>
 	<name>BallotUtils</name>
 	<description>Utilities for sample ballot generation</description>
@@ -29,16 +29,32 @@
 				</executions>
 			</plugin>
 			<plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>0.8.13</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>report</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			                <goal>report</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<argLine>-javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
-<!--	 			<argLine>@{argLine} -javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
-					<includes>
-						<include>**/Test*.java</include>
-					</includes>
--->				</configuration>
+					<!-- syntax below loads jococo and ginsberg agents -->
+					<argLine>@{argLine} -javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com-rodini</groupId>
   <artifactId>ballot-zipper</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.0</version>
   <name>BallotZipper</name>
   <description>Create zip files for each zone containing precinct ballots for that zone.</description>
   <build>
@@ -36,6 +36,25 @@
 					</includes>
 				</configuration>
 
+			</plugin>
+			<plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>0.8.13</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>report</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			                <goal>report</goal>
+			            </goals>
+			        </execution>
+			    </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -89,12 +108,12 @@
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>ballot-utils</artifactId>
-    	  <version>1.6.0</version>
+    	  <version>1.7.0</version>
 		</dependency>
 		<dependency>
 		  <groupId>com.rodini</groupId>
   		  <artifactId>zone-processor</artifactId>
-  		  <version>1.6.0</version>
+  		  <version>1.7.0</version>
 		</dependency>
 	</dependencies>
   

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rodini</groupId>
   <artifactId>zone-processor</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.0</version>
   <packaging>jar</packaging>
   <name>Zone Processor</name>
   <description>Provide and API for mapping precinct# to zone, and zone's list of precincts.</description>
@@ -27,7 +27,26 @@
 				</configuration>
 
 			</plugin>
-    </plugins>
+ 			<plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>0.8.13</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+			            <id>report</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			                <goal>report</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			</plugin>
+   </plugins>
   </build>
   	<dependencies>
 
@@ -56,7 +75,7 @@
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>ballot-utils</artifactId>
-    	  <version>1.6.0</version>
+    	  <version>1.7.0</version>
 		</dependency>
 	</dependencies>
   

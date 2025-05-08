@@ -2,8 +2,8 @@
 | Package Name     | File Name           | Type     | Blank    | JavaDoc  | Comment  | Code     | Total    |
 +------------------+---------------------+----------+----------+----------+----------+----------+----------+
 | ballotutils      | MockedAppender.java | test     |        6 |        0 |        1 |       16 |       23 |
-| ballotutils      | TestUtils.java      | test     |       10 |        4 |       19 |      288 |      321 |
-| ballotutils      | Utils.java          | src      |        7 |      169 |       21 |      241 |      438 |
+| ballotutils      | TestUtils.java      | test     |       11 |        4 |       19 |      297 |      331 |
+| ballotutils      | Utils.java          | src      |        7 |      177 |       21 |      249 |      454 |
 +------------------+---------------------+----------+----------+----------+----------+----------+----------+
-| 1 package(s)     | 3 file(s)           | java     |       23 |      173 |       41 |      545 |      782 |
+| 1 package(s)     | 3 file(s)           | java     |       24 |      181 |       41 |      562 |      808 |
 +------------------+---------------------+----------+----------+----------+----------+----------+----------+
