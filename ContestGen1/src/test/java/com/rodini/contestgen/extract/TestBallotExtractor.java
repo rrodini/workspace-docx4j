@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.rodini.contestgen.model.Ballot;
 import com.rodini.ballotutils.Utils;
 import com.rodini.contestgen.common.Initialize;
 class TestBallotExtractor {
@@ -30,10 +31,23 @@ class TestBallotExtractor {
 	}
 
 	@Test
+	void testExtract() {
+		// This is a full specimen
+		String specimenText = Utils.readTextFile("./src/test/java/Primary-Dems-2021.txt");
+		Initialize.precinctNameRepeatCount = 2;
+		Initialize.precinctNameRegex = Utils.compileRegex("(?m)^OFFICIAL MUNICIPAL PRIMARY ELECTION BALLOT\n(?<id>\\d+) (?<name>.*)$\n");
+		List<Ballot> ballots = BallotExtractor.extract(specimenText);
+//		for (Ballot ballot: ballots) {
+//			System.out.printf("%s%n", ballot.getPrecinctNoName());
+//		}
+//		System.out.printf("ballots size: %d%n", ballots.size());
+		assertEquals(231, ballots.size());
+	}
+	@Test
 	void testExtractNamesGood() {
 		// This is a full specimen
 		String specimenText = Utils.readTextFile("./src/test/java/Primary-Dems-2021.txt");
-		Initialize.precinctNameRegex = Utils.compileRegex("(?m)^OFFICIAL MUNICIPAL PRIMARY ELECTION BALLOT\\n(?<id>\\d+) (?<name>.*)$\\n");
+		Initialize.precinctNameRegex = Utils.compileRegex("(?m)^OFFICIAL MUNICIPAL PRIMARY ELECTION BALLOT\n(?<id>\\d+) (?<name>.*)$\n");
 		List<String> names = BallotExtractor.extractPrecinctNoNames(specimenText);
 //		for (String name: names) {
 //			System.out.printf("%s%n", name);

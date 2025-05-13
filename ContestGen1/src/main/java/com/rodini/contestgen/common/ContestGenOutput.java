@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 /**
  * ContestGenOutput is a simple enum class that converts a string value to an enum object.
+ * It exists so that the corresponding property value can be written in upper or lower case.
  * @author Bob Rodini
  *
  */

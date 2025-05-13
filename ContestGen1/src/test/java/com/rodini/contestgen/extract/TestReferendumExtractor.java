@@ -252,11 +252,26 @@ class TestReferendumExtractor {
 	
 	@Test
 	void testExtractPageReferendums1() {
+		String refText =
+				"""
+				"Do you favor the imposition of a
+				tax on earned income of
+				Township residents by West
+				Bradford Township at the rate of
+				one-quarter of one percent
+				annually to be used to preserve,
+				conserve, and acquire open
+				space property interest and
+				benefits?"
+				""";
 		Ballot ballot = new Ballot("025_WEST_BRADFORD_1", "");
 		ballot.setPage1Text(page1Text);
 		ballot.setPage2Text(page2Text);
 		ReferendumExtractor.extractPageReferendums(ballot);
 		assertEquals(1, ballot.getReferendums().size());
+		Referendum ref = ballot.getReferendums().get(0);
+		assertEquals("WEST BRADFORD TOWNSHIP\nOPEN SPACE REFERENDUM", ref.getRefQuestion());
+		assertEquals(refText, ref.getRefText());
 	}
 
 	@Test

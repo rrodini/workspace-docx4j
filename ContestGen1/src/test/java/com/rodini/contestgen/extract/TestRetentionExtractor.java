@@ -239,6 +239,14 @@ class TestRetentionExtractor {
 	void testExtractRetentions1() {
 		List<Retention> rets = RetentionExtractor.extractRetentions("025", "WEST_BRADFORD_1", page2Text);
 		assertEquals(5, rets.size());
+		// check first retention
+		Retention first = rets.get(0);
+		assertEquals("JUSTICE OF THE SUPREME\nCOURT RETENTION ELECTION", first.getOfficeName());
+		assertEquals("THOMAS G SAYLOR", first.getJudgeName());
+		// check last retention
+		Retention last = rets.get(rets.size()-1);
+		assertEquals("JUDGE OF THE COURT OF\nCOMMON PLEAS RETENTION ELECTION", last.getOfficeName());
+		assertEquals("KATHERINE B L PLATT", last.getJudgeName());
 	}
 
 	@Test

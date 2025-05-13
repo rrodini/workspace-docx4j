@@ -31,9 +31,16 @@ public class Initialize {
 	public static int     precinctNameRepeatCount;
 	// All regexes are compiled after loading
 	public static Pattern precinctNameRegex;
+//  DO NOT USE. Next three variables were obsoleted by v1.7.0
 	public static int     precinctBallotPageCount;
 	public static Pattern precinctBallotPage1Regex;
 	public static Pattern precinctBallotPage2Regex;
+//	NEW - Next four variables are used by v1.7.0+
+	public static Pattern precinctPageBreakRegex;
+	public static Pattern precinctOnePageRegex;
+	public static Pattern precinctTwoPage1Regex;
+	public static Pattern precinctTwoPage2Regex;
+
 	public static Pattern [] contestRegex;
 	public static Pattern referendumRegex;
 	public static Pattern retentionQuestionRegex;
@@ -49,9 +56,15 @@ public class Initialize {
 //  2. All properties are *county* specific, e.g. chester.muniNameRepeatCount
 	private static final String PROP_PRECINCT_NAME_REPEAT_COUNT = ".muniNameRepeatCount";
 	private static final String PROP_PRECINCT_NAME_REGEX = ".muniNameRegex";
+//  DO NOT USE. Next three regexes were obsoleted by v1.7.0
 	private static final String PROP_PRECINCT_BALLOT_PAGE_COUNT = ".muniTextPageCount";
 	private static final String PROP_PRECINCT_BALLOT_PAGE1_REGEX = ".muniTextPage1Regex";
 	private static final String PROP_PRECINCT_BALLOT_PAGE2_REGEX = ".muniTextPage2Regex";
+//  NEW - Next four regexes are used by v1.7.0+
+	private static final String PROP_PRECINCT_PAGE_BREAK_REGEX = ".pageBreakRegex";
+	private static final String PROP_PRECINCT_ONE_PAGE_REGEX = ".onePageRegex";
+	private static final String PROP_PRECINCT_TWO_PAGE1_REGEX = ".twoPage1Regex";
+	private static final String PROP_PRECINCT_TWO_PAGE2_REGEX = ".twoPage2Regex";
 	private static final String PROP_CONTEST_REGEX    = ".contest.format";
 	private static final String PROP_REFERENDUM_REGEX = ".referendum.format";
 	private static final String PROP_RETENTION_QUESTION_REGEX  = ".retention.question.format";
@@ -190,12 +203,17 @@ public class Initialize {
 	    precinctNameRepeatCount = validateIntProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_NAME_REPEAT_COUNT, 2);
 		// chester.muniNameRegex=regex
 	    precinctNameRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_NAME_REGEX);
+	    // Next three regexes were obsoleted by v1.7.0
 		// chester.muniTextPageCount=2
-	    precinctBallotPageCount = validateIntProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_BALLOT_PAGE_COUNT, 2);
+	    //precinctBallotPageCount = validateIntProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_BALLOT_PAGE_COUNT, 2);
 		// chester.muniTextPage1Regex=
-	    precinctBallotPage1Regex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_BALLOT_PAGE1_REGEX);
+	    //precinctBallotPage1Regex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_BALLOT_PAGE1_REGEX);
 		// chester.muniTextPage2Regex=
-	    precinctBallotPage2Regex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_BALLOT_PAGE2_REGEX);
+	    //precinctBallotPage2Regex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_BALLOT_PAGE2_REGEX);
+	    precinctPageBreakRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_PAGE_BREAK_REGEX);
+	    precinctOnePageRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_ONE_PAGE_REGEX);
+	    precinctTwoPage1Regex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_TWO_PAGE1_REGEX);
+	    precinctTwoPage2Regex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_TWO_PAGE2_REGEX);
 	    // chester.contest.format.1, chester.contest.format.2, ...
 	    contestRegex = validateOrderedRegexProperties(props, ContestGen1.COUNTY + PROP_CONTEST_REGEX);
 	    // chester.referendum.format

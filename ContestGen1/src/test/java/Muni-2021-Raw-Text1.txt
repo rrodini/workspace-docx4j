@@ -173,7 +173,6 @@ Atglen Borough
 6 Year Term
 Vote for ONE
 Write-in
-Continued from front side of ballot
 Vote Both Sides
 OFFICIAL JUDICIAL RETENTION
 QUESTIONS INSTRUCTIONS TO
@@ -238,3 +237,4 @@ Judge of the Court of Common Pleas,
 County?
 Yes
 No
+Review

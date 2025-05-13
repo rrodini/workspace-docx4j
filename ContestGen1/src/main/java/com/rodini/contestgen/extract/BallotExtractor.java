@@ -14,8 +14,8 @@ import com.rodini.contestgen.common.Initialize;
 import com.rodini.contestgen.model.Ballot;
 /**
  * BallotExtractor extracts the ballot text for each precinct-level ballot from
- * the specimen text.  First it extracts the application names (keys) for the ballot
- * then it extracts the raw text. At the end, a list of Ballot objects are created.
+ * the specimen text.  First it finds the precinct boundaries for each precinct
+ * then it extracts the raw text of the precinct. At the end, a list of Ballot objects are created.
  * 
  * @author Bob Rodini
  *
@@ -58,7 +58,9 @@ public class BallotExtractor {
 				end = textSize;
 			}
 			logger.info(String.format("ballot extraction %s specimen start: %d end %d ", precinctNoName, start, end));
-			Ballot ballot = new Ballot(precinctNoName, specimenText.substring(start, end));
+			// Appending EOL to end makes the page level regexes work to capture last "Write-in" or "No" on page.
+			String ballotRawText = specimenText.substring(start, end) + "\n";
+			Ballot ballot = new Ballot(precinctNoName, ballotRawText);
 			ballots.add(ballot);
 			count++;
 		}

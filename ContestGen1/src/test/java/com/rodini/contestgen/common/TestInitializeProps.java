@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import com.ginsberg.junit.exit.ExpectSystemExit;
 
 import com.rodini.ballotutils.Utils;
 import com.rodini.contestgen.ContestGen1;
@@ -31,8 +32,7 @@ class TestInitializeProps {
 	    logger = (Logger)LogManager.getLogger(Initialize.class);
 	    logger.addAppender(mockedAppender);
 	    logger.setLevel(Level.ERROR);
-	    ContestGen1.COUNTY = "chester";
-	    
+	    ContestGen1.COUNTY = "chester";  
 	}
 
 	@AfterAll
@@ -91,8 +91,17 @@ class TestInitializeProps {
 		assertTrue(mockedAppender.messages.get(0).startsWith("property regex.prop.missing is missing."));
 	}
 	@Test
-//	@Disabled // Implement when System.exit() issue is fixed.
-	void testValidateRegexPropertyBad() {		
+//	@Disabled
+	@ExpectSystemExit	
+	void testValidateRegexPropertyBad() {
+		// Since Utils.loadProperties detects this error.
+		Logger saveLogger = logger;
+	    logger = (Logger)LogManager.getLogger(Utils.class);
+		Properties props = Utils.loadProperties("./src/test/java/Bad-Properties.properties");
+		Pattern patBadRegexProperty = Initialize.validateRegexProperty(props, "regex.prop.bad");
+		logger = saveLogger;
+		assertEquals(1, mockedAppender.messages.size());
+		assertTrue(mockedAppender.messages.get(0).startsWith("can't compile regex:"));
 	}
 	@Test
 	void testValidateOrderedRegexProperties() {

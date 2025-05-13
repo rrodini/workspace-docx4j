@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.rodini.contestgen.model.Ballot;
 import com.rodini.ballotutils.Utils;
 import com.rodini.contestgen.common.Initialize;
 
@@ -180,6 +181,15 @@ class TestPageExtractor {
 	the Commonwealth of Pennsylvania?
 	Yes
 	No
+	Court of Common Pleas Retention
+	Election Question
+	Shall Ann Marie Wheatcraft be
+	retained for an additional term as
+	Judge of the Court of Common Pleas,
+	15th Judicial District, Chester
+	County?
+	Yes
+	No
 	""";
 
 	@BeforeAll
@@ -199,6 +209,7 @@ class TestPageExtractor {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		Initialize.writeIn = "Write-in";
 	}
 
 	@AfterEach
@@ -206,14 +217,40 @@ class TestPageExtractor {
 		mockedAppender.messages.clear();
 	}
 
+	@Test 
+	void testExtractPagesFromOnePageBallot() {
+		String rawText = Utils.readTextFile("./src/test/java/Muni-2021-Raw-Text2.txt");
+		rawText = rawText + "\n";
+		Ballot ballot = new Ballot("005_Atglen", rawText);
+		// This is a one page ballot.
+		Initialize.precinctPageBreakRegex = Utils.compileRegex("Vote Both Sides");
+		Initialize.precinctOnePageRegex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*)");
+		PageExtractor.extractPages(ballot);
+		assertEquals(expectedText1, ballot.getPage1Text());
+		assertEquals("", ballot.getPage2Text());
+	}
+	@Test
+	void testExtractPagesFromTwoPageBallot() {
+		String rawText = Utils.readTextFile("./src/test/java/Muni-2021-Raw-Text1.txt");
+		// This is a two page ballot.
+		Initialize.precinctPageBreakRegex = Utils.compileRegex("Vote Both Sides");
+		Initialize.precinctTwoPage1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*)^Vote Both Sides$");
+		Initialize.precinctTwoPage2Regex = Utils.compileRegex("(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)(?<page>((.*)\n)*)^Review$");
+		Ballot ballot = new Ballot("005_Atglen", rawText);
+		PageExtractor.extractPages(ballot);
+		assertEquals(expectedText1, ballot.getPage1Text());
+		assertEquals(expectedText2, ballot.getPage2Text());
+	}
+	
+	
 	@Test
 	void testExtractPageWithTwoPageBallot() {
 		// Regexes for ROW OFFICE General Election of 2021 featuring Judge Retentions.
 		// See "Chester-General-2021.properties"
 		String rawText = Utils.readTextFile("./src/test/java/Muni-2021-Raw-Text1.txt");
-		int     pageCount = 2;
-		Pattern page1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*?)^Continued from front side of ballot$(.*)");
-		Pattern page2Regex = Utils.compileRegex("(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)((?<page>((.*)\n)*^(No\n)))");
+//		This is a two page ballot.
+		Pattern page1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*)^Vote Both Sides$");
+		Pattern page2Regex = Utils.compileRegex("(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)(?<page>((.*)\n)*)^Review$");
 		String page1Text = PageExtractor.extractPage("005_Atglen", rawText, page1Regex, 1);
 		String page2Text = PageExtractor.extractPage("005_Atglen", rawText, page2Regex, 2);
 		assertEquals(expectedText1, page1Text);
@@ -225,13 +262,11 @@ class TestPageExtractor {
 		// Regexes for ROW OFFICE General Election of 2021 with no Judge Retentions.
 		// See "Chester-General-2021.properties"
 		String rawText = Utils.readTextFile("./src/test/java/Muni-2021-Raw-Text2.txt");
-		int     pageCount = 2;
-		Pattern page1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*?)^Continued from front side of ballot$(.*)");
-		Pattern page2Regex = Utils.compileRegex("(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)((?<page>((.*)\n)*^(No\n)))");
+		rawText = rawText + "\n";
+//		This is a one page ballot.
+		Pattern page1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(?<page>((.*)\n)*)");
 		String page1Text = PageExtractor.extractPage("005_Atglen", rawText, page1Regex, 1);
-		String page2Text = PageExtractor.extractPage("005_Atglen", rawText, page2Regex, 2);
 		assertEquals(expectedText1, page1Text);
-		assertEquals("", page2Text);
 	}
 
 	@Test
@@ -241,9 +276,9 @@ class TestPageExtractor {
 		// But this ballot has one page.
 		// See "Chester-General-2021.properties"
 		String rawText = Utils.readTextFile("./src/test/java/Muni-2021-Raw-Text2.txt");
-		int     pageCount = 1;
-		Pattern page1Regex = Utils.compileRegex("\\ddd");
-//		Pattern page2Regex = Utils.compileRegex("(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)((?<page>((.*)\n)*^(No\n)))");
+		rawText = rawText + "\n";
+//		This is a bad regex - no ?<page>
+		Pattern page1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(((.*)\n)*)");
 		String page1Text = PageExtractor.extractPage("005_Atglen", rawText, page1Regex, 1);
 		assertEquals(1, mockedAppender.messages.size());
 		assertTrue(mockedAppender.messages.get(0).startsWith("no match for precinctNoName: 005_Atglen"));
@@ -257,13 +292,14 @@ class TestPageExtractor {
 		// But this ballot has one page.
 		// See "Chester-General-2021.properties"
 		String rawText = Utils.readTextFile("./src/test/java/Muni-2021-Raw-Text2.txt");
-		int     pageCount = 1;
-		Pattern page1Regex = Utils.compileRegex("(?m)(.*?)(^CONTESTS AND QUESTIONS\\.$\n)(((.*)\n)*?)^Continued from front side of ballot$(.*)");
-//		Pattern page2Regex = Utils.compileRegex("(?m)(.*?)(^FOLLOWING JUDICIAL RETENTION\nQUESTIONS$\n)((?<page>((.*)\n)*^(No\n)))");
-		String page1Text = PageExtractor.extractPage("005_Atglen", rawText, page1Regex, 1);
+		rawText = rawText + "\n";
+//		This a bad regex - does not match anything		
+		Pattern page1Regex = Utils.compileRegex("\\ddd");
+		String page2Text = PageExtractor.extractPage("005_Atglen", rawText, page1Regex, 1);
 		assertEquals(1, mockedAppender.messages.size());
-		assertEquals("No group with name <page>", mockedAppender.messages.get(0));
+		assertTrue(mockedAppender.messages.get(0).startsWith("no match for precinctNoName: 005_Atglen"));
 	}
 
+	
 	
 }

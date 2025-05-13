@@ -12,15 +12,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import com.ginsberg.junit.exit.agent.AgentSystemExitHandlerStrategy;
 import com.ginsberg.junit.exit.ExpectSystemExit;
-//import com.ginsberg.junit.exit.FailOnSystemExit;
-//import com.ginsberg.junit.exit.SystemExitExtension;
 
 import com.rodini.contestgen.ContestGen1;
 import com.rodini.ballotutils.Utils;
-//@ExtendWith(SystemExitExtension.class)
 class TestInitializeCLIArgs {
 
 	private static MockedAppender mockedAppender;
@@ -53,18 +48,6 @@ class TestInitializeCLIArgs {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-//	@Test
-//	@Disabled
-//	@ExpectSystemExit
-//	void testInitializeArgsCount() {
-//		String [] args1 = {
-//				"bogus"
-//		};
-//		String expected = "missing command line arguments";
-//		Initialize.validateCommandLineArgs(args1);
-//		assertEquals(1, mockedAppender.messages.size());
-//		assertTrue(mockedAppender.messages.get(0).startsWith(expected));
-//	}
 	@Test
 //	@Disabled
 	@ExpectSystemExit
