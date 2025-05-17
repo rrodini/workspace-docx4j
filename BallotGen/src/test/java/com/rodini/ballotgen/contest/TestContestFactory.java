@@ -24,10 +24,10 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 
-import com.rodini.ballotgen.common.ElectionType;
+import com.rodini.ballotutils.ElectionType;
 import com.rodini.ballotgen.common.Initialize;
 import com.rodini.ballotgen.common.MockedAppender;
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.Party;
 import com.rodini.ballotgen.contest.Contest;
 import com.rodini.ballotgen.contest.ContestFactory;
 import com.rodini.ballotgen.contest.ContestNameCounter;

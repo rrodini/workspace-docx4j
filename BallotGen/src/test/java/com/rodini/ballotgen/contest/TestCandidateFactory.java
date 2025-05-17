@@ -1,7 +1,7 @@
 package com.rodini.ballotgen.contest;
 
-import static com.rodini.ballotgen.common.ElectionType.*;
-import static com.rodini.ballotgen.common.Party.*;
+import static com.rodini.ballotutils.ElectionType.*;
+import static com.rodini.ballotutils.Party.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;

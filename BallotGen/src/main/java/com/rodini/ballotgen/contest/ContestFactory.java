@@ -6,13 +6,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.common.ElectionType;
 import com.rodini.ballotgen.common.Initialize;
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.ElectionType;
+import com.rodini.ballotutils.Party;
 
 /**
  * ContestFactory has methods that find ballot text relating

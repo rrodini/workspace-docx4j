@@ -6,11 +6,11 @@ package com.rodini.ballotgen.contest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.common.ElectionType;
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.ElectionType;
+import com.rodini.ballotutils.Party;
 import com.rodini.ballotutils.Utils;
 
-import static com.rodini.ballotgen.common.ElectionType.*;
+import static com.rodini.ballotutils.ElectionType.*;
 import static com.rodini.ballotgen.common.Initialize.*;
 
 

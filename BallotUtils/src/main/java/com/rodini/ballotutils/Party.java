@@ -1,4 +1,4 @@
-package com.rodini.ballotgen.common;
+package com.rodini.ballotutils;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

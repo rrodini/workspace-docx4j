@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.Party;
 import com.rodini.ballotgen.contest.Candidate;
 import com.rodini.ballotgen.contest.Contest;
 import com.rodini.ballotgen.contest.GeneralCandidate;

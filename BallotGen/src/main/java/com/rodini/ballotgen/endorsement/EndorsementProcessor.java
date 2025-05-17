@@ -36,12 +36,12 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.common.ElectionType;
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.ElectionType;
+import com.rodini.ballotutils.Party;
 import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 
-import static com.rodini.ballotgen.common.ElectionType.*;
+import static com.rodini.ballotutils.ElectionType.*;
 import static com.rodini.ballotgen.endorsement.EndorsementMode.*;
 import static com.rodini.ballotgen.endorsement.EndorsementScope.*;
 

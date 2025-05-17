@@ -33,6 +33,8 @@ import com.rodini.ballotgen.writein.Writein;
 import com.rodini.ballotgen.writein.WriteinFactory;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
+import com.rodini.ballotutils.ElectionType;
+import com.rodini.ballotutils.Party;
 import com.rodini.zoneprocessor.ZoneProcessor;
 import com.rodini.zoneprocessor.Zone;
 /** 
@@ -79,6 +81,7 @@ public class Initialize {
 	public  static final String PROPS_FILE = "ballotgen.properties";
 	public  static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
 //	Property names - must match names within ballotgen.properties
+	private static final String PROP_ELECTION_TYPE = "election.type";
 	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WORD_TEMPLATE_DEFAULT = ".word.template.default";
 	private static final String PROP_WORD_TEMPLATE_UNIQUE = ".word.template.unique";
@@ -196,7 +199,7 @@ public class Initialize {
 	 * validateElectionType get/display election type.
 	 */
 	static void validateElectionType() {
-		String type = Utils.getPropValue(ballotGenProps, "election.type");
+		String type = Utils.getPropValue(contestGenProps, PROP_ELECTION_TYPE);
 		logger.info(String.format("election.type: %s", type));
 		elecType = ElectionType.toEnum(type);
 	}
@@ -204,7 +207,7 @@ public class Initialize {
 	 * validateEndorsedParty get/display the endorsed party.
 	 */
 	static void validateEndorsedParty() {
-		String endorsedPartyString = Utils.getPropValue(ballotGenProps, PROP_ENDORSED_PARTY);
+		String endorsedPartyString = Utils.getPropValue(contestGenProps, PROP_ENDORSED_PARTY);
 		logger.info(String.format("endorsed.party: %s", endorsedPartyString));
 		endorsedParty = endorsedPartyString.isEmpty()? null : Party.toEnum(endorsedPartyString);
 	}
@@ -214,7 +217,8 @@ public class Initialize {
 	static void validateContestFileLevel() {
 		String level = Utils.getPropValue(ballotGenProps, CONTEST_FILE_LEVEL);
 		logger.info(String.format("%s: %s", CONTEST_FILE_LEVEL, level));
-		contestLevel = ContestFileLevel.valueOf(level);
+		// Line below deactivated since property is OBSOLETE.
+//		contestLevel = ContestFileLevel.valueOf(level);
 	}
 	/**
 	 * validateFormatsText reads the formats (regexes) from the properties
@@ -450,7 +454,7 @@ public class Initialize {
 		ballotGenProps = Utils.loadProperties(RESOURCE_PATH + PROPS_FILE);
 		contestGenProps = Utils.loadProperties(CONTESTGEN_RESOURCE_PATH + CONTESTGEN_PROPS_FILE);
 		env = ENVIRONMENT.valueOf(Utils.getPropValue(ballotGenProps, "environment"));
-		contestLevel = ContestFileLevel.valueOf(Utils.getPropValue(ballotGenProps, CONTEST_FILE_LEVEL));
+//		contestLevel = ContestFileLevel.valueOf(Utils.getPropValue(ballotGenProps, CONTEST_FILE_LEVEL));
 		validateCommandLineArgs(args);
 		validateWordTemplates();
 		// very little validation here.

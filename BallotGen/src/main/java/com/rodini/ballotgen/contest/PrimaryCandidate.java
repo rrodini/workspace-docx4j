@@ -4,7 +4,7 @@ package com.rodini.ballotgen.contest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.Party;
 /**
  * General Candidate class represents a candidate of a know region.
  * This makes endorsements hard as an auxiliary file is needed.

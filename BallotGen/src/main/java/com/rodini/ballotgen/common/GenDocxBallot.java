@@ -42,6 +42,7 @@ import com.rodini.ballotgen.placeholder.Placeholder;
 import com.rodini.ballotgen.placeholder.PlaceholderProcessor;
 import com.rodini.ballotgen.writein.WriteinProcessor;
 import com.rodini.ballotutils.Utils;
+import com.rodini.ballotutils.ElectionType;
 import com.rodini.zoneprocessor.Zone;
 /**
  * GenDocxBallot is the workhorse class that produces a new Word file

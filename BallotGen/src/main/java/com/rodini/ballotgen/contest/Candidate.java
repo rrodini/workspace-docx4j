@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.Party;
 
 /**
  * Candidate class is just a value object that holds candidate name.

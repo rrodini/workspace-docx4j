@@ -7,8 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.rodini.ballotgen.common.ElectionType;
-import com.rodini.ballotgen.common.Party;
+import com.rodini.ballotutils.ElectionType;
+import com.rodini.ballotutils.Party;
 import com.rodini.ballotgen.endorsement.EndorsementFactory;
 import com.rodini.ballotgen.endorsement.EndorsementMode;
 import com.rodini.ballotgen.endorsement.EndorsementProcessor;

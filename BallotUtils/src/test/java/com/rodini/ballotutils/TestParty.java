@@ -1,4 +1,4 @@
-package com.rodini.ballotgen.common;
+package com.rodini.ballotutils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.rodini.ballotgen.common.Party;
 /**
  * Party should be a simple enum except for the fact
  * that the sample ballot uses string "Democratic" instead of
