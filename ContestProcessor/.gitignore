@@ -1,0 +1,25 @@
+### General
+.DS_Store
+codemr/
+../logs/
+
+### Eclipse ###
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+### Maven ###
+target/
+
+### ContestGen ###
+contests/
+
+### BallotZipper ###
+*.zip
