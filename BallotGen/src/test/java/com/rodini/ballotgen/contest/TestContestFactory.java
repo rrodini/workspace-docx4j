@@ -210,7 +210,8 @@ class TestContestFactory {
 		formatsText = formatLines.stream()
 				.collect(joining("\n"));
 		ContestNameCounter bf = new ContestNameCounter(ballotTextGeneral);
-		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+//		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+		cf = new ContestFactory(ballotTextGeneral, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 	}
 
 	@AfterEach
@@ -250,9 +251,9 @@ class TestContestFactory {
 	}
 	@Test
 	void testFindContestText1() {
-		ContestNameCounter bf = new ContestNameCounter(ballotTextPrimary);
+//		ContestNameCounter bf = new ContestNameCounter(ballotTextPrimary);
 //		Initialize.WRITE_IN = "Write-in";
-		cf = new ContestFactory(bf, formatsText, ElectionType.PRIMARY, Party.DEMOCRATIC);
+		cf = new ContestFactory(ballotTextPrimary, formatsText, ElectionType.PRIMARY, Party.DEMOCRATIC);
 		String contestName = "DEMOCRATIC STATE COMMITTEE";
 		String expected = 
 			"DEMOCRATIC STATE COMMITTEE\n" +
@@ -311,8 +312,8 @@ class TestContestFactory {
 	}
 	@Test
 	void testFindContestTextError2() {
-		ContestNameCounter bf = new ContestNameCounter(ballotTextBad);
-		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+//		ContestNameCounter bf = new ContestNameCounter(ballotTextBad);
+		cf = new ContestFactory(ballotTextBad, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		String contestName = "Justice of the Supreme Court";
 		String expected = "can't find this contest end text for: " + contestName;
 		String text = cf.findContestText(contestName);
@@ -358,8 +359,8 @@ class TestContestFactory {
  		// This value must be built dynamically.  Don't know why.
  		String contestName = elements2[0].concat("\n").concat(elements2[1]);
  		assertEquals(ballotTextGeneral, ballotFileText);
-		ContestNameCounter bf = new ContestNameCounter(ballotFileText);
-		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+//		ContestNameCounter bf = new ContestNameCounter(ballotFileText);
+		cf = new ContestFactory(ballotFileText, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		contestText = cf.findContestText(contestName);
 		assertEquals(expected, contestText);
 	}
@@ -390,8 +391,8 @@ class TestContestFactory {
 	void testGetContestPattern2() {
 		// first section of regex should not compile.
 		String formatsText = "/^@#(\\($%^\n(?<instructions>.*)\n(?<candidates>((.*\n){2})*)^Write-in$/";
-		ContestNameCounter bf = new ContestNameCounter(ballotTextGeneral);
-		cf = new ContestFactory(bf, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
+//		ContestNameCounter bf = new ContestNameCounter(ballotTextGeneral);
+		cf = new ContestFactory(ballotTextGeneral, formatsText, ElectionType.GENERAL, Party.DEMOCRATIC);
 		String contestName = "Judge of the\nCourt of Common Pleas";
 		String expected = "can't compile regex";
 		cf.getContestPattern(contestName,"1");

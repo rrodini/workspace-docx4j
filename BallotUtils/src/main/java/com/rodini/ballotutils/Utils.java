@@ -230,8 +230,7 @@ public class Utils {
 			}
 		} while (propValue != null);
 		if (propValues.size() == 0 ) {
-//			Not an error (actually expected)
-			logger.info("no property names starting with: " + propNamePrefix);
+			logger.error("no property names starting with: " + propNamePrefix);
 		}
 		return propValues;
 	}

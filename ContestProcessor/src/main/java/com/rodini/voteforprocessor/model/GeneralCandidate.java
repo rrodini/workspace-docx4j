@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.model;
 
 
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ public class GeneralCandidate extends Candidate {
 	private boolean bottomOfTicket;
 
 	
-	GeneralCandidate(String name, Party party, String textBeneathName, boolean bottomOfTicket) {
+	public GeneralCandidate(String name, Party party, String textBeneathName, boolean bottomOfTicket) {
 		super(name, party);
 		this.textBeneathName = textBeneathName;
 		this.bottomOfTicket = bottomOfTicket;

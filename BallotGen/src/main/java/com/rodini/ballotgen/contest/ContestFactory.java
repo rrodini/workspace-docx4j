@@ -32,7 +32,7 @@ public class ContestFactory {
 	// BUCKS
 	private final String CONTEST_END = Initialize.WRITE_IN.trim();
 	private final String CONTEST_NAME = "%contest name%";
-	private final ContestNameCounter ballotFactory;
+//	private final ContestNameCounter ballotFactory;
 	private final String ballotText;	// text of the entire ballot
 	private final ElectionType elecType; // GENERAL or PRIMARY
 	private final Party endorsedParty;
@@ -46,9 +46,10 @@ public class ContestFactory {
 	 * @param ballotText text of the entire ballot for municipality.
 	 * @param formatsText strings of key,value pairs for parsing contest text.
 	 */
-	public ContestFactory(ContestNameCounter bf, String formatsText, ElectionType type, Party endorsedParty) {
-		this.ballotFactory = bf;
-		this.ballotText = bf.getBallotText();
+//	public ContestFactory(ContestNameCounter bf, String formatsText, ElectionType type, Party endorsedParty) {
+	public ContestFactory(String ballotText, String formatsText, ElectionType type, Party endorsedParty) {
+//		this.ballotFactory = bf;
+		this.ballotText = ballotText;
 		this.elecType = type;
 		this.endorsedParty = endorsedParty;
 		contestFormats = new HashMap<>();
@@ -85,7 +86,8 @@ public class ContestFactory {
      */
 	public String findContestText(String contestName) {
 		String contestText = "";
-		int start = ballotText.indexOf(contestName, ballotFactory.getStartIndex(contestName));
+//		int start = ballotText.indexOf(contestName, ballotFactory.getStartIndex(contestName));
+		int start = ballotText.indexOf(contestName);
 		if (start == -1) {
 			String msg = "can't find this contestName: " + contestName;
 			logger.error(msg);
@@ -98,7 +100,7 @@ public class ContestFactory {
 			return contestText;
 		}
 		contestText = ballotText.substring(start, end + CONTEST_END.length());
-		ballotFactory.setEndIndex(contestName, end + CONTEST_END.length());
+//		ballotFactory.setEndIndex(contestName, end + CONTEST_END.length());
 		return contestText;
 	}
     /**

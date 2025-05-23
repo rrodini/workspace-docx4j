@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.extract;
 
 import static com.rodini.ballotutils.ElectionType.*;
 import static com.rodini.ballotutils.Party.*;
@@ -16,6 +16,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 //import org.mockito.Mock;
 //import org.mockito.MockitoAnnotations.*;
+
+import com.rodini.voteforprocessor.extract.CandidateFactory;
+import com.rodini.voteforprocessor.extract.ContestFactory;
+import com.rodini.voteforprocessor.extract.Initialize;
+import com.rodini.voteforprocessor.model.Candidate;
+import com.rodini.voteforprocessor.model.GeneralCandidate;
+import com.rodini.voteforprocessor.model.PrimaryCandidate;
 
 //import com.rodini.ballotgen.common.MockedAppender;
 //import com.rodini.ballotgen.common.Initialize;

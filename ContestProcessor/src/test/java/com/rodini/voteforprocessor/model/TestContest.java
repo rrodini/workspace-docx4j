@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,16 +12,21 @@ import com.rodini.ballotutils.Party;
 //import com.rodini.ballotgen.contest.Candidate;
 //import com.rodini.ballotgen.contest.Contest;
 //import com.rodini.ballotgen.contest.GeneralCandidate;
+import com.rodini.voteforprocessor.model.Candidate;
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.GeneralCandidate;
 
 class TestContest {
 	Contest contest;
+	String precinctNo = "350";
+	String precinctName = "Malvern";
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		GeneralCandidate cand1 = new GeneralCandidate("Maria McLaughlin", Party.DEMOCRATIC, "", false);
 		GeneralCandidate cand2 = new GeneralCandidate("Kevin Brobson", Party.REPUBLICAN, "", false);
 		List<Candidate> cands = List.of(cand1, cand2);
-		contest = new Contest("Justice of the Supreme Court", "", "Vote for ONE", cands);
+		contest = new Contest(precinctNo, precinctName, "Justice of the Supreme Court", "", "Vote for ONE", cands, 1);
 	}
 
 	@AfterEach

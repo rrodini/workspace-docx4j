@@ -514,7 +514,7 @@ public class GenDocxBallot {
 		List<P> contestsParagraphs = new ArrayList<>();		
 		String[] contestLines = contestsText.split("\n");
 		Utils.logLines(logger, DEBUG, "contestLines:", contestLines);
-		ContestNameCounter ballotFactory = new ContestNameCounter(ballotText);
+//		ContestNameCounter ballotFactory = new ContestNameCounter(ballotText);
 //		int i = 0;
 //		int j = 0;
 		for (String line: contestLines) {
@@ -533,7 +533,7 @@ public class GenDocxBallot {
 			// Test if a pseudo contest box should be generated.
 			contestParagraphs.addAll(contestName.equals(Initialize.PAGE_BREAK)?
 					  GenDocx.genPageBreak(docx.getMainDocumentPart())
-					: genContest(ballotFactory, contestName, contestFormat));
+					: genContest(ballotText, contestName, contestFormat));
 //			// Insert column break after contest?
 //			if (i+1 == Initialize.columnBreaks[j]) {
 //				MainDocumentPart mdp = docx.getMainDocumentPart();
@@ -555,11 +555,13 @@ public class GenDocxBallot {
 	 * @param format number # that references "contest.format.#"
 	 */
 	/* private */
-	List<P> genContest(ContestNameCounter bf, String name, String format) {
+//	List<P> genContest(ContestNameCounter bf, String name, String format) {
+	List<P> genContest(String ballotText, String name, String format) {
 		logger.debug(String.format("generating contest name: %s format: %s%n", name, format));
 		List<P> contestParagraphs = new ArrayList<>();
 		MainDocumentPart mdp = docx.getMainDocumentPart();
-		ContestFactory cf = new ContestFactory(bf, formatsText, Initialize.elecType, Initialize.endorsedParty);
+//		ContestFactory cf = new ContestFactory(bf, formatsText, Initialize.elecType, Initialize.endorsedParty);
+		ContestFactory cf = new ContestFactory(ballotText, formatsText, Initialize.elecType, Initialize.endorsedParty);
 		String contestText = cf.findContestText(name);
 		if (!contestText.isBlank()) {
 			Contest contest = cf.parseContestText(name, contestText, format);

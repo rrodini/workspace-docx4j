@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.model;
 
 
 import org.apache.logging.log4j.LogManager;

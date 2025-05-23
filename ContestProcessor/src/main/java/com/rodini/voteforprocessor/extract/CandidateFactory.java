@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.extract;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -9,6 +9,9 @@ import org.apache.logging.log4j.Logger;
 import com.rodini.ballotutils.ElectionType;
 import com.rodini.ballotutils.Party;
 import com.rodini.ballotutils.Utils;
+import com.rodini.voteforprocessor.model.Candidate;
+import com.rodini.voteforprocessor.model.GeneralCandidate;
+import com.rodini.voteforprocessor.model.PrimaryCandidate;
 
 import static com.rodini.ballotutils.ElectionType.*;
 
@@ -47,7 +50,7 @@ public class CandidateFactory {
 //			"PRESIDENT AND VICE-PRESIDENT"
 //			);
 //	private static final List<String> namesOfTicketContests = 
-//			Arrays.asList(Utils.getPropValue(ballotGenProps, TICKET_CONTEST_NAMES).split(","));
+//			Arrays.asList(Utils.getPropValue(ballotGenProps, PROP_TICKET_CONTEST_NAMES).split(","));
 	
 //	private static final List<String> namesOfLocalContests = List.of(
 //			"PRESIDENT OF THE UNITED STATES"   // not exactly local but no region line beneath
@@ -71,7 +74,7 @@ public class CandidateFactory {
 //			"BOROUGH COUNCIL"
 //			);
 //	private static final List<String> namesOfLocalContests = 
-//			Arrays.asList(Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_NAMES).split(","));
+//			Arrays.asList(Utils.getPropValue(ballotGenProps, PROP_LOCAL_CONTEST_NAMES).split(","));
 	// School district regions below have boundaries that extend beyond Chester County.
 	// This results in the candidate name being followed by their county of residence.
 	// Yet another anomaly in a primary ballot.
@@ -83,7 +86,7 @@ public class CandidateFactory {
 //			"SCHOOL DIRECTOR SPRING FORD REGION 3"
 //			);
 //	private static final List<String> namesOfLocalContestsExceptions = 
-//			Arrays.asList(Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_EXCEPTION_NAMES).split(","));
+//			Arrays.asList(Utils.getPropValue(ballotGenProps, PROP_LOCAL_CONTEST_EXCEPTION_NAMES).split(","));
 
 	List<Candidate> candidates = new ArrayList<Candidate>();
 	/**

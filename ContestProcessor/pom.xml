@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rodini</groupId>
-  <artifactId>contest-processor</artifactId>
+  <artifactId>votefor-processor</artifactId>
   <version>1.7.0</version>
   <packaging>jar</packaging>
-  <name>Contest Processor</name>
-  <description>Provides an API for processing contest found in VS sample ballot.</description>
+  <name>VoteFor Processor</name>
+  <description>Provides an API for processing "VoteFor" objects found in VS sample ballot.</description>
   <build>
     <plugins>
       <plugin>

@@ -1,7 +1,4 @@
-package com.rodini.contestprocessor;
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+package com.rodini.voteforprocessor.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +12,7 @@ import com.rodini.ballotutils.Party;
 public abstract class Candidate {
 	private static final Logger logger = LogManager.getLogger(Candidate.class);
 
-	protected String name;
+	protected String name; // normalized name.
 	protected Party party;
 	
 	protected Candidate(String name, Party party) {
@@ -38,5 +35,9 @@ public abstract class Candidate {
 	}
 	public Party getParty() {
 		return party;
+	}
+	@Override
+	public String toString() {
+		return name;
 	}
 }

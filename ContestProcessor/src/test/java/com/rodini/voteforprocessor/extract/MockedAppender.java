@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.extract;
 
 import java.util.ArrayList;
 import java.util.List;

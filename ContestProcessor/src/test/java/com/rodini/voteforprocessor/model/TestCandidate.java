@@ -1,4 +1,4 @@
-package com.rodini.contestprocessor;
+package com.rodini.voteforprocessor.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import com.rodini.ballotutils.Party;
 //import com.rodini.ballotgen.contest.GeneralCandidate;
 //import com.rodini.ballotgen.contest.PrimaryCandidate;
+import com.rodini.voteforprocessor.model.GeneralCandidate;
+import com.rodini.voteforprocessor.model.PrimaryCandidate;
 
 class TestCandidate {
 //  General Candidate
