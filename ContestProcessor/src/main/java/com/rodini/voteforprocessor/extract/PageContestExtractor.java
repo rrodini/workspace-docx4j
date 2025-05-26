@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import com.rodini.voteforprocessor.extract.Initialize;
 import com.rodini.voteforprocessor.model.Contest;
 /**
- * ContestExtractor extracts multiple contests from the contests text of the ballot.
+ * PageContestExtractor extracts multiple contests from a page text of the ballot.
  * The contest text contains contests, referendums text, and retentions text.
  * The "Vote Both Sides" marker has already been eliminated.
  * 
@@ -19,10 +19,10 @@ import com.rodini.voteforprocessor.model.Contest;
  * It does this by applying the contest regexs from 1 to N sequentially through
  * the text. Only the first hit is used each iteration, then the process is repeated.
  */
-public class ContestExtractor {
-	private static final Logger logger = LogManager.getLogger(ContestExtractor.class);
+public class PageContestExtractor {
+	private static final Logger logger = LogManager.getLogger(PageContestExtractor.class);
 	// prevent instantiation.
-	private ContestExtractor() {}
+	private PageContestExtractor() {}
 
 	/** 
 	 * extractPageContests extracts the contests on the combined pages of a ballot.
@@ -33,7 +33,7 @@ public class ContestExtractor {
 	 * @param ballotText ballot text
 	 * @return List of Contest objects
 	 */
-	static List<Contest> extractPageContests(String precinctNo, String precinctName, String ballotText) {
+	public static List<Contest> extractPageContests(String precinctNo, String precinctName, String ballotText) {
 		List<Contest> contests = new ArrayList<>();
 		int start = 0;
 		int end = 0;

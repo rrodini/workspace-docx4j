@@ -8,8 +8,6 @@
  */
 package com.rodini.voteforprocessor.extract;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -25,9 +23,7 @@ import com.rodini.ballotutils.Utils;
 public class Initialize {
 	private static final Logger logger = LogManager.getLogger(Initialize.class);
 	// Property names. Note: FORMAT == REGEX
-	private static final String ENV_BALLOTGEN_COUNTY = "COUNTY";
-//	public  static final String CONTESTGEN_RESOURCE_PATH = "../contestgen/resources/";
-//	public  static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
+	private static final String ENV_BALLOTGEN_COUNTY = "BALLOTGEN_COUNTY";
 	private static final String PROP_ELECTION_TYPE = "election.type";
 	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WRITE_IN = ".write.in";
@@ -68,6 +64,9 @@ public class Initialize {
 		logger.info(String.format("endorsed.party: %s", endorsedPartyString));
 		endorsedParty = endorsedPartyString.isEmpty()? null : Party.toEnum(endorsedPartyString);
 	}
+	/**
+	 * validateWritein property. This is critical to contest delineation.
+	 */
 	static void validateWritein() {
 		WRITE_IN = Utils.getPropValue(contestGenProps, COUNTY + PROP_WRITE_IN);
 		if (WRITE_IN == null || WRITE_IN.isBlank()) {
@@ -87,8 +86,6 @@ public class Initialize {
 	 */
 	static Pattern [] validateOrderedRegexProperties(Properties props, String propPrefix) {
 		List<String> regexList = Utils.getPropOrderedValues(props, propPrefix);
-//System.out.printf("contest property formats size: %d%n", regexList.size());
-//System.out.printf("contest property formats: %s%n", regexList.toString());
 		Pattern [] patList = new Pattern [regexList.size()];
 		for (int i = 0; i < regexList.size(); i++) {
 			patList[i] = Utils.compileRegex(regexList.get(i));
@@ -133,7 +130,6 @@ public class Initialize {
 		logger.info(String.format("there are %d contest formats in the contestgen properties file", count-1));
 		// Now validate them by compiling them
 		contestRegexes = validateOrderedRegexProperties(contestGenProps, COUNTY + PROP_CONTEST_FORMAT_PREFIX);
-//System.out.printf("contestRegexes.length: %d%n", contestRegexes.length);
 	}
 	
 	/**

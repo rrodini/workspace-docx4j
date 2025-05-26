@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Contest is a value object that holds information about a particular political contest (race).
+ * Contest is a value object that holds information about a particular political contest (office).
  * It is used by ContestGen1 to generate files like 350_MALVERN_contests.txt
  * and by BallotGen to generate the Contest paragraphs of the docx file. 
  */
@@ -66,27 +66,6 @@ public class Contest extends VoteFor {
 		// strip off the final ", " from last candidate
 		return contestText.substring(0, contestText.length()  - 2);
 	}
-	/**
-	 * processContestName handles the special case where the name is
-	 * split over two lines of text, e.g. "Judge of the\nCourt of Commonwealth Pleas"
-	 * 
-	 * Note: Not sure why embedded \n doesn't work, but this does.
-	 * @param name contest name which may have embedded \n
-	 * @return new contest name build dynamically
-	 */
-	// TODO: Determine if this method does anything.
-	public static String processContestName(String name) {
-		String [] elements = name.split("\\\\n");
-		StringBuffer sb = new StringBuffer();
-		int i;
-		for (i = 0; i < elements.length - 1; i++) {
-			sb.append(elements[i]);
-			sb.append("\n");
-		}
-		if (i < elements.length) {
-			sb.append(elements[i]);
-		}
-		return sb.toString();
-	}
+
 
 }

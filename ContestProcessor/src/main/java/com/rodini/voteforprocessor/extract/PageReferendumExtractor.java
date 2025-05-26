@@ -10,18 +10,23 @@ import org.apache.logging.log4j.Logger;
 
 import com.rodini.voteforprocessor.model.Referendum;
 /**
- * ReferendumExtractor processes all ballots and extracts the referendums
+ * PageReferendumExtractor processes all ballots and extracts the referendums
  * from each.
+ * 
+ * Note: The wording of referendums varies greatly between different precincts.
+ * This means that one regex will probably NOT match the referendum question exactly.
+ * The solution is to use a number of regexes (like contest regexes) but this is NOT implemented
+ * at present.
  * 
  * @author Bob Rodini
  *
  */
-public class ReferendumExtractor {
+public class PageReferendumExtractor {
 	
-	static final Logger logger = LogManager.getLogger(ReferendumExtractor.class);
+	static final Logger logger = LogManager.getLogger(PageReferendumExtractor.class);
 
 	// prevent instantiation
-	public ReferendumExtractor() { }
+	private PageReferendumExtractor() { }
 	
 	/**
 	 * extractReferendums extracts Referendum objects from the pageText.
@@ -32,7 +37,7 @@ public class ReferendumExtractor {
 	 * 
 	 * @return List of Referendum objects.
 	 */
-	static List<Referendum> extractReferendums(String precinctNo, String precinctName, String pageText) {
+	public static List<Referendum> extractReferendums(String precinctNo, String precinctName, String pageText) {
 		List<Referendum> referendumList = new ArrayList<>();
 		Pattern regex = Initialize.referendumRegex;
 		Matcher m = regex.matcher(pageText);

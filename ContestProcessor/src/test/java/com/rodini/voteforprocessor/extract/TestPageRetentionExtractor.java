@@ -18,7 +18,7 @@ import com.rodini.ballotutils.Utils;
 
 import static com.rodini.voteforprocessor.extract.TestBallotText.*;
 
-class TestRetentionExtractor {
+class TestPageRetentionExtractor {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -43,7 +43,7 @@ class TestRetentionExtractor {
 		// contestgen_2024_Primary_Dems.properties
 		Properties props = Utils.loadProperties("./src/test/java/contestgen_2024_Primary_Dems.properties");
 		Initialize.start(props);
-		rets = RetentionExtractor.extractRetentions("OO5",  "ATGLEN", ATGLEN_PRIMARY_2024_BALLOT);
+		rets = PageRetentionExtractor.extractRetentions("OO5",  "ATGLEN", ATGLEN_PRIMARY_2024_BALLOT);
 		// There should be 0 contests.
 		assertEquals(0, rets.size());
 	}
@@ -55,7 +55,7 @@ class TestRetentionExtractor {
 		// contestgen_2024_Primary_Dems.properties
 		Properties props = Utils.loadProperties("./src/test/java/contestgen_2024_Primary_Dems.properties");
 		Initialize.start(props);
-		rets = RetentionExtractor.extractRetentions("300",  "MALVERN", HONEYBROOK_GENERAL_2023_BALLOT);
+		rets = PageRetentionExtractor.extractRetentions("300",  "MALVERN", HONEYBROOK_GENERAL_2023_BALLOT);
 		// There should be 4 retentions.
 		assertEquals(4, rets.size());
 		// And its fields should match these

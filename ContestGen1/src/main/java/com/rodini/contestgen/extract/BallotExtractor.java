@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.rodini.ballotutils.Utils.ATTN;
+
+import com.rodini.ballotutils.Utils;
 import com.rodini.contestgen.common.Initialize;
 import com.rodini.contestgen.model.Ballot;
 /**
@@ -80,8 +82,8 @@ public class BallotExtractor {
 		Matcher match = pat.matcher(specimenText);
 		if (!match.find()) {
 			String msg = String.format("no matches for precinctNoNames. Bad regex: %s", pat.pattern());
-			// TODO: logFatalError here.
-			logger.error(msg);
+			// Can't proceed without matches here.
+			Utils.logFatalError(msg);
 		} else {
 			// must reset the matcher or loose the first match
 			match.reset();

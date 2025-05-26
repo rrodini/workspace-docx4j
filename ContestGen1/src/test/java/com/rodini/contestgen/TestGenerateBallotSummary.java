@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 
 import com.rodini.contestgen.model.Ballot;
-import com.rodini.contestgen.model.Contest;
-import com.rodini.contestgen.model.Referendum;
-import com.rodini.contestgen.model.Retention;
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.Referendum;
+import com.rodini.voteforprocessor.model.Retention;
 
 class TestGenerateBallotSummary {
 
@@ -30,15 +30,15 @@ class TestGenerateBallotSummary {
 		List<Contest> contests = new ArrayList<>();
 		List<Referendum> referendums = new ArrayList<>();
 		List<Retention> retentions = new ArrayList<>();
-		Contest contest1 = new Contest("305", "KENNETT_SQUARE_N", "Justice of the Supreme Court", 1);
-		Contest contest2 = new Contest("305", "KENNETT_SQUARE_N", "Judge of the Court of Common Pleas\n15th Judicial District", 1);
+		Contest contest1 = new Contest("305", "KENNETT_SQUARE_N", "Justice of the Supreme Court", "term", "instructions", null, 1);
+		Contest contest2 = new Contest("305", "KENNETT_SQUARE_N", "Judge of the Court of Common Pleas\n15th Judicial District", "term", "instructions", null, 1);
 		contests.add(contest1);
 		contests.add(contest2);
 		Referendum ref1 = new Referendum("305", "KENNETT_SQUARE_N", "Borough of Kennett Square:\nLibrary Tax Referendum", "refText - not used");
 		referendums.add(ref1);
-		Retention ret1 = new Retention("305","KENNETT_SQUARE_N", "Superior Court Retention\nElection Question", "Jack Panella");
-		Retention ret2 = new Retention("305","KENNETT_SQUARE_N", "Superior Court Retention\nElection Question", "Victor P. Stabile");
-		Retention ret3 = new Retention("305","KENNETT_SQUARE_N", "Court of Common Pleas Retention\nElection Question", "Patrick Carmody");
+		Retention ret1 = new Retention("305","KENNETT_SQUARE_N", "question", "Superior Court Retention\nElection Question", "Jack Panella");
+		Retention ret2 = new Retention("305","KENNETT_SQUARE_N", "question", "Superior Court Retention\nElection Question", "Victor P. Stabile");
+		Retention ret3 = new Retention("305","KENNETT_SQUARE_N", "question", "Court of Common Pleas Retention\nElection Question", "Patrick Carmody");
 		retentions.add(ret1);
 		retentions.add(ret2);
 		retentions.add(ret3);

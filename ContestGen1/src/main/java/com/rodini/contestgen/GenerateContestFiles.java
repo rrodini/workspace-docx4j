@@ -12,9 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.rodini.contestgen.common.Initialize;
 import com.rodini.contestgen.model.Ballot;
-import com.rodini.contestgen.model.Contest;
-import com.rodini.contestgen.model.Referendum;
-import com.rodini.contestgen.model.Retention;
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.Referendum;
+import com.rodini.voteforprocessor.model.Retention;
 //@formatter: off
 /**
  * GenerateContestFiles generates the precinct-level files in the ./contests folder.
@@ -62,9 +62,9 @@ public class GenerateContestFiles {
 	static void generateContests(Writer cf, Ballot ballot) throws IOException {
 		cf.write("Contests\n");
 		for (Contest contest: ballot.getContests()) {
-			String contestName = contest.getContestName();
+			String contestName = contest.getName();
 			contestName = contestName.replaceAll("\n", "\\\\\\n");
-			cf.write(String.format("%s,%d%n", contestName, contest.getContestFormat()));
+			cf.write(String.format("%s,%d%n", contestName, contest.getFormatIndex()));
 		}	
 	}
 	/**

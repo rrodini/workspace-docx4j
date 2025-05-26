@@ -18,7 +18,7 @@ import com.rodini.ballotutils.Utils;
 
 import static com.rodini.voteforprocessor.extract.TestBallotText.*;
 
-class TestContestExtractor {
+class TestPageContestExtractor {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -53,7 +53,7 @@ class TestContestExtractor {
 		// contestgen_2024_Primary_Dems.properties
 		Properties props = Utils.loadProperties("./src/test/java/contestgen_2024_Primary_Dems.properties");
 		Initialize.start(props);
-		contests = ContestExtractor.extractPageContests("OO5",  "ATGLEN", ATGLEN_PRIMARY_2024_BALLOT);
+		contests = PageContestExtractor.extractPageContests("OO5",  "ATGLEN", ATGLEN_PRIMARY_2024_BALLOT);
 		// There should be 8 contests.
 		assertEquals(8, contests.size());
 		// And their names should match these
@@ -84,7 +84,7 @@ class TestContestExtractor {
 		// contestgen_2024_Primary_Dems.properties
 		Properties props = Utils.loadProperties("./src/test/java/contestgen_2024_Primary_Dems.properties");
 		Initialize.start(props);
-		contests = ContestExtractor.extractPageContests("350",  "MALVERN", MALVERN_PRIMARY_2023_BALLOT);
+		contests = PageContestExtractor.extractPageContests("350",  "MALVERN", MALVERN_PRIMARY_2023_BALLOT);
 		// There should be 8 contests.
 		assertEquals(12, contests.size());
 		// And their names should match these
@@ -111,7 +111,7 @@ class TestContestExtractor {
 		// contestgen_2024_general_election.properties
 		Properties props = Utils.loadProperties("./src/test/java/contestgen_2024_General_Election.properties");
 		Initialize.start(props);
-		contests = ContestExtractor.extractPageContests("OO5",  "ATGLEN", ATGLEN_GENERAL_2024_BALLOT);
+		contests = PageContestExtractor.extractPageContests("OO5",  "ATGLEN", ATGLEN_GENERAL_2024_BALLOT);
 		// There should be 8 contests.
 		assertEquals(7, contests.size());
 		// And their names should match these

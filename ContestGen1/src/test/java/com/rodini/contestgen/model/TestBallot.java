@@ -11,6 +11,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.Referendum;
+import com.rodini.voteforprocessor.model.Retention;
+
 class TestBallot {
 
 	private String precinctNoName = "305_KENNETT_SQUARE_N";
@@ -420,7 +424,7 @@ class TestBallot {
 	void testAfterVoteForExtraction() {
 		// ballot state after contest, referendum, and retention extraction.
 		// Not all of these extracted!
-		Contest contest = new Contest("305", "KENNETT_SQUARE_N", "Justice of the Supreme Court", 1);
+		Contest contest = new Contest("305", "KENNETT_SQUARE_N", "Justice of the Supreme Court", "", "", null, 1);
 		List<Contest> contests = new ArrayList<>();
 		assertEquals(0, ballot.getContests().size());
 		contests.add(contest);
@@ -437,6 +441,7 @@ class TestBallot {
 		List<Retention> retentions = new ArrayList<>();
 		Retention ret = new Retention(precinctNo, precinctName,
 				"Superior Court Retention\nElection Question",
+				"",
 				"Jack Panella");
 		assertEquals(0, ballot.getRetentions().size());
 		retentions.add(ret);

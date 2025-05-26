@@ -3,6 +3,9 @@ package com.rodini.contestgen.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.Referendum;
+import com.rodini.voteforprocessor.model.Retention;
 import com.rodini.ballotutils.Utils;
 
 /** 

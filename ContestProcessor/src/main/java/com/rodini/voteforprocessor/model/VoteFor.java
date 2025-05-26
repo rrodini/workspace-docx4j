@@ -21,4 +21,25 @@ public abstract class VoteFor {
 		return precinctName;
 	}
 	
+	/**
+	 * processContestName handles the special case where the name (or question) is
+	 * split over two lines of text, e.g. "Judge of the\nCourt of Commonwealth Pleas"
+	 * 
+	 * Note: Not sure why embedded \n doesn't work, but this does.
+	 * @param name contest name which may have embedded \n
+	 * @return new contest name build dynamically
+	 */
+	public static String processName(String name) {
+		String [] elements = name.split("\\\\n");
+		StringBuffer sb = new StringBuffer();
+		int i;
+		for (i = 0; i < elements.length - 1; i++) {
+			sb.append(elements[i]);
+			sb.append("\n");
+		}
+		if (i < elements.length) {
+			sb.append(elements[i]);
+		}
+		return sb.toString();
+	}
 }

@@ -21,9 +21,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.rodini.contestgen.common.Initialize;
 import com.rodini.contestgen.model.Ballot;
-import com.rodini.contestgen.model.Contest;
-import com.rodini.contestgen.model.Referendum;
-import com.rodini.contestgen.model.Retention;
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.Referendum;
+import com.rodini.voteforprocessor.model.Retention;
 
 public class GenerateBallotSummary {
 	static final Logger logger = LogManager.getLogger(GenerateBallotSummary.class);
@@ -141,7 +141,7 @@ public class GenerateBallotSummary {
 	 */
 	static String getUniqueString(Ballot ballot) {
 		String uniqueString;
-		String contestsString = ballot.getContests().stream().map(Contest::getContestName).collect(joining(""));
+		String contestsString = ballot.getContests().stream().map(Contest::getName).collect(joining(""));
 		String refsString    = ballot.getReferendums().stream().map(Referendum::getRefQuestion).collect(joining(""));
 		String retsString    = ballot.getRetentions().stream().map(Retention::getOfficeName).collect(joining(""));
 		uniqueString = contestsString + refsString + retsString;

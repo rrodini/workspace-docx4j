@@ -13,19 +13,12 @@ import com.rodini.contestgen.common.Initialize;
 import com.rodini.contestgen.model.Ballot;
 /**
  * GenerateBallotFiles generates the precinct-level files in the ./output folder.
- * Example: ./chester-output/
- *             municipal-0.txt
- *             municipal-1.txt
- *             municipal-2.txt
- *             ...                 
- * 
- * Note: 
- * The BallotNamer program will subsequently change the names.
- * Example:
- *             municipal-0.txt => 005_ATGLEN_VS.txt
- *             municipal-1.txt => 010_AVONDALE_VS.txt
- *             municipal-2.txt => 014_BIRMINGHAM_1_VS.txt
- *             ...                 
+ *  Example: ./chester-output/
+ *             005_ATGLEN_VS.txt
+ *             010_AVONDALE_VS.txt
+ *             014_BIRMINGHAM_1_VS.txt
+ *             ...
+ *  Note: The ballot text is "clean" not "raw".
  * @author Bob Rodini
  *
  */
@@ -56,8 +49,8 @@ public class GenerateBallotFiles {
 			String msg = String.format("writing file: %s", ballotFilePath);
 			logger.info(msg);
 			try (FileWriter ballotFile = new FileWriter(ballotFilePath, StandardCharsets.UTF_8, false);) {
-				// Just write the raw text as this file isn't really needed.
-				ballotFile.write(ballot.getRawText());				
+				// NEW pass "clean" text on. OLD pass "raw" text on.
+				ballotFile.write(ballot.getPage1Text() + ballot.getPage2Text());				
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			}

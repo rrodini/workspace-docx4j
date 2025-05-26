@@ -1,8 +1,0 @@
-Justice of the Supreme Court,1
-Judge of the Superior Court,1
-Judge of the Commonwealth Court,1
-Judge of the\nCourt of Common Pleas,1
-Treasurer,2
-Controller,2
-Clerk Of Courts,2
-Coroner,2

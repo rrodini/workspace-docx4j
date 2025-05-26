@@ -45,24 +45,6 @@ public class PageExtractor {
 	static void extractPages(Ballot ballot) {
 		String rawText = ballot.getRawText();
 		String precinctNoName = ballot.getPrecinctNoName();
-		// OLD logic.
-//		Pattern page1Regex = Initialize.precinctBallotPage1Regex;
-//		Pattern page2Regex = Initialize.precinctBallotPage2Regex;
-//		int pageCount = Initialize.precinctBallotPageCount;
-//		String precinctNoName = ballot.getPrecinctNoName();
-//		// extract page1
-//		String page1Text = extractPage(precinctNoName, rawText, page1Regex, 1);
-//		Utils.logLines(logger, Level.DEBUG, precinctNoName + " page1 text:", page1Text.split("\n"));
-//		// ATTENTION:
-//		// page2Text may be empty due to two reasons:
-//		// 1. For all ballots only page 1 have text (short ballot)
-//		// 2. Some ballots have only 1 page whereas others have 2.
-//		String page2Text = "";
-//		// extract page2
-//		if (pageCount == 2) {
-//			page2Text = extractPage(precinctNoName, rawText, page2Regex, 2);
-//		}
-//		Utils.logLines(logger, Level.DEBUG, precinctNoName + " page2 text:", page2Text.split("\n"));
 		String page1Text = "";
 		String page2Text = "";
 		if (extractPageCount(rawText) == 1) {
@@ -123,10 +105,6 @@ public class PageExtractor {
 				logger.error(msg);
 			}
 		}
-		// OLD logic and should not be necessary if the page level regexes are properly designed.
-//		if (!pageText.endsWith(Initialize.writeIn)) {
-//			pageText = pageText + Initialize.writeIn;
-//		}
 		return pageText;
 	}
 

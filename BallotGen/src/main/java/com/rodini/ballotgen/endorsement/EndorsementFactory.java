@@ -17,8 +17,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.contest.Contest;
-
 /**
  * EndorsementFactory processes the endorsementsCSVText into Endorsement objects.
  * It is the only class that knows the format of the CSV file (endorsements.csv).

@@ -4,14 +4,15 @@ import static com.rodini.ballotgen.endorsement.EndorsementMode.ENDORSED;
 import static com.rodini.ballotgen.endorsement.EndorsementMode.UNENDORSED;
 import static com.rodini.ballotutils.Utils.ATTN;
 import static org.apache.logging.log4j.Level.DEBUG;
+import static org.apache.logging.log4j.Level.INFO;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -28,13 +29,18 @@ import org.docx4j.wml.P;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
 
-import com.rodini.ballotgen.contest.Candidate;
-import com.rodini.ballotgen.contest.Contest;
-import com.rodini.ballotgen.contest.ContestFactory;
-import com.rodini.ballotgen.contest.ContestFileLevel;
-import com.rodini.ballotgen.contest.ContestNameCounter;
-import com.rodini.ballotgen.contest.GeneralCandidate;
-import com.rodini.ballotgen.contest.PrimaryCandidate;
+import com.rodini.voteforprocessor.extract.PageContestExtractor;
+import com.rodini.voteforprocessor.extract.PageReferendumExtractor;
+import com.rodini.voteforprocessor.extract.PageRetentionExtractor;
+
+import com.rodini.voteforprocessor.model.Candidate;
+import com.rodini.voteforprocessor.model.Contest;
+import com.rodini.voteforprocessor.model.Referendum;
+import com.rodini.voteforprocessor.model.Retention;
+import com.rodini.voteforprocessor.model.VoteFor;
+//import com.rodini.ballotgen.contest.ContestFileLevel;
+import com.rodini.voteforprocessor.model.GeneralCandidate;
+import com.rodini.voteforprocessor.model.PrimaryCandidate;
 import com.rodini.ballotgen.endorsement.EndorsementMode;
 import com.rodini.ballotgen.endorsement.EndorsementProcessor;
 import com.rodini.ballotgen.generate.GenDocx;
@@ -47,8 +53,8 @@ import com.rodini.zoneprocessor.Zone;
 /**
  * GenDocxBallot is the workhorse class that produces a new Word file
  * based on inputs.  Those inputs are:
- * 1. The ballot (text) file for the municipality.
- * 2. The contests (text) file for the municipality.
+ * 1. The ballot (text) file for the precinct.
+ * 2. The contests (text) file for the precinct.
  * 3. The dotx template file which is referenced by the program's
  *    properties file.
  * 
@@ -71,9 +77,9 @@ public class GenDocxBallot {
 	private String dotxPath;  // path to DOTX template file
 	private String ballotTextFilePath; // path to ballot text file e.g. path/750_East_Whiteland_4_VS.txt
 	private String ballotTitle; // ballot file title e.g. "750_East_Whiteland_4" or "unique_00"
-	private ContestFileLevel contestLevel; // OBSOLETE: COMMON or MUNICIPAL
 	private String ballotText; // text of ballotTextFile
-	private String contestsText; // text of contest names on this ballot
+	// The text below is from the precinct contests file, e.g., 350_MALVERN_contests.txt
+	private String contestNamesText; // text of contest names on this ballot
 	private String referendumsText; // text of referendum questions on this ballot
 	private String retentionsText; // text of retention questions on this ballot
 	// local variables
@@ -84,7 +90,6 @@ public class GenDocxBallot {
 	private String zoneNo;		// # of zone that "owns" precinct
 	private String zoneName;	// name of zone that "owns" precinct
 	private String fileOutputPath; // generated DOCX file
-	private String formatsText;   // formats (regexes) read from properties
 	private EndorsementProcessor endorsementProcessor;
 	private WriteinProcessor writeinProcessor;
 	//          Candidate Candidate
@@ -141,9 +146,6 @@ public class GenDocxBallot {
 		this.dotxPath = dotxPath;
 		this.ballotTextFilePath = textFilePath;
 		this.ballotTitle = ballotTitle;
-// TBD - TO BE DELETED.
-//		this.contestLevel = contestLevel;
-		this.formatsText = formatsText;
 		this.endorsementProcessor = ep;
 		this.writeinProcessor = wp;
 	}
@@ -232,15 +234,7 @@ public class GenDocxBallot {
 	 */
 	void initContestsFileText() {
 		String contestsPath = Initialize.ballotContestsPath + File.separator;
-// TBD - To Be Deleted.
-//		if (contestLevel == COMMON) {
-//			contestsPath = contestsPath + Initialize.COMMON_CONTESTS_FILE;
-//		} else if (contestLevel == MUNICIPAL) {
 		contestsPath = contestsPath + precinctNoName + "_contests.txt";
-// TBD - To Be Deleted.
-//		} else {
-//			Utils.logFatalError("contest file level not recognized. See: " + contestLevel.toString());
-//		}
 		logger.debug("Loading contests file: " + contestsPath);
 		String contestsFileText = Utils.readTextFile(contestsPath);
 		// prepare logging message
@@ -253,7 +247,7 @@ public class GenDocxBallot {
 		initContestsSectionsText(contestsFileText);
 	}
 	/**
-	 * initContestsSectionsText separates the contents of a municipal contests file into
+	 * initContestsSectionsText separates the contents of a precinct contests file into
 	 * its sections: Contests (required), Referendums (optional), Retentions (optional).
 	 * Note: ContestGen uses the order above.
 	 * 
@@ -266,19 +260,25 @@ public class GenDocxBallot {
 		int end = contestsFileText.length();
 		// is "Retentions" present?
 		if (indexRetentions >= 0) {
-			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length(), end);
+			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
 			end = indexRetentions;
+		}
+		if (retentionsText == null || retentionsText.isBlank()) {
+			logger.info("no retention questions found in this municipality's contest file");
 		}
 		// is "Referendums" present?
 		if (indexReferendums >= 0) {
-			referendumsText = contestsFileText.substring(indexReferendums + PLACEHOLDER_REFERENDUMS.length(), end);
+			referendumsText = contestsFileText.substring(indexReferendums + PLACEHOLDER_REFERENDUMS.length()+1, end);
 			end = indexReferendums;
+		}
+		if (referendumsText == null || referendumsText.isBlank()) {
+			logger.info("no referendums questions found in this municipality's contest file");
 		}
 		// is "Contests" present? Should be.
 		if (indexContests >= 0) {
-			contestsText = contestsFileText.substring(indexContests + PLACEHOLDER_CONTESTS.length()+1, end);
+			contestNamesText = contestsFileText.substring(indexContests + PLACEHOLDER_CONTESTS.length()+1, end);
 		}
-		if (contestsText == null || contestsText.isBlank()) {
+		if (contestNamesText == null || contestNamesText.isBlank()) {
 			logger.error("no contest names found in this municipality's contest file");
 		}
 	}
@@ -290,6 +290,7 @@ public class GenDocxBallot {
 	void initReadBallotText() {
 		// Perform file existence check here.
 		ballotText = Utils.readTextFile(ballotTextFilePath);
+		ballotText += "\n";
 	}
 	/**
 	 * initStyles checks that the expected StyleIds (just strings) exist
@@ -497,30 +498,35 @@ public class GenDocxBallot {
 		GenDocx.genWmlChunk(mdp, "ballot_instructions.wml");
 	}
 	/**
-	 * genContests uses the contestsText to generate each "contest group"
+	 * genContests uses the contestNamesText to generate each "contest group"
 	 * It assumes that the format (regex) is correct for each contest.
 	 * 
 	 * Notes:
-	 * The property column.break.contest.count is a crude way of formatting
-	 * the ballot layout. A human counts (starting at 1) the contests
-	 * after which a column break should be generated.  This is crude since
-	 * a contest names and # of candidates can vary from municipality to
-	 * municipality.
+	 * Due to the variability between 231 precinct ballots between election cycle
+	 * years, it is hard to match the column breaks seen on the VS ballot.
+	 * At first a count of the offices was used. Next, the name of the contest 
+	 * that starts the column. The later is used, but it's not perfect.
 	 */
 	/* private */
 	List<P> genContests() {
 		logger.debug("generating contests for document");
+		// Re-extract all the Contest objects on this ballot.
+		List<Contest> contests = PageContestExtractor.extractPageContests(precinctNo, precinctName, ballotText);	
 		// contestsParagraphs is the list of all of the contest paragraphs.
-		List<P> contestsParagraphs = new ArrayList<>();		
-		String[] contestLines = contestsText.split("\n");
-		Utils.logLines(logger, DEBUG, "contestLines:", contestLines);
-//		ContestNameCounter ballotFactory = new ContestNameCounter(ballotText);
+		List<P> contestsParagraphs = new ArrayList<>();
+		String[] contestNamesLines = contestNamesText.split("\n");
+		Utils.logLines(logger, DEBUG, "contestLines:", contestNamesLines);
 //		int i = 0;
 //		int j = 0;
-		for (String line: contestLines) {
+		// Each line is a contest name previously extracted.
+		for (String line: contestNamesLines) {
 			String [] elements = line.split(",");
 			String contestName = elements[0];
-			contestName = Contest.processContestName(contestName);
+			Contest contest = null;
+			if (!contestName.equals(Initialize.PAGE_BREAK)) {
+				contestName = VoteFor.processName(contestName);
+				contest = findContestByName(contestName, contests);
+			}
 			List<P> contestParagraphs = new ArrayList<>();
 			// Insert column break before contest?
 			if (Initialize.columnBreaks.indexOf(contestName) >= 0) {
@@ -528,12 +534,12 @@ public class GenDocxBallot {
 				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
 				contestParagraphs.add(columnBreakParagraph);
 			}
-			String contestFormat = elements[1];
+//			String contestFormat = elements[1];
 			// Is there a "page break" in the ballot?
 			// Test if a pseudo contest box should be generated.
 			contestParagraphs.addAll(contestName.equals(Initialize.PAGE_BREAK)?
 					  GenDocx.genPageBreak(docx.getMainDocumentPart())
-					: genContest(ballotText, contestName, contestFormat));
+					: genContest(contest));
 //			// Insert column break after contest?
 //			if (i+1 == Initialize.columnBreaks[j]) {
 //				MainDocumentPart mdp = docx.getMainDocumentPart();
@@ -547,27 +553,32 @@ public class GenDocxBallot {
 		return contestsParagraphs;
 	}
 	/**
-	 * genContest generates a particular contest group. This consists 
-	 * of the contest name, contest instructions, candidates, etc.
-	 *  
-	 * @param bf ballotFactory object
-	 * @param name e.g. "Justice of the Supreme Court"
-	 * @param format number # that references "contest.format.#"
+	 * findContestByName matches a contest from contestNamesText with one just extracted.
+	 * @param contestName contest name.
+	 * @param contests Contest objects.
+	 * @return Contest object.
 	 */
-	/* private */
-//	List<P> genContest(ContestNameCounter bf, String name, String format) {
-	List<P> genContest(String ballotText, String name, String format) {
-		logger.debug(String.format("generating contest name: %s format: %s%n", name, format));
-		List<P> contestParagraphs = new ArrayList<>();
-		MainDocumentPart mdp = docx.getMainDocumentPart();
-//		ContestFactory cf = new ContestFactory(bf, formatsText, Initialize.elecType, Initialize.endorsedParty);
-		ContestFactory cf = new ContestFactory(ballotText, formatsText, Initialize.elecType, Initialize.endorsedParty);
-		String contestText = cf.findContestText(name);
-		if (!contestText.isBlank()) {
-			Contest contest = cf.parseContestText(name, contestText, format);
-			contestParagraphs = genContestParagraphs(mdp, contest);
+	Contest findContestByName(String contestName, List<Contest> contests) {
+		for (Contest contest: contests) {
+			if (contest.getName().equals(contestName)) {
+				return contest;
+			}
 		}
-		return contestParagraphs;
+		// If name cannot be found, there's a mismatch between ContestGen and BallotGen
+		Utils.logFatalError(String.format("precinctNoName: %s. Can't find contestName: %s%n", precinctNoName, contestName));
+		return null;
+	}
+	/**
+	 * genContest generates the paragraphs for a particular contest.
+	 * @param contest Contest object.
+	 * @return List of P objects.
+	 */
+	List<P> genContest(Contest contest) {
+		logger.debug(String.format("generating contest name: %s%n", contest.getName()));
+		MainDocumentPart mdp = docx.getMainDocumentPart();
+		List<P> contestParagraphs = new ArrayList<>();
+		contestParagraphs = genContestParagraphs(mdp, contest);
+	    return contestParagraphs;
 	}
 	/**
 	 * genContestParagraphs generates the paragraphs of a contest.
@@ -766,6 +777,7 @@ public class GenDocxBallot {
 	 */
 	List<P> genReferendums() {
 		logger.debug("generating referendums for document");
+		List<Referendum> refs = PageReferendumExtractor.extractReferendums(precinctNo, precinctName, ballotText);	
 		List<P> referendumParagraphs = new ArrayList<>();
 		if (referendumsText != null && !referendumsText.isBlank()) {
 			String[] referendumLines = referendumsText.split("\n");
@@ -774,34 +786,41 @@ public class GenDocxBallot {
 			for (String line: referendumLines) {
 				// Each line is a referendum question
 				String refQuestion = line;
-				referendumParagraphs.addAll(genReferendum(mdp, refQuestion));
+				refQuestion = VoteFor.processName(refQuestion);
+				Referendum ref = findReferendumByName(refQuestion, refs);
+				referendumParagraphs.addAll(genReferendum(mdp, ref));
 			}
 		}
 		return referendumParagraphs;
 	}
 	/**
+	 * findReferendumByName matches a referendum from referendumsText with one just extracted.
+	 * @param refQuestion referendum question (name).
+	 * @param refs
+	 * @return Referendum objects.
+	 */
+	Referendum findReferendumByName(String refQuestion, List<Referendum> refs) {
+		for (Referendum ref: refs) {
+			if (ref.getRefQuestion().equals(refQuestion)) {
+				return ref;
+			}
+		}
+		// If name cannot be found, there's a mismatch between ContestGen and BallotGen
+		Utils.logFatalError(String.format("precinctNoName: %s. Can't find refQuestion: %s%n", precinctNoName, refQuestion));
+		return null;	
+	}
+	/**
 	 * genReferendum generates a single referendum box within the docx.
-	 * Notes: ballotgen.referendum.format regex used here.
 	 * 
 	 * @param mdp main document part.
 	 * @param refQuestion referendum question.
 	 * @return list of paragraphs.
 	 */
-	List<P> genReferendum(MainDocumentPart mdp, String refQuestion) {
-		List<P> referendumParagraphs = new ArrayList<>();
-		// retrofit the refQuestion to the referendumFormat (replace %question% )
-		final String REF_QUESTION = "%question%";
-		String regex = Initialize.referendumFormat.replace(REF_QUESTION, refQuestion);
-		Pattern compiledRegex = Utils.compileRegex(regex);	
-		Matcher m = compiledRegex.matcher(ballotText);
-		if (m.find() ) {
-			// 09/20/2024 remove \n from referendum text
-			String text = m.group("text");
-			String newText = text.replace('\n', ' ');
-			referendumParagraphs = genReferendumParagraphs(mdp, refQuestion, newText);
-		} else {
-			logger.error(String.format("no match for ref. question %s", refQuestion));
-		}
+	List<P> genReferendum(MainDocumentPart mdp, Referendum ref) {
+//		// 09/20/2024 remove \n from referendum text since word wrap will vary from VS ballot.
+		String text = ref.getRefText();
+		text = text.replace('\n', ' ');	
+		List<P> referendumParagraphs = genReferendumParagraphs(mdp, ref.getRefQuestion(), text);
 		return referendumParagraphs;
 	}
 	/**
@@ -816,7 +835,7 @@ public class GenDocxBallot {
 		List<P> refParagraphs = new ArrayList<>();
 		String style = STYLEID_CONTEST_TITLE;
 		// conversion for printing
-		String question1 = Contest.processContestName(question);
+		String question1 = Contest.processName(question);
 		newParagraph = mdp.createStyledParagraphOfText(style, question1);
 		refParagraphs.add(newParagraph);
 		style = STYLEID_NORMAL;
@@ -834,6 +853,7 @@ public class GenDocxBallot {
 	 */
 	List<P> genRetentions() {
 		logger.debug("generating retentions for document");
+		List<Retention> rets = PageRetentionExtractor.extractRetentions(precinctNo, precinctName, ballotText);
 		List<P> retentionParagraphs = new ArrayList<>();
 		if (retentionsText != null && !retentionsText.isBlank()) {
 			String[] retentionLines = retentionsText.split("\n");
@@ -843,12 +863,31 @@ public class GenDocxBallot {
 				// Each line is a referendum question
 				String [] elements = line.split(",");
 				String officeName = elements[0];
-				String judgeName = elements[1];
-				retentionParagraphs.addAll(genRetention(mdp, officeName, judgeName));
+				officeName = VoteFor.processName(officeName);
+				Retention ret = findRetentionByName(officeName, rets);
+				retentionParagraphs.addAll(genRetention(mdp, ret));
 			}
 		}
 		return retentionParagraphs;
 	}
+	/**
+	 * findRetentionByName matches a retention question from retentionsText with one just extracted.
+	 * @param officeName judicial office name.
+	 * @param rets Retention objects
+	 * @return Retention object.
+	 */
+	Retention findRetentionByName(String officeName, List<Retention> rets) {
+		for (Retention ret: rets) {
+			if (ret.getOfficeName().equals(officeName)) {
+				return ret;
+			}
+		}
+		// If name cannot be found, there's a mismatch between ContestGen and BallotGen
+		Utils.logFatalError(String.format("precinctNoName: %s. Can't find retOfficeName: %s%n", precinctNoName, officeName));
+		return null;	
+	}
+
+
 	/**
 	 * genRetention generates a single retention box within the docx.
 	 * Notes: ballotgen.retention.format regex used here.
@@ -858,20 +897,9 @@ public class GenDocxBallot {
 	 * @param judgeName judge's name.
 	 * @return list of paragraphs.
 	 */
-	List<P> genRetention(MainDocumentPart mdp, String officeName, String judgeName) {
-		List<P> retentionParagraphs = new ArrayList<>();
-		// retrofit both the office name and the judge name to retentionFormat (replace %office name% and %judge name%)
-		final String RET_OFFICE_NAME = "%office name%";
-		final String RET_JUDGE_NAME = "%judge name%";
-		String regex = Initialize.retentionFormat.replace(RET_OFFICE_NAME, officeName);
-		regex = regex.replace(RET_JUDGE_NAME, judgeName);
-		Pattern compiledRegex = Utils.compileRegex(regex);
-		Matcher m = compiledRegex.matcher(ballotText);
-		if (m.find() ) {
-			retentionParagraphs = genRetentionParagraphs(mdp, officeName, judgeName, m.group(1));
-		} else {
-			logger.error(String.format("no match for retention office: %s judge: %s", officeName, judgeName));
-		}
+	List<P> genRetention(MainDocumentPart mdp, Retention ret) {
+
+		List<P> retentionParagraphs = genRetentionParagraphs(mdp, ret.getOfficeName(), ret.getJudgeName(), ret.getQuestion());
 		return retentionParagraphs;
 	}
 	/**
@@ -889,12 +917,10 @@ public class GenDocxBallot {
 		List<P> retParagraphs = new ArrayList<>();
 		String style = STYLEID_CONTEST_TITLE;
 		// massage the office name string.
-		officeName = Contest.processContestName(officeName);
+		officeName = Contest.processName(officeName);
 		newParagraph = mdp.createStyledParagraphOfText(style, officeName);
 		retParagraphs.add(newParagraph);
 		style = STYLEID_NORMAL;
-		// TODO: find the judge name and use a BOLD font.
-//		newParagraph = mdp.createStyledParagraphOfText(style, question);
 		newParagraph = genRetentionQuestionParagraph(judgeName, question);
 		retParagraphs.add(newParagraph);
 		retParagraphs.addAll(genYesNoParagraphs(mdp, judgeName));

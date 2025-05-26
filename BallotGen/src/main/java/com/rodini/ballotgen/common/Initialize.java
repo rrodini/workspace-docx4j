@@ -1,46 +1,37 @@
 package com.rodini.ballotgen.common;
 
-import static com.rodini.ballotgen.common.Initialize.LOCAL_CONTEST_EXCEPTION_NAMES;
-import static com.rodini.ballotgen.common.Initialize.TICKET_CONTEST_NAMES;
-import static com.rodini.ballotgen.common.Initialize.ballotGenProps;
-import static com.rodini.ballotgen.common.BallotReportParser.parseBallotReport;
-import static com.rodini.ballotgen.common.BallotGenOutput.*;
-
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static java.util.stream.Collectors.joining;
+import static com.rodini.ballotgen.common.BallotGenOutput.PRECINCT;
 import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rodini.ballotgen.contest.ContestFileLevel;
 import com.rodini.ballotgen.endorsement.Endorsement;
 import com.rodini.ballotgen.endorsement.EndorsementFactory;
 import com.rodini.ballotgen.endorsement.EndorsementProcessor;
 import com.rodini.ballotgen.writein.Writein;
 import com.rodini.ballotgen.writein.WriteinFactory;
 import com.rodini.ballotgen.writein.WriteinProcessor;
-import com.rodini.ballotutils.Utils;
 import com.rodini.ballotutils.ElectionType;
 import com.rodini.ballotutils.Party;
-import com.rodini.zoneprocessor.ZoneProcessor;
+import com.rodini.ballotutils.Utils;
 import com.rodini.zoneprocessor.Zone;
+import com.rodini.zoneprocessor.ZoneProcessor;
 /** 
  * Initialize class gets the program ready to generate sample ballots.
  * It attempts to validate critical inputs and FAIL EARLY if things
  * are amiss.
+ * 
+ * Note: Many property values are now read by voteforprocessor component.
  * 
  * @author Bob Rodini
  *
@@ -57,8 +48,6 @@ public class Initialize {
 	public static String retentionFormat;		// read from properties file
 	public static String msWordPrecinctTemplateFile = "";	// MS Word precinct template file
 	public static String msWordUniqueTemplateFile = "";	    // MS Word unique template file
-	// 10/29/24 - contestLevel not used.  Kept solely for backward compatibility.
-	public static ContestFileLevel contestLevel; 	// e.g. COMMON or MUNICIPAL
 	public static ENVIRONMENT env;			// TEST vs. PRODUCTION
 	public static Properties ballotGenProps;
 	public static Properties contestGenProps;
@@ -81,24 +70,15 @@ public class Initialize {
 	public  static final String PROPS_FILE = "ballotgen.properties";
 	public  static final String CONTESTGEN_PROPS_FILE = "contestgen.properties";
 //	Property names - must match names within ballotgen.properties
-	private static final String PROP_ELECTION_TYPE = "election.type";
-	private static final String PROP_ENDORSED_PARTY = "endorsed.party";
 	private static final String PROP_WORD_TEMPLATE_DEFAULT = ".word.template.default";
 	private static final String PROP_WORD_TEMPLATE_UNIQUE = ".word.template.unique";
-	private static final String PROP_CONTEST_FORMAT_PREFIX = ".contest.format";
-	private static final String PROP_REFERENDUM_FORMAT = ".ballotgen.referendum.format";
-	private static final String PROP_RETENTION_FORMAT = ".ballotgen.retention.format";
 	
-	private static final String CONTEST_FILE_LEVEL = "contest.file.level";
-	public  static final String COMMON_CONTESTS_FILE = "common_contests.txt";
 	private static final String PRECINCT_TO_ZONE_FILE = ".precinct.to.zone.file";
 	private static final String ENDORSEMENTS_FILE = ".endorsements.file";
 	private static final String WRITEINS_FILE = ".write.ins.file";
-	private static final String WRITE_IN_DISPLAY = ".write.in.display";
 	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
 	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
 	public	static       String COUNTY;
-	public  static       String WRITE_IN;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
 	public  static       String PAGE_BREAK_WORDING;
 	public  static final String TICKET_CONTEST_NAMES = "ticket.contest.names";
@@ -189,83 +169,12 @@ public class Initialize {
 		if (!path.isDirectory()) {
 			Utils.logFatalError("invalid args[1] value, ballotContestsPath does not exist: " + ballotContestsPath);
 		}
-		// 06/13/2023 Dropped support for common_contests.txt
-//		String commonFilePath = ballotContestsPath + File.separator + COMMON_CONTESTS_FILE;
-//		if (!Files.exists(Path.of(commonFilePath), NOFOLLOW_LINKS)) {
-//			Utils.logFatalError("can't find \"" + COMMON_CONTESTS_FILE + "\" file here: " + commonFilePath);
-//		}
 	}
 	/**
-	 * validateElectionType get/display election type.
+	 * validateWordTemplate checks that there is a MS Word template (.dotx) file.
+	 * @param templateFile .dotx file
+	 * @param which PRECINC or UNIQUE template
 	 */
-	static void validateElectionType() {
-		String type = Utils.getPropValue(contestGenProps, PROP_ELECTION_TYPE);
-		logger.info(String.format("election.type: %s", type));
-		elecType = ElectionType.toEnum(type);
-	}
-	/**
-	 * validateEndorsedParty get/display the endorsed party.
-	 */
-	static void validateEndorsedParty() {
-		String endorsedPartyString = Utils.getPropValue(contestGenProps, PROP_ENDORSED_PARTY);
-		logger.info(String.format("endorsed.party: %s", endorsedPartyString));
-		endorsedParty = endorsedPartyString.isEmpty()? null : Party.toEnum(endorsedPartyString);
-	}
-	/**
-	 * validateContestFileLevel get/display the contest granularity.
-	 */
-	static void validateContestFileLevel() {
-		String level = Utils.getPropValue(ballotGenProps, CONTEST_FILE_LEVEL);
-		logger.info(String.format("%s: %s", CONTEST_FILE_LEVEL, level));
-		// Line below deactivated since property is OBSOLETE.
-//		contestLevel = ContestFileLevel.valueOf(level);
-	}
-	/**
-	 * validateFormatsText reads the formats (regexes) from the properties
-	 * file and gets them into a long string that ContestFactory
-	 * expects.
-	 */
-	static void validateFormatsText() {
-		// This is a good place to read the Write-in string value.
-		WRITE_IN = Utils.getPropValue(contestGenProps, COUNTY + ".write.in");
-		List<String> formatLines = Utils.getPropOrderedValues(contestGenProps, COUNTY + ".ballotgen.contest.format");
-		formatsText = formatLines.stream()
-				.collect(joining("\n"));
-		logger.info(String.format("formatsText:%n%s%n", formatsText));
-	}
-	/**
-	 * validateContestFormats reads the contest formats (regexes) from the properties
-	 * file and displays them.
-	 */
-	static void validateContestFormats() {
-		String format;
-		int count = 1;
-		do {
-			// Don't know how many there will be
-			String key = Integer.toString(count);
-			String propName =  COUNTY + PROP_CONTEST_FORMAT_PREFIX + "." + key;
-			format = Utils.getPropValue(contestGenProps, propName);
-			logger.info(String.format("%s.%d: %s", propName, count, format));
-			if (format != null) {
-				count++;				
-			}
-		} while (format != null);
-		logger.info(String.format("there are %d contest formats in the contestgen properties file", count-1));
-	}
-	
-	static void validateReferendumFormat() {
-		// referendumFormat is a regex.
-		String propName =  COUNTY + PROP_REFERENDUM_FORMAT;
-		referendumFormat = Utils.getPropValue(contestGenProps, propName);
-		logger.info(String.format("%s: %s", propName, referendumFormat));
-	}
-	
-	static void validateRetentionFormat() {
-		// retentionFormat is a regex.
-		String propName =  COUNTY + PROP_RETENTION_FORMAT;
-		retentionFormat = Utils.getPropValue(contestGenProps, propName);
-		logger.info(String.format("%s: %s", propName, retentionFormat));
-	}
 	static void validateWordTemplate(String templateFile, String which) {
 		if (templateFile.isEmpty()) {
 			Utils.logFatalError(String.format("MS Word %s template file not specified (blank)", which));
@@ -336,18 +245,6 @@ public class Initialize {
 		WriteinFactory.processCSVText(writeinsCSVText);
 		precinctWriteins = WriteinFactory.getPrecinctWriteins();
 	}
-
-	/**
-	 * validateWriteInDisplay reads/displays the WRITE_IN_DISPLAY property value.
-	 */
-	static void validateWriteInDisplay() {
-		String value = Utils.getPropValue(ballotGenProps,COUNTY + WRITE_IN_DISPLAY);
-		if (value == null) {
-			value = "false";
-		}
-		writeInDisplay = Boolean.parseBoolean(value);
-		logger.info(String.format("%s: %s", COUNTY + WRITE_IN_DISPLAY, value));
-	}
 	/**
 	 * validateColumnBreakContestNAME reads/displays the COlUMN_BREAK_CONTEST_NAME property value.
 	 */
@@ -414,18 +311,7 @@ public class Initialize {
 		PAGE_BREAK_WORDING = value;
 		logger.info(String.format("%s: %s", "PAGE_BREAK_WORDING", value));
 	}
-	/**
-	 * Used by CandidateFactory (of all things).
-	 */
-	static void validateTicketAndLocalContestNames() {
-		String 	contestNames;
-		contestNames = Utils.getPropValue(ballotGenProps, TICKET_CONTEST_NAMES);
-		namesOfTicketContests = Arrays.asList(contestNames.split(","));
-		contestNames = Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_NAMES);
-		namesOfLocalContests = Arrays.asList(contestNames.split(","));
-		contestNames = Utils.getPropValue(ballotGenProps, LOCAL_CONTEST_EXCEPTION_NAMES);
-		namesOfLocalContestsExceptions = Arrays.asList(contestNames.split(","));
-	}
+
 	static void validateBallotGenOutput() {
 		String propValue;
 		propValue = Utils.getPropValue(ballotGenProps, BALLOTGEN_OUTPUT);
@@ -454,31 +340,23 @@ public class Initialize {
 		ballotGenProps = Utils.loadProperties(RESOURCE_PATH + PROPS_FILE);
 		contestGenProps = Utils.loadProperties(CONTESTGEN_RESOURCE_PATH + CONTESTGEN_PROPS_FILE);
 		env = ENVIRONMENT.valueOf(Utils.getPropValue(ballotGenProps, "environment"));
-//		contestLevel = ContestFileLevel.valueOf(Utils.getPropValue(ballotGenProps, CONTEST_FILE_LEVEL));
 		validateCommandLineArgs(args);
 		validateWordTemplates();
-		// very little validation here.
-		validateElectionType();
-		validateEndorsedParty();
-		validateContestFileLevel();
-		validateFormatsText();
-		validateContestFormats();
-		validateReferendumFormat();
-		validateRetentionFormat();
 		validatePrecinctZoneFile();
 		validateEndorsementsFile();
 		validateWriteinsFile();
 		validateBallotGenOutput();
+		// the votefor processor is separate component
+		// but it must be inititialized.
+		com.rodini.voteforprocessor.extract.Initialize.start(contestGenProps);
 		// create the endorsement processor
 		endorsementProcessor  = new EndorsementProcessor(elecType, endorsedParty,
 				candidateEndorsements, precinctToZoneMap);
 		// create the write-in processor
 		writeinProcessor = new WriteinProcessor(precinctWriteins);
-		validateWriteInDisplay();
 //		validateColumnBreakContestCount();
 		validateColumnBreakContestName();
 		validatePageBreak();
-		validateTicketAndLocalContestNames();
 		validateBallotReport();
 	}
 	

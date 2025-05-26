@@ -10,18 +10,18 @@ import org.apache.logging.log4j.Logger;
 
 import com.rodini.voteforprocessor.model.Retention;
 /** 
- * RetentionExtractor processes all ballots and extracts the retentions
+ * PageRetentionExtractor processes all ballots and extracts the retentions
  * from each.
  * 
  * @author Bob Rodini
  *
  */
-public class RetentionExtractor {
+public class PageRetentionExtractor {
 	
-	static final Logger logger = LogManager.getLogger(RetentionExtractor.class);
+	static final Logger logger = LogManager.getLogger(PageRetentionExtractor.class);
 
 	// prevent instantiation
-	public RetentionExtractor() { }
+	private PageRetentionExtractor() { }
 	
 	/**
 	 * extractRetentions extracts Retention objects from the pageText.
@@ -32,7 +32,7 @@ public class RetentionExtractor {
 	 * 
 	 * @return List of Retention objects.
 	 */
-	static List<Retention> extractRetentions(String precinctNo, String precinctName, String pageText) {
+	public static List<Retention> extractRetentions(String precinctNo, String precinctName, String pageText) {
 		List<Retention> retentionList = new ArrayList<>();
 		Pattern questionRegex = Initialize.retentionQuestionRegex;
 		Pattern nameRegex = Initialize.retentionNameRegex;
@@ -41,7 +41,6 @@ public class RetentionExtractor {
 			String question = m1.group("question");
 			String officeName = m1.group("office");
 			question += "\n";
-			// TODO: Add try/catch
 			Matcher m2 = nameRegex.matcher(question);
 			if (m2.find()) {
 				logger.info(String.format("retention extraction: %s question: %s", precinctNo + "_" + precinctName, question));
