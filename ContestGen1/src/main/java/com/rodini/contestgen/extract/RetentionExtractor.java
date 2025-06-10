@@ -39,7 +39,7 @@ public class RetentionExtractor {
 	 * 
 	 * @param ballot Ballot object.
 	 */
-	static void extractPageRetentions(Ballot ballot) {
+	public static void extractPageRetentions(Ballot ballot) {
 		String precinctNo = ballot.getPrecinctNo();
 		String precinctName = ballot.getPrecinctName();
 		List<Retention> retentionList = new ArrayList<>();

@@ -13,11 +13,11 @@ public abstract class VoteFor {
 		this.precinctNo = precinctNo;
 		this.precinctName = precinctName;
 	}
-	String getPrecinctNo() {
+	public String getPrecinctNo() {
 		return precinctNo;
 	}
 
-	String getPrecinctName() {
+	public String getPrecinctName() {
 		return precinctName;
 	}
 	

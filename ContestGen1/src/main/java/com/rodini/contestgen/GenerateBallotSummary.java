@@ -85,6 +85,8 @@ public class GenerateBallotSummary {
 			} else {
 				electionName = match.group("electionname");
 			}
+		} else {
+			logger.error("property electionNameRegex is missing");
 		}
 		return electionName;
 	}

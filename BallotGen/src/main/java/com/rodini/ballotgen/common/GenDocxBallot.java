@@ -260,7 +260,7 @@ public class GenDocxBallot {
 		int end = contestsFileText.length();
 		// is "Retentions" present?
 		if (indexRetentions >= 0) {
-			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
+			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length(), end);
 			end = indexRetentions;
 		}
 		if (retentionsText == null || retentionsText.isBlank()) {
@@ -616,10 +616,12 @@ public class GenDocxBallot {
 				STYLEID_CONTEST_INSTRUCTIONS:
 				STYLEID_CONTEST_GENERIC_INSTRUCTIONS;	
 		if (!contest.getTerm().isEmpty()) {
+//System.out.printf("instructions: %s%n", contest.getName());
 			newParagraph = mdp.createStyledParagraphOfText(style, contest.getTerm());
 			headParagraphs.add(newParagraph);
 		}
 		newParagraph = mdp.createStyledParagraphOfText(style, contest.getInstructions());
+//System.out.printf("instructions: %s%n", contest.getInstructions());
 		headParagraphs.add(newParagraph);
 //		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
 		// 4/4/2025 Added Separator Paragraph style w/ "Keep together"

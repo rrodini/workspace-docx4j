@@ -8,7 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rodini.ballotutils.Utils;
+import com.rodini.ballotutils.ElectionType;
 import com.rodini.contestgen.common.Initialize;
+import static com.rodini.voteforprocessor.extract.Initialize.elecType;
 import static com.rodini.contestgen.common.ContestGenOutput.*;
 import com.rodini.contestgen.extract.BallotExtractor;
 import com.rodini.contestgen.extract.ContestExtractor;
@@ -103,6 +105,9 @@ public class ContestGen1 {
 			GenerateContestFiles.generate(ballots);
 		}
 		GenerateBallotSummary.generate(ballots);
+		if (elecType == ElectionType.PRIMARY) {
+			GenerateEndorsementsFile.generate(ballots);
+		}
 		Utils.logAppErrorCount(logger);
 		Utils.logAppMessage(logger, "End of ContestGen1 app.", true);
 	}

@@ -198,7 +198,7 @@ public class Initialize {
 	 * validatePrecinctZoneFile validates the existence of the zones to precincts file.
 	 */
 	static void validatePrecinctZoneFile() {
-		String precinctZoneFile = Utils.getPropValue(ballotGenProps, COUNTY + PRECINCT_TO_ZONE_FILE);
+		String precinctZoneFile = Utils.getPropValue(contestGenProps, COUNTY + PRECINCT_TO_ZONE_FILE);
 		logger.info(String.format("%s: %s", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
 		String precinctZoneCSVText = "";
 		if (!Utils.checkFileExists(precinctZoneFile)) {

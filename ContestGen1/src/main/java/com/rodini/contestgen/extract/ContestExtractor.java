@@ -47,7 +47,7 @@ public class ContestExtractor {
 	 * @param ballot
 	 */
 	//@formatter: on
-	static void extractContests(Ballot ballot) {
+	public static void extractContests(Ballot ballot) {
 		String precinctNo = ballot.getPrecinctNo();
 		String precinctName = ballot.getPrecinctName();
 		String precinctNoName = precinctNo + "_" + precinctName;

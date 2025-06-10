@@ -39,7 +39,7 @@ public class ReferendumExtractor {
 	 * 
 	 * @param ballot Ballot object.
 	 */
-	static void extractPageReferendums(Ballot ballot) {
+	public static void extractPageReferendums(Ballot ballot) {
 		String precinctNo = ballot.getPrecinctNo();
 		String precinctName = ballot.getPrecinctName();
 		List<Referendum> referendumList = new ArrayList<>();

@@ -29,6 +29,7 @@ public class Initialize {
 	public static String outBallotPath;		// path to ballot output directory
 	public static final String RESOURCE_PATH = "./resources/";
 	public static final String PROPS_FILE = "contestgen.properties";
+	public static Properties contestGenProps;
 	public static int     precinctNameRepeatCount;
 	// All regexes are compiled after loading
 	public static Pattern precinctNameRegex;
@@ -45,12 +46,14 @@ public class Initialize {
 	public static Pattern electionNameRegex;
 	public static boolean precinctNoNameFileName;
 	public static String  writeIn;  	// Write-in vs. Write-In
+	public static String  endorsementsAllFileName;
 	public static ContestGenOutput contestGenOutput;
 
 //	Property names within contestgen.properties. 
 //  Notes:
 //  1. External names preserved for backwards compatibility, e.g. muniNameRepeatCount NOT precinctNameRepeatCount
 //  2. All properties are *county* specific, e.g. chester.muniNameRepeatCount
+	private static final String PROP_ELECTION_NAME_REGEX = ".electionNameRegex";
 	private static final String PROP_PRECINCT_NAME_REPEAT_COUNT = ".muniNameRepeatCount";
 	private static final String PROP_PRECINCT_NAME_REGEX = ".muniNameRegex";
 //  NEW - Next four regexes are used by v1.7.0+
@@ -59,6 +62,7 @@ public class Initialize {
 	private static final String PROP_PRECINCT_TWO_PAGE1_REGEX = ".twoPage1Regex";
 	private static final String PROP_PRECINCT_TWO_PAGE2_REGEX = ".twoPage2Regex";
 	private static final String PROP_PRECINCTNONAME_FILENAME = ".precinctNoName.fileName";
+	private static final String PROP_ENDORSEMENTS_ALL_FILENAME = ".endorsements.all.fileName";
 	public  static final String WRITE_IN = ".write.in";
 	private static final String CONTESTGEN_OUTPUT = ".contestgen.output";
 	/**
@@ -184,12 +188,11 @@ public class Initialize {
 	 * The most important properties are the Regular Expressions (regexes) that
 	 * are used to isolate sections of text that need to be processed.
 	 */
-	static void validateProperties() {
-		Properties props = Utils.loadProperties(RESOURCE_PATH + PROPS_FILE);
-		Utils.logProperties(logger, DEBUG, props);
-		// chester.muniNameRepeatCount=2
-	    precinctNameRepeatCount = validateIntProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_NAME_REPEAT_COUNT, 2);
-		// chester.muniNameRegex=regex
+	public static void validateProperties(Properties props) {
+//		Properties props = Utils.loadProperties(RESOURCE_PATH + PROPS_FILE);
+//		Utils.logProperties(logger, DEBUG, props);
+		electionNameRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_ELECTION_NAME_REGEX);
+		precinctNameRepeatCount = validateIntProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_NAME_REPEAT_COUNT, 2);
 	    precinctNameRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_NAME_REGEX);
 	    precinctPageBreakRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_PAGE_BREAK_REGEX);
 	    precinctOnePageRegex = validateRegexProperty(props, ContestGen1.COUNTY + PROP_PRECINCT_ONE_PAGE_REGEX);
@@ -198,8 +201,8 @@ public class Initialize {
 	    // start the VoteFor processor with contestgen properties
 	    com.rodini.voteforprocessor.extract.Initialize.start(props);
 	    precinctNoNameFileName = validateBooleanProperty(props, ContestGen1.COUNTY + PROP_PRECINCTNONAME_FILENAME, true);
-	    // chester.write.in=
 	    writeIn= Utils.getPropValue(props, ContestGen1.COUNTY + WRITE_IN);
+	    endorsementsAllFileName = Utils.getPropValue(props, ContestGen1.COUNTY + PROP_ENDORSEMENTS_ALL_FILENAME);
 	    // chester.contestgen.output=
 	    validateContestGenOutput(props, ContestGen1.COUNTY + CONTESTGEN_OUTPUT);
 	}
@@ -209,7 +212,9 @@ public class Initialize {
 	 */
 	public static void start(String[] args) {
 		validateCommandLineArgs(args);
-		validateProperties();
+		contestGenProps = Utils.loadProperties(RESOURCE_PATH + PROPS_FILE);
+		Utils.logProperties(logger, DEBUG, contestGenProps);
+		validateProperties(contestGenProps);
 	}
 
 }
