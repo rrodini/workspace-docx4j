@@ -129,6 +129,7 @@ public class GenDocxBallot {
 	public static String STYLEID_BOTTOM_BORDER = "BottomBorder";
 	public static String STYLEID_COLUMN_BREAK_PARAGRAPH = "ColumnBreakParagraph";
 	public static String STYLEID_SEPARATOR_PARAGRAPH = "SeparatorParagraph";
+	public static String STYLEID_VOTE_BOTH_SIDES = "VoteBothSides";
 	// Make separate enum if needed elsewhere.
 	public enum TextStyle {BOLD, UNDERLINE}; // BOLD for retention questions, UNDERLINE for write-in candidates.
 	// These are unicode characters (also Segoe UI Symbol font)
@@ -355,6 +356,10 @@ public class GenDocxBallot {
 		if (!templateIdStyles.contains(STYLEID_SEPARATOR_PARAGRAPH)) {
 			logger.error("dotx template missing this styleId: " + STYLEID_SEPARATOR_PARAGRAPH);
 			STYLEID_SEPARATOR_PARAGRAPH = STYLEID_NORMAL;
+		}
+		if (!templateIdStyles.contains(STYLEID_VOTE_BOTH_SIDES)) {
+			logger.error("dotx template missing this styleId: " + STYLEID_VOTE_BOTH_SIDES);
+			STYLEID_VOTE_BOTH_SIDES = STYLEID_NORMAL;
 		}
 	}
 	/**

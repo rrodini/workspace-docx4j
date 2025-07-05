@@ -195,19 +195,20 @@ public class Initialize {
 		validateWordTemplate(msWordUniqueTemplateFile, "UNIQUE");
 	}
 	/**
-	 * validatePrecinctZoneFile validates the existence of the zones to precincts file.
+	 * initializeZoneProcessor initializes the zone processor component.
 	 */
-	static void validatePrecinctZoneFile() {
-		String precinctZoneFile = Utils.getPropValue(contestGenProps, COUNTY + PRECINCT_TO_ZONE_FILE);
-		logger.info(String.format("%s: %s", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
-		String precinctZoneCSVText = "";
-		if (!Utils.checkFileExists(precinctZoneFile)) {
-			logger.info(String.format("%s does not exist: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
-			logger.info("Cannot endorse at the zone/precinct level.");
-		} else {
-			precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
-		}
-		ZoneProcessor.processCSVText(precinctZoneCSVText);
+	static void initializeZoneProcessor() {
+//		String precinctZoneFile = Utils.getPropValue(contestGenProps, COUNTY + PRECINCT_TO_ZONE_FILE);
+//		logger.info(String.format("%s: %s", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+//		String precinctZoneCSVText = "";
+//		if (!Utils.checkFileExists(precinctZoneFile)) {
+//			logger.info(String.format("%s does not exist: %s ", COUNTY + PRECINCT_TO_ZONE_FILE, precinctZoneFile));
+//			logger.info("Cannot endorse at the zone/precinct level.");
+//		} else {
+//			precinctZoneCSVText = Utils.readTextFile(precinctZoneFile);
+//		}
+//		ZoneProcessor.processCSVText(precinctZoneCSVText);
+		ZoneProcessor.start(contestGenProps);
 		precinctToZoneMap = ZoneProcessor.getPrecinctZoneMap();
 	}
 	/**
@@ -342,7 +343,7 @@ public class Initialize {
 		env = ENVIRONMENT.valueOf(Utils.getPropValue(ballotGenProps, "environment"));
 		validateCommandLineArgs(args);
 		validateWordTemplates();
-		validatePrecinctZoneFile();
+		initializeZoneProcessor();
 		validateEndorsementsFile();
 		validateWriteinsFile();
 		validateBallotGenOutput();

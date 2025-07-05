@@ -92,10 +92,11 @@ public class GenerateEndorsementsFile {
 	 */
 	static void initializeZoneProcessor(Properties props) {
 		logger.info("initializing the ZoneProcessor.");
-		String csvFilePath = Utils.getPropValue(props, ContestGen1.COUNTY + ".precinct.to.zone.file");
-		String csvText = Utils.readTextFile(csvFilePath);
-		// after this call the ZoneProcessor is functional.
-		ZoneProcessor.processCSVText(csvText);
+//		String csvFilePath = Utils.getPropValue(props, ContestGen1.COUNTY + ".precinct.to.zone.file");
+//		String csvText = Utils.readTextFile(csvFilePath);
+//		// after this call the ZoneProcessor is functional.
+//		ZoneProcessor.processCSVText(csvText);
+		ZoneProcessor.start(Initialize.contestGenProps);
 	}
 	/**
 	 * processCommonContests processes all specimen ballots and identify the contests common

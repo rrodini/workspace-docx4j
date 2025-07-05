@@ -1,6 +1,7 @@
 package com.rodini.zoneprocessor;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -29,6 +30,9 @@ import com.rodini.ballotutils.Utils;
  */
 public class ZoneProcessor {
 	static final Logger logger = LogManager.getLogger(ZoneProcessor.class);
+	static final String COUNTY = Utils.getEnvVariable("BALLOTGEN_COUNTY", true);
+	static final String PROP_PRECINCT_ZONE_FILE = COUNTY + ".precinct.to.zone.file";
+	static       String precinctZoneCsvFilePath;
 
 	// PrecinctNo (key) Zone object(value)
 	// 020              Zone7
@@ -37,8 +41,17 @@ public class ZoneProcessor {
 	// Disable constructor
 	private ZoneProcessor() {
 	}
-
-	// Process the input CSV text.
+	// new initialization API
+	static public void start(Properties props) {
+		precinctZoneCsvFilePath = props.getProperty(PROP_PRECINCT_ZONE_FILE);
+		if (!Utils.checkFileExists(precinctZoneCsvFilePath)) {
+			logger.error(String.format("file does not exist: %s%n",precinctZoneCsvFilePath));
+		}
+		String csvText = Utils.readTextFile(precinctZoneCsvFilePath);
+		// after this call the ZoneProcessor is functional.
+		ZoneProcessor.processCSVText(csvText);
+	}
+	// old initialization API
 	/** 
 	 * processCSVText processed the contents of the precinct-zone CVS file into zone objects
 	 * and Precinct objects.  It relies on its client to read the file from disk.

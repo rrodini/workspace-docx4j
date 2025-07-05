@@ -4,6 +4,7 @@ import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_BOTTOM_BORDER;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_COLUMN_BREAK_PARAGRAPH;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_CONTEST_TITLE;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_ANTI_ENDORSED_CANDIDATE_NAME;
+import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_VOTE_BOTH_SIDES;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -95,7 +96,7 @@ public class GenDocx {
 			logger.info("generating page break");
 			P newParagraph;
 			// first paragraph at bottom
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_VOTE_BOTH_SIDES, Initialize.PAGE_BREAK_WORDING);
 			pageBreakParagraphs.add(newParagraph);
 			// Draw a border line as a separator
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
