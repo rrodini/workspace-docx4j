@@ -28,11 +28,12 @@ public class ZoneFactory {
 	 * @param zoneLogoPath
 	 * @return Zone object.
 	 */
-	public static Zone findOrCreate(String zoneNo, String zoneName, String zoneLogoPath) {
+	public static Zone findOrCreate(String zoneNo, String zoneName, String zoneLogoPath,
+			String zoneUrl, String zoneChunkPath) {
 		Zone zone = null;
 		Set<String> keySet = zoneMap.keySet();
 		if (!keySet.contains(zoneNo)) {
-			zone = new Zone(zoneNo, zoneName, zoneLogoPath);
+			zone = new Zone(zoneNo, zoneName, zoneLogoPath, zoneUrl, zoneChunkPath);
 			zoneMap.put(zoneNo, zone);
 		} else {
 			// TODO: check for duplicate zone names, duplicate zone file paths?

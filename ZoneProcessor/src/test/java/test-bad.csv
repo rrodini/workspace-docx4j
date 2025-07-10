@@ -1,7 +1,7 @@
 Zones
 #zone no, zone name,zone logo path
-3,OXGrove,./src/test/java/zone-logo-03.jpg
-6,Thornbury,./src/test/java/zone-logo-06.jpg
+3,OXGrove,./src/test/java/zone-logo-03.jpg,https://www.oxgrovedems.org/,./src/test/java/default.docx
+6,Thornbury,./src/test/java/zone-logo-06.jpg,http://midchescodems.org,./src/test/java/default.docx
 Precincts
 #precinct no,precinct name,zone no
 0005,ATGLEN,3

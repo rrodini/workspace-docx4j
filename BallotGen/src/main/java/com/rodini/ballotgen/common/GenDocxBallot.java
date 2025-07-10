@@ -87,6 +87,7 @@ public class GenDocxBallot {
 	private String precinctNoName; // e.g. "005_Atglen" or "750_East_Whiteland_4"
 	private String precinctName; // e.g. "Atglen" or "East_Whiteland_4"
 	private String precinctNo; // e.g. "005" or "750"
+	private Zone   zone;		// Zone that owns precince
 	private String zoneNo;		// # of zone that "owns" precinct
 	private String zoneName;	// name of zone that "owns" precinct
 	private String fileOutputPath; // generated DOCX file
@@ -106,9 +107,11 @@ public class GenDocxBallot {
 	public static final String PLACEHOLDER_ZONE_NO= "ZoneNo";	
 	public static final String PLACEHOLDER_ZONE_NAME = "ZoneName";	
 	public static final String PLACEHOLDER_ZONE_LOGO = "ZoneLogo";	
-	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_REFERENDUMS, PLACEHOLDER_RETENTIONS,
-			  PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME,
-			  PLACEHOLDER_ZONE_NO, PLACEHOLDER_ZONE_NAME, PLACEHOLDER_ZONE_LOGO);
+	public static final String PLACEHOLDER_ZONE_URL = "ZoneUrl";	
+	public static final String PLACEHOLDER_ZONE_CHUNK = "ZoneChunk";	
+	public static List<String> placeholderNames = List.of (PLACEHOLDER_CONTESTS, PLACEHOLDER_REFERENDUMS,
+			PLACEHOLDER_RETENTIONS, PLACEHOLDER_PRECINCT_NO, PLACEHOLDER_PRECINCT_NAME, PLACEHOLDER_PRECINCT_NO_NAME,
+			PLACEHOLDER_ZONE_NO, PLACEHOLDER_ZONE_NAME, PLACEHOLDER_ZONE_LOGO, PLACEHOLDER_ZONE_URL, PLACEHOLDER_ZONE_CHUNK);
 	private static PlaceholderProcessor phProcessor;
 	// Styles are pre-defined within the dotx template.
 	// There is a chance that this program is out of sync with the template
@@ -204,8 +207,9 @@ public class GenDocxBallot {
 		if (!precinctInMap) {
 			logger.error(String.format("precinct # %s is not in precinctToZoneMap", precinctNo));
 		}
-		zoneNo = endorsementProcessor.getZoneNoForPrecinct(precinctNo);
-		zoneName = endorsementProcessor.getZoneNameForPrecinct(precinctNo);
+		zone = Initialize.precinctToZoneMap.get(precinctNo);
+		zoneNo = zone.getZoneNo();
+		zoneName = zone.getZoneName();
 		logger.log(ATTN, precinctNoName);
 		System.out.println("Generating: " + precinctNoName);
 		try {
@@ -432,6 +436,14 @@ public class GenDocxBallot {
 					} else if (name.equals(PLACEHOLDER_RETENTIONS)) {
 						// Are there retentions?
 						phProcessor.replaceContent(ph, genRetentions());
+					} else if (name.equals(PLACEHOLDER_ZONE_CHUNK)) {
+						String chunkPath = zone.getZoneChunkPath();
+						phProcessor.replaceContent(ph, GenDocx.genChunk(docx.getMainDocumentPart(), chunkPath));
+					} else if (name.equals(PLACEHOLDER_ZONE_URL)) {
+						String zoneName = zone.getZoneName();
+						String zoneUrl = zone.getZoneUrl();
+						P paragraph = GenDocx.genHyperlink(docx.getMainDocumentPart(), zoneName, zoneUrl);
+						phProcessor.replaceContent(ph, List.of(paragraph));
 					} else {
 						P paragraph = genPlaceholderValue(name, ph, "Normal", docx.getMainDocumentPart());
 						phProcessor.replaceContent(ph, List.of(paragraph));
@@ -484,10 +496,13 @@ public class GenDocxBallot {
 			// The precinct-zone CSV file must be correct. In particular,
 			// the file path to the zone logo must be correct relative to 
 			// the directory from which ballogen program is run.
-			Zone zone = Initialize.precinctToZoneMap.get(precinctNo);
+//			Zone zone = Initialize.precinctToZoneMap.get(precinctNo);
 			String zoneLogoPath = zone.getZoneLogoPath();
 			// pass sourcePart as last parameter
 			paragraph = GenDocx.genImageParagraph(zoneLogoPath, docx, phProcessor.getLocPart(ph.getLoc()));
+			break;
+		case PLACEHOLDER_ZONE_URL:
+			paragraph = GenDocx.genHyperlink(phProcessor.getLocPart(ph.getLoc()), zone.getZoneName(), zone.getZoneUrl());
 			break;
 		}	
 		return paragraph;
@@ -500,7 +515,7 @@ public class GenDocxBallot {
 	/* private */
 	void genBallotInstructions() {
 		MainDocumentPart mdp = docx.getMainDocumentPart();
-		GenDocx.genWmlChunk(mdp, "ballot_instructions.wml");
+		GenDocx.genChunk(mdp, "ballot_instructions.wml");
 	}
 	/**
 	 * genContests uses the contestNamesText to generate each "contest group"
@@ -621,14 +636,11 @@ public class GenDocxBallot {
 				STYLEID_CONTEST_INSTRUCTIONS:
 				STYLEID_CONTEST_GENERIC_INSTRUCTIONS;	
 		if (!contest.getTerm().isEmpty()) {
-//System.out.printf("instructions: %s%n", contest.getName());
 			newParagraph = mdp.createStyledParagraphOfText(style, contest.getTerm());
 			headParagraphs.add(newParagraph);
 		}
 		newParagraph = mdp.createStyledParagraphOfText(style, contest.getInstructions());
-//System.out.printf("instructions: %s%n", contest.getInstructions());
 		headParagraphs.add(newParagraph);
-//		newParagraph = mdp.createParagraphOfText(null);  // Paragraph separator
 		// 4/4/2025 Added Separator Paragraph style w/ "Keep together"
 		newParagraph = mdp.createStyledParagraphOfText(STYLEID_SEPARATOR_PARAGRAPH, null);
 		headParagraphs.add(newParagraph);

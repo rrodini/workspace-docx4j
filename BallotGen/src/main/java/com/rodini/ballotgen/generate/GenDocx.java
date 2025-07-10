@@ -2,12 +2,10 @@ package com.rodini.ballotgen.generate;
 
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_BOTTOM_BORDER;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_COLUMN_BREAK_PARAGRAPH;
-import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_CONTEST_TITLE;
-import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_ANTI_ENDORSED_CANDIDATE_NAME;
 import static com.rodini.ballotgen.common.GenDocxBallot.STYLEID_VOTE_BOTH_SIDES;
-import java.io.FileInputStream;
+
+import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,16 +17,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.docx4j.XmlUtils;
 import org.docx4j.dml.wordprocessingDrawing.Inline;
+import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.openpackaging.parts.relationships.Namespaces;
 import org.docx4j.wml.BooleanDefaultTrue;
 import org.docx4j.wml.Br;
 import org.docx4j.wml.Drawing;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
+import org.docx4j.wml.P.Hyperlink;
 import org.docx4j.wml.PPr;
 import org.docx4j.wml.PPrBase;
 import org.docx4j.wml.R;
@@ -40,11 +41,11 @@ import com.rodini.ballotgen.common.GenDocxBallot.TextStyle;
 import com.rodini.ballotgen.common.Initialize;
 
 import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
 
 /**
  * GenDocx class contains static methods for generating low-level Docx4J stuff.
  * Low-level here means that it has no dependencies except for Docx4J itself.
+ * Most code taken from DOCX4J sample code.
  * 
  * @author Bob Rodini
  *
@@ -58,30 +59,28 @@ public class GenDocx {
 	private static Map<String, byte[]> imageFileMap = new HashMap<>();
 	
 	/**
-	 * genWmlChunk demonstrates the technique of generating
-	 * a big chunk of content using Word, then exporting the .xml
-	 * using the DOCX4J word add-in, then importing the .xml file.
+	 * genChunk demonstrates the technique of generating
+	 * a big chunk of content using Word
 	 * 
-	 * WARNING: Export/import does not work with graphics, hyperlinks, etc.
+	 * WARNING: Import does not work with graphics, hyperlinks, etc.
 	 */
-	public static void genWmlChunk(MainDocumentPart mdp, String wmlFileName) {
-		String text = "";
-		try (FileInputStream inStream = new FileInputStream(Initialize.RESOURCE_PATH + wmlFileName);) {
-			text = new String(inStream.readAllBytes(), StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			logger.error("error reading xml chunk: " + wmlFileName);
-		}
-		Object o = null;
+	public static List<P> genChunk(MainDocumentPart mdp, String chunkFileName) {
+		String message = String.format("genChunk: %s%n", chunkFileName);
+		logger.debug(message);
+		WordprocessingMLPackage docSource = null;
 		try {
-			o = XmlUtils.unmarshalString(text);
-		} catch (JAXBException e) {
-			logger.error("can't convert xml to part");
+			docSource=WordprocessingMLPackage.load(new File(chunkFileName));
+		} catch (Docx4JException e) {
+			logger.error(message);
+			logger.error("Docx4JException: %s%n", e.getMessage());
 		}
-		org.docx4j.wml.Body body = ((org.docx4j.wml.Document) o).getBody();
-		List<Object> contents = body.getContent();
-		for (Object content: contents) {
-			mdp.addObject(content);
+		List<Object> objects = docSource.getMainDocumentPart().getContent();
+		List<P> paragraphs = new ArrayList<>();
+		// Convert to P objects by downcasting.
+		for (Object o: objects) {
+			paragraphs.add((P) o);
 		}
+		return paragraphs;
 	}
 	/**
 	 * genPageBreak generates the pseudo contest name "PAGE BREAK" using
@@ -274,6 +273,7 @@ public class GenDocx {
 	 * @return paragraph object containing image.
 	 */
 	public static P genImageParagraph(String zoneLogoPath, WordprocessingMLPackage docx, Part sourcePart) {
+		logger.info(String.format("genImageParagraph: %s%n", zoneLogoPath));
 		P paragraph = null;
 		Inline inline = null;
 		inline = genImageInline(zoneLogoPath, docx, sourcePart);
@@ -288,5 +288,64 @@ public class GenDocx {
 		}
 		return paragraph;
 	}
-	
+	/**
+	 * genHyperlink generates the wml objects needed for a hyperlink.
+	 * 
+	 * @param text seen by user.
+	 * @param url address for link.
+	 * @param part DocumentPart.
+	 * 
+	 * @return paragraph of text with underlying hyperlink.
+	 */
+	public static P genHyperlink(Part part, String text, String url) {
+		logger.info(String.format("genHyperlink: \"%s\" %s%n", text, url));
+		P paragraph = Context.getWmlObjectFactory().createP();
+		Hyperlink link = createHyperlink(part, text, url);
+		if (link != null) {
+			paragraph.getContent().add(link);
+		}
+		return paragraph;
+	}
+	/**
+	 * createHyperlink generates objects/wml needed for a hyperlink.
+	 * Taken from DOCX4J examples on the internet.
+	 * Notes: 
+	 * 1) Namespace urls must NOT start httpS!!!
+	 * 2) Must have Hyperlink style within document.
+	 * 
+	 * @param part DocumentPart.
+	 * @param url address for link.
+	 * 
+	 * @return Hyperlink object.
+	 */
+	public static Hyperlink createHyperlink(Part part, String text, String url) {
+		try {
+			// We need to add a relationship to word/_rels/document.xml.rels
+			// but since its external, we don't use the
+			// usual wordMLPackage.getMainDocumentPart().addTargetPart
+			// mechanism
+			org.docx4j.relationships.ObjectFactory factory =
+				new org.docx4j.relationships.ObjectFactory();
+			org.docx4j.relationships.Relationship rel = factory.createRelationship();
+			rel.setType( Namespaces.HYPERLINK  );
+			rel.setTarget(url);
+			rel.setTargetMode("External");
+			part.getRelationshipsPart().addRelationship(rel);
+			// addRelationship sets the rel's @Id
+			String hpl = "<w:hyperlink r:id=\"" + rel.getId() + "\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" " +
+					"xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" >" +
+					"<w:r>" +
+					"<w:rPr>" +
+					"<w:rStyle w:val=\"Hyperlink\" />" +  // TODO: enable this style in the document!
+					"</w:rPr>" +
+					"<w:t>" + text + "</w:t>" +
+					"</w:r>" +
+					"</w:hyperlink>";
+			Hyperlink link = (Hyperlink)XmlUtils.unmarshalString(hpl);
+			return link;
+		} catch (Exception e) {
+			logger.error(String.format("createHyperlink: %s%n", e.getMessage()));
+			return null;
+		}
+	}
 }

@@ -50,7 +50,10 @@ class TestZoneFactory {
 		String zoneNo = "03";
 		String zoneName = "Generic Zone Three"; 
 		String zoneLogoPath = "./zone-logo-03.jpg"; 
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo, zoneName, zoneLogoPath);
+		String zoneUrl = "https://www-zone-03.com/";
+		String zoneChunkPath = "./default.docx"; 
+		
+		Zone zone1 = ZoneFactory.findOrCreate(zoneNo, zoneName, zoneLogoPath, zoneUrl, zoneChunkPath);
 		Map<String, Zone> map = ZoneFactory.getZones();
 		Set<String> keys = map.keySet();
 		assertEquals(1, keys.size());
@@ -61,11 +64,15 @@ class TestZoneFactory {
 		String zoneNo1 = "03";
 		String zoneName1 = "Generic Zone Three"; 
 		String zoneLogoPath1 = "./zone-logo-03.jpg"; 
+		String zoneUrl1 = "https://www-zone-03.com/";
+		String zoneChunkPath1 = "./default.docx"; 
 		String zoneNo2 = "06";
 		String zoneName2 = "Generic Zone Six"; 
 		String zoneLogoPath2 = "./zone-logo-06.jpg"; 
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1);
-		Zone zone2 = ZoneFactory.findOrCreate(zoneNo2, zoneName2, zoneLogoPath2);
+		String zoneUrl2 = "https://www-zone-06.com/";
+		String zoneChunkPath2 = "./default.docx"; 
+		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1, zoneUrl1, zoneChunkPath1);
+		Zone zone2 = ZoneFactory.findOrCreate(zoneNo2, zoneName2, zoneLogoPath2, zoneUrl2, zoneChunkPath2);
 		Map<String, Zone> map = ZoneFactory.getZones();
 		Set<String> keys = map.keySet();
 		assertEquals(2, keys.size());
@@ -77,8 +84,10 @@ class TestZoneFactory {
 		String zoneNo1 = "03";
 		String zoneName1 = "Generic Zone Three"; 
 		String zoneLogoPath1 = "./zone-logo-03.jpg"; 
-		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1);
-		Zone zone2 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1);
+		String zoneUrl1 = "https://www-zone-03.com/";
+		String zoneChunkPath1 = "./default.docx"; 
+		Zone zone1 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1, zoneUrl1, zoneChunkPath1);
+		Zone zone2 = ZoneFactory.findOrCreate(zoneNo1, zoneName1, zoneLogoPath1, zoneUrl1, zoneChunkPath1);
 		Map<String, Zone> map = ZoneFactory.getZones();
 		Set<String> keys = map.keySet();
 		assertEquals(1, keys.size());

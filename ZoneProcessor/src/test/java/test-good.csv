@@ -1,8 +1,8 @@
 ZONES
 #zone no,zone name,zone logo path
-3,OXGrove,./src/test/java/zone-logo-03.jpg
-6,Thornbury,./src/test/java/zone-logo-06.jpg
-8,KAD,./src/test/java/zone-logo-08.jpg
+3,OXGrove,./src/test/java/zone-logo-03.jpg,https://www.oxgrovedems.org/,./src/test/java/default.docx
+6,Thornbury,./src/test/java/zone-logo-06.jpg,http://midchescodems.org,./src/test/java/default.docx
+8,KAD,./src/test/java/zone-logo-08.jpg,http://midchescodems.org/,./src/test/java/default.docx
 PRECINCTS
 #precinct no,precinct name, zone no
 5,ATGLEN,3

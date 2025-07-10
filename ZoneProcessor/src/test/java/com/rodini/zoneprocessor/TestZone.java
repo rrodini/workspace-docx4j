@@ -20,9 +20,11 @@ class TestZone {
 
 	@Test
 	void testConstructor() {
-		Zone zone = new Zone("03", "Generic zone","./zone-logo-03.jpg");
+		Zone zone = new Zone("03", "Generic zone","./zone-logo-03.jpg", "https://www-zone-03.com/", "./default.docx");
 		assertEquals("03", zone.getZoneNo());
 		assertEquals("Generic zone", zone.getZoneName());
 		assertEquals("./zone-logo-03.jpg", zone.getZoneLogoPath());
+		assertEquals("https://www-zone-03.com/", zone.getZoneUrl());
+		assertEquals("./default.docx", zone.getZoneChunkPath());
 	}	
 }

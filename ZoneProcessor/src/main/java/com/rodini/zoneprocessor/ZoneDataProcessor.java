@@ -17,32 +17,40 @@ import com.rodini.ballotutils.Utils;
  */
 public class ZoneDataProcessor {
 	static final Logger logger = LogManager.getLogger(ZoneDataProcessor.class);
-
+	static final int MIN_FIELD_NO = 3;
+	static final int MAX_FIELD_NO = 5;
+	
+	
 	private ZoneDataProcessor() {
 	}
 
 	// Process valid data from single CSV line.
-	static void processLine(String zoneNo, String zoneName, String zoneLogoPath) {
+	static void processLine(String zoneNo, String zoneName, String zoneLogoPath, String zoneUrl, String zoneChunkPath) {
 		// Precinct No must be 3 characters.
 		// Zone No must be 2 characters.
 		String normalZoneNo = Utils.normalizeZoneNo(Integer.parseInt(zoneNo));
-		logger.debug(String.format("zoneNo: %s zoneName: %s zoneLogoPath: %s", normalZoneNo, zoneName, zoneLogoPath));
-		Zone zone = ZoneFactory.findOrCreate(normalZoneNo, zoneName, zoneLogoPath);
+		logger.debug(String.format("zoneNo: %s zoneName: %s zoneLogoPath: %s zoneUrl: %s zoneChunkPath: %s", 
+				normalZoneNo, zoneName, zoneLogoPath, zoneUrl, zoneChunkPath));
+		Zone zone = ZoneFactory.findOrCreate(normalZoneNo, zoneName, zoneLogoPath, zoneUrl, zoneChunkPath);
 	}
 
 	// Process data from single CSV line.
+	// Format: zone no. (number), zone name (text), zone logo (image), zone website (url), zone chunk (docx)
 	static void processData(int lineNo, String[] fields) {
-		if (fields.length < 3) {
+		if (fields.length < MIN_FIELD_NO ) {
 			logger.error(String.format("zone CSV line #%d fewer than 3 fields", lineNo));
 			return;
 		}
-		if (fields.length > 3) {
-			logger.error(String.format("zone CSV line #%d more than 3 fields", lineNo));
+		if (fields.length > MAX_FIELD_NO) {
+			logger.error(String.format("zone CSV line #%d more than 5 fields", lineNo));
 			return;
 		}
 		String field0 = "";
 		String field1 = "";
 		String field2 = "";
+		String field3 = "";
+		String field4 = "";
+		boolean exists;
 		for (int i = 0; i < fields.length; i++) {
 			switch (i) {
 			case 0:
@@ -61,20 +69,34 @@ public class ZoneDataProcessor {
 				// zone logo path.
 				field2 = fields[2].trim();
 				if (field2.isBlank()) {
-					logger.error(String.format("CSV line #%d zone logo path %s is blank", lineNo, field2));
-					// Error should not prevent creation of zone object.
-					//return;
+					logger.info(String.format("CSV line #%d zone logo path %s is blank", lineNo, field2));
 				}
-				boolean exists = Utils.checkFileExists(field2);
+				exists = Utils.checkFileExists(field2);
 				if (!exists) {
-					logger.error(String.format("CSV line #%d zone logo path %s invalid", lineNo, field2));
-					// Error should not prevent creation of zone object.
-					//return;
+					logger.info(String.format("CSV line #%d zone logo path %s invalid", lineNo, field2));
 				}
-				processLine(field0, field1, field2);
+				break;
+			case 3:
+				// zone website url.
+				field3 = fields[3].trim();
+				if (field3.isBlank()) {
+					logger.info(String.format("CSV line #%d zone url %s is blank", lineNo, field3));
+				}
+				break;
+			case 4:
+				// zone chunk.
+				field4 = fields[4].trim();
+				if (field4.isBlank()) {
+					logger.info(String.format("CSV line #%d zone chunk %s is blank", lineNo, field4));
+				}
+				exists = Utils.checkFileExists(field4);
+				if (!exists) {
+					logger.info(String.format("CSV line #%d zone chunk path %s invalid", lineNo, field4));
+				}
 				break;
 			}
 		}
+		processLine(field0, field1, field2, field3, field4);
 	}
 
 	/**

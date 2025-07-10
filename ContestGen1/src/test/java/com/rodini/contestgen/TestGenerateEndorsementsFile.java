@@ -30,7 +30,7 @@ class TestGenerateEndorsementsFile {
 		// BALLOTS FOR 2025 PRIMARY: 350_MALVERN, 065_CHARLESTOWN
 		ballots = GenerateTestBallots.genBallot2();
 		commonContests = GenerateEndorsementsFile.processCommonContests(ballots);
-		String csvFilePath = "/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.7.0/chester-input/chester-precincts-zones.csv";
+		String csvFilePath = "/Users/robert/Documents/Sample Ballot Production/SampleBallotGen-1.7.0/chester-zone/chester-precincts-zones.csv";
 		csvText = Utils.readTextFile(csvFilePath);
 // TBD - Many ERRORS zone logo files not found
 		ZoneProcessor.processCSVText(csvText);

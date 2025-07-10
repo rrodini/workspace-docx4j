@@ -49,7 +49,7 @@ class TestZoneDataProcessor {
 		String zoneText =
 		"""
 		#zone no,zone name,zone logo path
-		3,OXGrove,./src/test/java/zone-logo-03.jpg
+		3,OXGrove,./src/test/java/zone-logo-03.jpg,https://www.oxgrovedems.org/,./src/test/java/default.docx
 		""";
 		ZoneDataProcessor.processZonesText(zoneText);
 		Map<String, Zone> map = ZoneFactory.getZones();
@@ -59,15 +59,17 @@ class TestZoneDataProcessor {
 		assertEquals("03", zone1.getZoneNo());
 		assertEquals("OXGrove", zone1.getZoneName());
 		assertEquals("./src/test/java/zone-logo-03.jpg", zone1.getZoneLogoPath());
+		assertEquals("https://www.oxgrovedems.org/", zone1.getZoneUrl());
+		assertEquals("./src/test/java/default.docx", zone1.getZoneChunkPath());
 	}
 	@Test
 	void testZoneData3() {
 		String zoneText =
 		"""
     	#zone no,zone name,zone logo path
-	    3,OXGrove,./src/test/java/zone-logo-03.jpg
-	    6,Thornbury,./src/test/java/zone-logo-06.jpg
-	    8,KAD,./src/test/java/zone-logo-08.jpg
+		3,OXGrove,./src/test/java/zone-logo-03.jpg,https://www.oxgrovedems.org/,./src/test/java/default.docx
+	    6,Thornbury,./src/test/java/zone-logo-06.jpg,http://midchescodems.org/,./src/test/java/default.docx
+	    8,KAD,./src/test/java/zone-logo-08.jpg,https://kennettareademocrats.com/,./src/test/java/default.docx
 		""";
 		ZoneDataProcessor.processZonesText(zoneText);
 		Map<String, Zone> map = ZoneFactory.getZones();
@@ -77,13 +79,19 @@ class TestZoneDataProcessor {
 		assertEquals("03", zone1.getZoneNo());
 		assertEquals("OXGrove", zone1.getZoneName());
 		assertEquals("./src/test/java/zone-logo-03.jpg", zone1.getZoneLogoPath());
+		assertEquals("https://www.oxgrovedems.org/", zone1.getZoneUrl());
+		assertEquals("./src/test/java/default.docx", zone1.getZoneChunkPath());
 		Zone zone2 = map.get("06");
 		assertEquals("06", zone2.getZoneNo());
 		assertEquals("Thornbury", zone2.getZoneName());
 		assertEquals("./src/test/java/zone-logo-06.jpg", zone2.getZoneLogoPath());
+		assertEquals("http://midchescodems.org/", zone2.getZoneUrl());
+		assertEquals("./src/test/java/default.docx", zone2.getZoneChunkPath());
 		Zone zone3 = map.get("08");
 		assertEquals("08", zone3.getZoneNo());
 		assertEquals("KAD", zone3.getZoneName());
 		assertEquals("./src/test/java/zone-logo-08.jpg", zone3.getZoneLogoPath());
+		assertEquals("https://kennettareademocrats.com/", zone3.getZoneUrl());
+		assertEquals("./src/test/java/default.docx", zone3.getZoneChunkPath());
 	}
 }

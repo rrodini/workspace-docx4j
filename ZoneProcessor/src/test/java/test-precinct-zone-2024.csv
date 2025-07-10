@@ -1,23 +1,23 @@
 Zones
-#zone no,zone name,zone logo
-1,Chester Co Democrats,./src/test/java/zone-logo-01.jpg
-2,Western Chester Co Democrats,./src/test/java/zone-logo-02.jpg
-3,OXGrove Democrats,./src/test/java/zone-logo-03.jpg
-4,Coatesville Area Democrats,./src/test/java/zone-logo-04.jpg
-5,Mid-Chester Co Democrats,./src/test/java/zone-logo-05.jpg
-6,Westtown Thornbury Birmingham Democrats,./src/test/java/zone-logo-06.jpg
-7,Brandywine Creek Democrats,./src/test/java/zone-logo-07.jpg
-8,Kennet Area Democrats,./src/test/java/zone-logo-08.jpg
-9,West Chester Democratic Committee,./src/test/java/zone-logo-09.jpg
-10,Central Chester Co Democratics,./src/test/java/zone-logo-10.jpg
-11,North Chesco Dems,./src/test/java/zone-logo-11.jpg
-12,Tredyffrin Township Democrats,./src/test/java/zone-logo-12.jpg
-13,Great Valley Democrats,./src/test/java/zone-logo-13.jpg
-14,West Whiteland and West Pikeland Democrats,./src/test/java/zone-logo-14.jpg
-15,Easttown Township Democratic Committee,./src/test/java/zone-logo-15.jpg
-16,Phoenixville Democratic Committee,./src/test/java/zone-logo-16.jpg
-17,East Goshen Democratics,./src/test/java/zone-logo-17.jpg
-18,West Goshen Democratic,./src/test/java/zone-logo-18.jpg
+#zone no,zone name,zone logo,zone website,zone chunk
+1,Upper Chesco Democrats,../chester-zone/logos/zone-01.jpg,https://www.chestercountydems.org/,../chester-zone/chunks/default.docx
+2,Western Chester County Democrats,../chester-zone/logos/zone-02.png,https://www.facebook.com/westernccdemocrats/,../chester-zone/chunks/default.docx
+3,OXGrove Democrats,../chester-zone/logos/zone-03.jpg,https://www.oxgrovedems.org/,../chester-zone/chunks/default.docx
+4,Coatesville Area Democrats,../chester-zone/logos/zone-04.jpg,,../chester-zone/chunks/default.docx
+5,Mid-Chester County Democrats,../chester-zone/logos/zone-05.png,http://midchescodems.org/,../chester-zone/chunks/default.docx
+6,Westtown Thornbury Birmingham Democrats,../chester-zone/logos/zone-06.png,http://midchescodems.org/,../chester-zone/chunks/default.docx
+7,Brandywine Creek Democrats,../chester-zone/logos/zone-07.png,http://www.brandywinecreekdems.org/,../chester-zone/chunks/default.docx
+8,Kennet Area Democrats,../chester-zone/logos/zone-08.jpg,https://kennettareademocrats.com/,../chester-zone/chunks/default.docx
+9,West Chester Democratic Committee,../chester-zone/logos/zone-09.png,https://www.westchesterdemocrats.org/,../chester-zone/chunks/default.docx
+10,Central Chester County Democrats,../chester-zone/logos/zone-10.jpg,https://centralchescodems.com/,../chester-zone/chunks/default.docx
+11,Northern Chester County Democrats,../chester-zone/logos/zone-11.jpg,https://northchescodems.com/,../chester-zone/chunks/default.docx
+12,Tredyffrin Township Democrats,../chester-zone/logos/zone-12.jpg,https://ttdems.com/,../chester-zone/chunks/default.docx
+13,Great Valley Democrats,../chester-zone/logos/zone-13.jpg,https://www.greatvalleydems.com/,../chester-zone/chunks/default.docx
+14,West Whiteland and West Pikeland Democrats,../chester-zone/logos/zone-14.png,https://westwhitelanddemocrats.com/,../chester-zone/chunks/default.docx
+15,Easttown Township Democratic Committee,../chester-zone/logos/zone-15.jpg,https://www.easttowndems.org/,../chester-zone/chunks/default.docx
+16,Phoenixville Democratic Committee,../chester-zone/logos/zone-16.jpg,https://www.phoenixvilledems.com/,../chester-zone/chunks/default.docx
+17,East Goshen Democratics,../chester-zone/logos/zone-17.jpg,https://www.eastgoshendems.org/,../chester-zone/chunks/default.docx
+18,West Goshen Democratic,../chester-zone/logos/zone-18.jpg,https://www.westgoshendems.org/,../chester-zone/chunks/default.docx
 Precincts
 #precinct no,precinct name,zone no
 5,ATGLEN,2
