@@ -83,7 +83,7 @@ public class BallotGen {
 					precinctBallotFile, // NNN_municipal_XYZ
 // TBD - TO BE DELETED.
 //					Initialize.contestLevel,
-					Initialize.formatsText,
+//					Initialize.formatsText,
 					Initialize.endorsementProcessor,
 					Initialize.writeinProcessor);								
 			gdb.generate();
@@ -115,7 +115,7 @@ public class BallotGen {
 						uniqueBallotFile, // unique_NN
 	// TBD - TO BE DELETED.
 	//					Initialize.contestLevel,
-						Initialize.formatsText,
+	//					Initialize.formatsText,
 						Initialize.endorsementProcessor,
 						Initialize.writeinProcessor);								
 				gdb.generate();

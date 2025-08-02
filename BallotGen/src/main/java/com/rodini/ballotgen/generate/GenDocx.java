@@ -26,6 +26,8 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.relationships.Namespaces;
 import org.docx4j.wml.BooleanDefaultTrue;
 import org.docx4j.wml.Br;
+import org.docx4j.wml.STBrType;
+import static org.docx4j.wml.STBrType.*;  // PAGE / COLUMN
 import org.docx4j.wml.Drawing;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
@@ -95,32 +97,40 @@ public class GenDocx {
 			logger.info("generating page break");
 			P newParagraph;
 			// first paragraph at bottom
-			newParagraph = mdp.createStyledParagraphOfText(STYLEID_VOTE_BOTH_SIDES, Initialize.PAGE_BREAK_WORDING);
+			newParagraph = mdp.createStyledParagraphOfText(STYLEID_VOTE_BOTH_SIDES, Initialize.pageBreakWording);
 			pageBreakParagraphs.add(newParagraph);
 			// Draw a border line as a separator
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
 			// last paragraph
 			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
-			// 9/7/2024 - generate a column break too
-			// For one page ballots don't do this!
-//			newParagraph = genColumnBreakParagraph(mdp);
-//			pageBreakParagraphs.add(newParagraph);
-//			// new paragraph at top
-//			newParagraph = mdp.createStyledParagraphOfText(STYLEID_CONTEST_TITLE, Initialize.PAGE_BREAK_WORDING);
-//			pageBreakParagraphs.add(newParagraph);
-//			// Draw a border line as a separator
-//			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
-//			pageBreakParagraphs.add(newParagraph);
+			// 8/1/2025 - may need a to generate a hard page break
+			if (Initialize.pageBreakHardBreak) {
+				newParagraph = genBreakParagraph(mdp, PAGE);
+				// Ironically, a column break works best
+//				newParagraph = genBreakParagraph(mdp, COLUMN);
+				pageBreakParagraphs.add(newParagraph);
+				// new paragraph at top
+				// Draw a border line as a separator
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+				pageBreakParagraphs.add(newParagraph);
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_VOTE_BOTH_SIDES, Initialize.pageBreakWording);
+				pageBreakParagraphs.add(newParagraph);
+				// Draw a border line as a separator
+				newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+				pageBreakParagraphs.add(newParagraph);
+			}
 		}
 		return pageBreakParagraphs;
 	}
 	/** 
-	 * genColumnBreakParagraph generates a column break object tree.
-	 * This can be used to "post-format" the columns after a human evaluation as to where
-	 * a column break should be injected.
-	 * @return paragraph effecting a column break
+	 * genBreakParagraph generates a column break or page break object tree.
+	 * This can be used to "post-format" the pages and columns in a docx.
+	 * 
+	 * @param mdp Main document part
+	 * @param type COLUMN or PAGE
+	 * @return paragraph effecting a break
 	 */
-	public static P genColumnBreakParagraph(MainDocumentPart mdp) {
+	public static P genBreakParagraph(MainDocumentPart mdp, STBrType type) {
 		logger.info("generating column break");
 		org.docx4j.wml.ObjectFactory wmlObjectFactory = new ObjectFactory();
         // Create object for p
@@ -131,7 +141,11 @@ public class GenDocx {
         // Create object for br
         Br br = wmlObjectFactory.createBr(); 
         r.getContent().add(br); 
-        br.setType(org.docx4j.wml.STBrType.COLUMN);
+        if (type == COLUMN) {
+        	br.setType(COLUMN);
+        } else {
+        	br.setType(PAGE);
+        }
         return p;
 	}
 	/**

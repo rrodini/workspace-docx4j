@@ -1,0 +1,89 @@
+#!/bin/bash
+# updatebinaries.sh refresh the jar files for ContestGen, BallotNamer, BallotGen, BallotZipper, TabReplacer
+# Note: These jars are embedded as dependencies BallotUtils, ZoneProcessor
+
+if [ -n "$BALLOTGEN_VERSION" ]; then
+  echo -e "\nBALLOTGEN_VERSION: ${BALLOTGEN_VERSION}\n"
+else 
+  echo -e "\nBALLOTGEN_VERSION environment variable not defined -- Quitting.\n"
+  exit 0
+fi
+# DESTINATION FOLDERS
+SLOC_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/SampleBallotGen-${BALLOTGEN_VERSION}/chester-post
+SLOC_FILE="sloc.txt"
+COVERAGE_FILE="index.html"
+# SOURCE FOLDERS
+CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen1
+CONTESTGEN_PREFIX="contestgen"
+BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
+BALLOTGEN_PREFIX="ballotgen"
+BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
+BALLOTNAMER_PREFIX="ballotnamer"
+BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
+BALLOTZIPPER_PREFIX="ballotzipper"
+BALLOTUTILS_FOLDER=/Users/robert/git/workspace-docx4j/BallotUtils
+BALLOTUTILS_PREFIX="ballotutils"
+ZONEPROCESSOR_FOLDER=/Users/robert/git/workspace-docx4j/ZoneProcessor
+ZONEPROCESSOR_PREFIX="zoneprocessor"
+COVERAGE_SUBFOLDER="target/site/jacoco"
+
+# copy_file - copy FILE1 to FILE2 only if it is newer.
+copy_file() {
+  # if [ $1 -nt $2 ]
+  # then
+   cp -v $1 $2
+  # fi
+}
+
+# do all work in the SLOC folder
+cd "$SLOC_FOLDER" || exit
+
+# CONTESTGEN1
+FILE1="${CONTESTGEN_FOLDER}/${SLOC_FILE}"
+FILE2="${CONTESTGEN_PREFIX}-${SLOC_FILE}"
+copy_file $FILE1 $FILE2
+FILE1="${CONTESTGEN_FOLDER}/$COVERAGE_SUBFOLDER/${COVERAGE_FILE}"
+FILE2="${CONTESTGEN_PREFIX}-${COVERAGE_FILE}"
+copy_file $FILE1 $FILE2
+
+# BALLOTGEN
+FILE1="${BALLOTGEN_FOLDER}/${SLOC_FILE}"
+FILE2="${BALLOTGEN_PREFIX}-${SLOC_FILE}"
+copy_file $FILE1 $FILE2
+FILE1="${BALLOTGEN_FOLDER}/$COVERAGE_SUBFOLDER/${COVERAGE_FILE}"
+FILE2="${BALLOTGEN_PREFIX}-${COVERAGE_FILE}"
+copy_file $FILE1 $FILE2
+
+# BALLOTNAMER
+FILE1="${BALLOTNAMER_FOLDER}/${SLOC_FILE}"
+FILE2="${BALLOTNAMER_PREFIX}-${SLOC_FILE}"
+copy_file $FILE1 $FILE2
+FILE1="${BALLOTNAMER_FOLDER}/$COVERAGE_SUBFOLDER/${COVERAGE_FILE}"
+FILE2="${BALLOTNAMER_PREFIX}-${COVERAGE_FILE}"
+copy_file $FILE1 $FILE2
+
+# BALLOTZIPPER
+FILE1="${BALLOTZIPPER_FOLDER}/${SLOC_FILE}"
+FILE2="${BALLOTZIPPER_PREFIX}-${SLOC_FILE}"
+copy_file $FILE1 $FILE2
+FILE1="${BALLOTZIPPER_FOLDER}/$COVERAGE_SUBFOLDER/${COVERAGE_FILE}"
+FILE2="${BALLOTZIPPER_PREFIX}-${COVERAGE_FILE}"
+copy_file $FILE1 $FILE2
+
+# BALLOTUTILS
+FILE1="${BALLOTUTILS_FOLDER}/${SLOC_FILE}"
+FILE2="${BALLOTUTILS_PREFIX}-${SLOC_FILE}"
+copy_file $FILE1 $FILE2
+FILE1="${BALLOTUTILS_FOLDER}/$COVERAGE_SUBFOLDER/${COVERAGE_FILE}"
+FILE2="${BALLOTUTILS_PREFIX}-${COVERAGE_FILE}"
+copy_file $FILE1 $FILE2
+
+# ZONEPROCESSOR
+FILE1="${ZONEPROCESSOR_FOLDER}/${SLOC_FILE}"
+FILE2="${ZONEPROCESSOR_PREFIX}-${SLOC_FILE}"
+copy_file $FILE1 $FILE2
+FILE1="${ZONEPROCESSOR_FOLDER}/$COVERAGE_SUBFOLDER/${COVERAGE_FILE}"
+FILE2="${ZONEPROCESSOR_PREFIX}-${COVERAGE_FILE}"
+copy_file $FILE1 $FILE2
+
+echo "DONE."

@@ -8,7 +8,7 @@
 # Notes:
 # - Script assumes there are TWO PAGES per precinct ballot in all elections.
 PREP_DIR="./chester-prep"  # no final / please
-SPECIMEN_PDF="2024_General_Election-VS.pdf"
+SPECIMEN_PDF="Chester County-2025 Municipal Primary-Democratic Specimen Ballots.pdf"
 SPECIMEN_NAME="${SPECIMEN_PDF%.*}"
 cd "./$PREP_DIR" || exit
 echo "$SPECIMEN_NAME"

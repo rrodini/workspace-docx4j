@@ -1,8 +1,10 @@
 #!/bin/bash
-# DO NOT USE! OBSOLETE! USE new-release.sh INSTEAD.
 # release.sh creates the folders and moves files for a new release of SampleBallotGen. 
-#
-# Script must be run in "Sample Ballot Production" folder.
+# A new release creates a new DEV environment, e.g. SampleBallotGen-1.6.0
+# - Build BallotUtils, ZoneProcessor, ContestGen, etc. with new version
+# - Set env variable BALLOTGEN_VERSION to new value, e.g. "1.6.0"
+# - Update the OLD_BALLOTGEN_VERSION variable
+# - Run this script. Script runs in "Sample Ballot Production" folder.
 
 if [ -n BALLOTGEN_VERSION ]; then
   echo -e "\nBALLOTGEN_VERSION: ${BALLOTGEN_VERSION}\n"
@@ -11,16 +13,15 @@ else
   exit 0
 fi
 
-
+OLD_BALLOTGEN_VERSION="1.6.0"
 PARENT_FOLDER=/Users/robert/Documents/"Sample Ballot Production"
-RELEASE_FOLDER="SampleBallotGen-${BALLOTGEN_VERSION}"
-CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen
-BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen
-BALLOTNAMER_FOLDER=/Users/robert/git/workspace-docx4j/BallotNamer
-BALLOTZIPPER_FOLDER=/Users/robert/git/workspace-docx4j/BallotZipper
-#TEXTCLEANER_FOLDER=/Users/robert/git/workspace-docx4j/TabReplacer
+RELEASE_FOLDER=SampleBallotGen-${BALLOTGEN_VERSION}
+CONTESTGEN_FOLDER=../SampleBallotGen-${OLD_BALLOTGEN_VERSION}/contestgen
+BALLOTGEN_FOLDER=../SampleBallotGen-${OLD_BALLOTGEN_VERSION}/ballotgen
+BALLOTNAMER_FOLDER=../SampleBallotGen-${OLD_BALLOTGEN_VERSION}/ballotnamer
+BALLOTZIPPER_FOLDER=../SampleBallotGen-${OLD_BALLOTGEN_VERSION}/ballotzipper
 PDFBOX_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/PDFBox
-SCRIPTS_FOLDER=/Users/robert/git/workspace-docx4j/Scripts
+SCRIPTS_FOLDER=../SampleBallotGen-${OLD_BALLOTGEN_VERSION}
 
 
 # do all work in the parent folder
@@ -48,13 +49,12 @@ cd "${RELEASE_FOLDER}"
 # /chester-input
 # /chester-output
 # /chester-prep
+# /chester-post
 # /chester-zip
 # /contestgen
 #  /resources
 # /logs
 # /PDFBOX
-# /textcleaner
-#  /resources
   
 echo "Creating ballotgen folder"
 mkdir ballotgen
@@ -92,6 +92,7 @@ mkdir chester-contests
 mkdir chester-input
 mkdir chester-output
 mkdir chester-prep
+mkdir chester-post
 mkdir chester-zip
 
 echo "Creating contestgen folder"
@@ -108,38 +109,29 @@ mkdir logs
 echo "Creating PDFBOX folder"
 mkdir PDFBOX
 
-echo "Creating textcleaner folder"
-mkdir textcleaner
-cd textcleaner
-
-echo "Creating textcleaner/resources folder"
-mkdir resources
-cd ..
-
 echo "folder structure creating...Now moving files..."
+# Now in new release folder
+echo "copying contestgen resources"
 
-echo "copying contestgen files and resources"
-
-cp "${CONTESTGEN_FOLDER}/target/contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" contestgen/
+# no need to copy the old binary
+#cp "${CONTESTGEN_FOLDER}/contest-gen-${OLD_BALLOTGEN_VERSION}-jar-with-dependencies.jar" contestgen/
 cp -a "${CONTESTGEN_FOLDER}"/resources/. contestgen/resources/
 
-echo "copying ballotgen files and resources"
-cp "${BALLOTGEN_FOLDER}/target/ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotgen/
+
+echo "copying ballotgen resources"
+# no need to copy the old binary
+cp "${BALLOTGEN_FOLDER}/ballot-gen-${OLD_BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotgen/
 cp -a "${BALLOTGEN_FOLDER}"/resources/. ballotgen/resources/
 
-echo "copying ballotnamer files and resources"
-cp "${BALLOTNAMER_FOLDER}/target/ballot-namer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotnamer/
+echo "copying ballotnamer resources"
+# no need to copy the old binary
+#cp "${BALLOTNAMER_FOLDER}/ballot-namer-${OLD_BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotnamer/
 cp -a "${BALLOTNAMER_FOLDER}"/resources/. ballotnamer/resources/
 
-echo "copying ballotzipper files and resources"
-cp "${BALLOTZIPPER_FOLDER}/target/ballot-zipper-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
+echo "copying ballotzipper resources"
+# no need to copy the old binary
+#cp "${BALLOTZIPPER_FOLDER}/ballot-zipper-${OLD_BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
 cp -a "${BALLOTZIPPER_FOLDER}"/resources/. ballotzipper/resources/
-
-echo "copying textcleaner files and resources"
-cp "${TEXTCLEANER_FOLDER}/target/tab-replacer-${BALLOTGEN_VERSION}-jar-with-dependencies.jar" ballotzipper/
-cp -a "${TEXTCLEANER_FOLDER}"/resources/. textcleaner/resources/
-
-
 
 echo "copying PDFBox files and resources"
 cp "${PDFBOX_FOLDER}/pdfbox-app-3.0.2.jar" PDFBOX/

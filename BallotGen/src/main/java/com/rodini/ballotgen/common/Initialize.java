@@ -39,13 +39,14 @@ import com.rodini.zoneprocessor.ZoneProcessor;
 public class Initialize {
 	private static final Logger logger = LogManager.getLogger(Initialize.class);
 	// Global variables
+	// TODO: clean up elecType and endorsedParty
 	public static ElectionType elecType;	// e.g. PRIMARY or GENERAL
 	public static Party endorsedParty;		// e.g. Democratic (or NULL)
 	public static List<String> ballotFiles; // e.g. List: "Atglen_VS.txt","Avondale_VS.txt",..,"West_Chester_7_VS.txt"
 	public static String ballotContestsPath;
-	public static String formatsText;		// read from properties file
-	public static String referendumFormat;		// read from properties file
-	public static String retentionFormat;		// read from properties file
+//	public static String formatsText;		// read from properties file
+//	public static String referendumFormat;		// read from properties file
+//	public static String retentionFormat;		// read from properties file
 	public static String msWordPrecinctTemplateFile = "";	// MS Word precinct template file
 	public static String msWordUniqueTemplateFile = "";	    // MS Word unique template file
 	public static ENVIRONMENT env;			// TEST vs. PRODUCTION
@@ -58,6 +59,8 @@ public class Initialize {
 	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
 	public static boolean pageBreakDisplay;
+	public static boolean pageBreakHardBreak;
+	public static String  pageBreakWording; // Typically "Vote Both Sides"
 	public static String columnBreaks = "ZZZZ"; // sentinel value
 	public static BallotGenOutput ballotGenOutput;
 	public static List<String> uniqueFirstBallotFile; // ballot file that triggers unique_ballot_xx.docx
@@ -80,7 +83,9 @@ public class Initialize {
 	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
 	public	static       String COUNTY;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
-	public  static       String PAGE_BREAK_WORDING;
+	public  static       String PAGE_BREAK_HARD = "page.break.hard"; // True => generate a hard page break
+	public  static       String PAGE_BREAK_DISPLAY = "page.break.display"; // True => display wording below
+	public  static       String PAGE_BREAK_WORDING = "page.break.wording";
 	public  static final String TICKET_CONTEST_NAMES = "ticket.contest.names";
 	public  static final String LOCAL_CONTEST_NAMES = "local.contest.names";
 	public  static final String LOCAL_CONTEST_EXCEPTION_NAMES = "local.contest.exception.names";
@@ -299,18 +304,26 @@ public class Initialize {
 	
 	static void validatePageBreak() {
 		boolean display = true;
-		String strDisplay = Utils.getPropValue(ballotGenProps,"page.break.display");
+		boolean hardBreak = false;
+		String strDisplay = Utils.getPropValue(ballotGenProps,PAGE_BREAK_DISPLAY);
 		if (strDisplay != null) {
 			display = Boolean.valueOf(strDisplay);
 		}
 		pageBreakDisplay = display;
-		logger.info(String.format("%s: %s", "pageBreakDisplay", Boolean.toString(display)));
-		String value = Utils.getPropValue(ballotGenProps,"page.break.wording");
-		if (value == null) {
-			value = "Page Break";
+		String strHardBreak = Utils.getPropValue(ballotGenProps,PAGE_BREAK_HARD);
+		if (strHardBreak != null) {
+			hardBreak = Boolean.valueOf(strHardBreak);
 		}
-		PAGE_BREAK_WORDING = value;
-		logger.info(String.format("%s: %s", "PAGE_BREAK_WORDING", value));
+		pageBreakDisplay = display;
+		pageBreakHardBreak = hardBreak;
+		logger.info(String.format("%s: %s", "pageBreakDisplay", pageBreakDisplay));
+		logger.info(String.format("%s: %s", "pageBreakHardBreak", pageBreakHardBreak));
+		String value = Utils.getPropValue(ballotGenProps, PAGE_BREAK_WORDING);
+		if (value == null) {
+			value = "Vote Both Sides";
+		}
+		pageBreakWording = value;
+		logger.info(String.format("%s: %s", "pageBreakWording", pageBreakWording));
 	}
 
 	static void validateBallotGenOutput() {
@@ -350,7 +363,9 @@ public class Initialize {
 		// the votefor processor is separate component
 		// but it must be inititialized.
 		com.rodini.voteforprocessor.extract.Initialize.start(contestGenProps);
-		// create the endorsement processor
+		// create the endorsement processor using voteforprocessor properties.
+		elecType = com.rodini.voteforprocessor.extract.Initialize.elecType;
+		endorsedParty = com.rodini.voteforprocessor.extract.Initialize.endorsedParty;
 		endorsementProcessor  = new EndorsementProcessor(elecType, endorsedParty,
 				candidateEndorsements, precinctToZoneMap);
 		// create the write-in processor

@@ -26,6 +26,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.P;
+import static org.docx4j.wml.STBrType.*;  // PAGE / COLUMN
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Styles;
 
@@ -143,10 +144,9 @@ public class GenDocxBallot {
 	 * @param dotxPath path to the Word template.
 	 * @param textFilePath path to the ballot text file.
 	 * @param contestsLevel which contests text file to use.
-	 * @param formatsText formats (regexes) to use.
 	 */
 	public GenDocxBallot(String dotxPath, String textFilePath, String ballotTitle,
-			String formatsText, EndorsementProcessor ep, WriteinProcessor wp) {
+			EndorsementProcessor ep, WriteinProcessor wp) {
 		this.dotxPath = dotxPath;
 		this.ballotTextFilePath = textFilePath;
 		this.ballotTitle = ballotTitle;
@@ -265,7 +265,7 @@ public class GenDocxBallot {
 		int end = contestsFileText.length();
 		// is "Retentions" present?
 		if (indexRetentions >= 0) {
-			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length(), end);
+			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
 			end = indexRetentions;
 		}
 		if (retentionsText == null || retentionsText.isBlank()) {
@@ -438,12 +438,20 @@ public class GenDocxBallot {
 						phProcessor.replaceContent(ph, genRetentions());
 					} else if (name.equals(PLACEHOLDER_ZONE_CHUNK)) {
 						String chunkPath = zone.getZoneChunkPath();
-						phProcessor.replaceContent(ph, GenDocx.genChunk(docx.getMainDocumentPart(), chunkPath));
+						if (!chunkPath.isBlank()) {
+							phProcessor.replaceContent(ph, GenDocx.genChunk(docx.getMainDocumentPart(), chunkPath));
+						} else {
+							phProcessor.replaceContent(ph, null);					
+						}
 					} else if (name.equals(PLACEHOLDER_ZONE_URL)) {
 						String zoneName = zone.getZoneName();
 						String zoneUrl = zone.getZoneUrl();
-						P paragraph = GenDocx.genHyperlink(docx.getMainDocumentPart(), zoneName, zoneUrl);
-						phProcessor.replaceContent(ph, List.of(paragraph));
+						if (!zoneName.isBlank() && !zoneUrl.isBlank()) {
+							P paragraph = GenDocx.genHyperlink(docx.getMainDocumentPart(), zoneName, zoneUrl);
+							phProcessor.replaceContent(ph, List.of(paragraph));
+						} else {
+							phProcessor.replaceContent(ph, null);
+						}
 					} else {
 						P paragraph = genPlaceholderValue(name, ph, "Normal", docx.getMainDocumentPart());
 						phProcessor.replaceContent(ph, List.of(paragraph));
@@ -551,7 +559,7 @@ public class GenDocxBallot {
 			// Insert column break before contest?
 			if (Initialize.columnBreaks.indexOf(contestName) >= 0) {
 				MainDocumentPart mdp = docx.getMainDocumentPart();
-				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
+				P columnBreakParagraph = GenDocx.genBreakParagraph(mdp, COLUMN);
 				contestParagraphs.add(columnBreakParagraph);
 			}
 //			String contestFormat = elements[1];
@@ -879,7 +887,7 @@ public class GenDocxBallot {
 			Utils.logLines(logger, DEBUG, "retentionLines:", retentionLines);
 			MainDocumentPart mdp = docx.getMainDocumentPart();
 			for (String line: retentionLines) {
-				// Each line is a referendum question
+				// Each line is a retention question
 				String [] elements = line.split(",");
 				String officeName = elements[0];
 				officeName = VoteFor.processName(officeName);

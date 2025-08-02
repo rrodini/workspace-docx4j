@@ -7,12 +7,12 @@
 # STEP4  - BALLOT GENERATE  <= For Democratic Committee experts
 # STEP4a - BALLOT CUSTOMIZE <= OPTIONAL
 # STEP5  - BALLOT ZIP       <= For Democratic Committee experts
-# TO activate a STEP, set STEPx value to 1
+# TO activate a STEP, set  STEPx value to 1
 $STEP1=0
 $STEP2=0
 $STEP3=0
-$STEP4=0
-$STEP5=1
+$STEP4=1
+$STEP5=0
 
 # if ($STEP1 -eq $true) {
 #     Write-Output "Step1 is true"
@@ -70,10 +70,10 @@ Write-Output "Initializing Chester Co. values"
         $global:COUNTY_OUTPUT = "chester-output"
         $global:COUNTY_CONTESTS=".\chester-contests"
         $global:COUNTY_ZIP=".\chester-zip"
-        $global:VOTER_SERVICES_SPECIMEN_PDF="2020_PRIMARY_DEMOCRATIC_SPECIMEN.pdf"
-        $global:VOTER_SERVICES_SPECIMEN_TXT="2020_PRIMARY_DEMOCRATIC_SPECIMEN.txt"
-        $global:VOTER_SERVICES_PAGES_PER_BALLOT=1
-        $global:PRECINCTS_ZONES_CSV="chester-2024-precincts-zones.csv"
+        $global:VOTER_SERVICES_SPECIMEN_PDF="Primary-Dems-2025.pdf"
+        $global:VOTER_SERVICES_SPECIMEN_TXT="Primary-Dems-2025.txt"
+        $global:VOTER_SERVICES_PAGES_PER_BALLOT=2
+        $global:PRECINCTS_ZONES_CSV="chester-2025-precincts-zones.csv"
     } elseif ($BALLOTGEN_COUNTY -eq "bucks" ) {
         $global:COUNTY_INPUT=".\bucks-input"
         $global:COUNTY_OUTPUT=".\bucks-output"

@@ -10,7 +10,7 @@ else
 fi
 # List of binaries
 RELEASE_FOLDER=/Users/robert/Documents/"Sample Ballot Production"/SampleBallotGen-${BALLOTGEN_VERSION}
-CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen/target
+CONTESTGEN_FOLDER=/Users/robert/git/workspace-docx4j/ContestGen1/target
 CONTESTGEN="contest-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
 BALLOTGEN_FOLDER=/Users/robert/git/workspace-docx4j/BallotGen/target
 BALLOTGEN="ballot-gen-${BALLOTGEN_VERSION}-jar-with-dependencies.jar"
