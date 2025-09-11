@@ -144,6 +144,13 @@ public class GenerateBallotSummary {
 	static String getUniqueString(Ballot ballot) {
 		String uniqueString;
 		String contestsString = ballot.getContests().stream().map(Contest::getName).collect(joining(""));
+//		// Kludge: Need to remove JOE contest and IOE contests here since these are precinct-level contests.
+//		// Assume that every precinct has these two and that JOE precedes IOE and IOE is last contest.
+//		int indexJOE = contestsString.indexOf("Judge of Elections");
+//		if (indexJOE > 0) {
+//			// See assumption.
+//			contestsString = contestsString.substring(0, indexJOE);
+//		}
 		String refsString    = ballot.getReferendums().stream().map(Referendum::getRefQuestion).collect(joining(""));
 		String retsString    = ballot.getRetentions().stream().map(Retention::getOfficeName).collect(joining(""));
 		uniqueString = contestsString + refsString + retsString;

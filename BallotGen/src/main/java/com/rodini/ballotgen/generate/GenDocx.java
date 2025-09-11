@@ -94,7 +94,7 @@ public class GenDocx {
 		List<P> pageBreakParagraphs = new ArrayList<>();
 		// Test the property value here
 		if (Initialize.pageBreakDisplay) {
-			logger.info("generating page break");
+			logger.info("generating logical VBS break");
 			P newParagraph;
 			// first paragraph at bottom
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_VOTE_BOTH_SIDES, Initialize.pageBreakWording);
@@ -103,11 +103,13 @@ public class GenDocx {
 			newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
 			// last paragraph
 			pageBreakParagraphs.add(newParagraph);  // Paragraph separator
-			// 8/1/2025 - may need a to generate a hard page break
-			if (Initialize.pageBreakHardBreak) {
-				newParagraph = genBreakParagraph(mdp, PAGE);
-				// Ironically, a column break works best
-//				newParagraph = genBreakParagraph(mdp, COLUMN);
+			// 9/11/2025 - another variation for trifold size template
+			if (!Initialize.pageBreakType.equals("NONE")) {
+				if (Initialize.pageBreakType.equalsIgnoreCase("COLUMN")) {			
+					newParagraph = genBreakParagraph(mdp, COLUMN);
+				} else {
+					newParagraph = genBreakParagraph(mdp, PAGE);
+				}
 				pageBreakParagraphs.add(newParagraph);
 				// new paragraph at top
 				// Draw a border line as a separator
@@ -131,7 +133,6 @@ public class GenDocx {
 	 * @return paragraph effecting a break
 	 */
 	public static P genBreakParagraph(MainDocumentPart mdp, STBrType type) {
-		logger.info("generating column break");
 		org.docx4j.wml.ObjectFactory wmlObjectFactory = new ObjectFactory();
         // Create object for p
         P p = mdp.createStyledParagraphOfText(STYLEID_COLUMN_BREAK_PARAGRAPH,null);
@@ -142,8 +143,10 @@ public class GenDocx {
         Br br = wmlObjectFactory.createBr(); 
         r.getContent().add(br); 
         if (type == COLUMN) {
-        	br.setType(COLUMN);
+    		logger.info("generating hard column break");
+       	br.setType(COLUMN);
         } else {
+    		logger.info("generating hard page break");
         	br.setType(PAGE);
         }
         return p;

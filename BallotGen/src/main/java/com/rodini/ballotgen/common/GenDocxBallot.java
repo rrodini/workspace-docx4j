@@ -265,7 +265,11 @@ public class GenDocxBallot {
 		int end = contestsFileText.length();
 		// is "Retentions" present?
 		if (indexRetentions >= 0) {
-			retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
+			if (end == indexRetentions + PLACEHOLDER_RETENTIONS.length()) {
+				retentionsText = "";
+			} else {
+				retentionsText = contestsFileText.substring(indexRetentions + PLACEHOLDER_RETENTIONS.length()+1, end);
+			}
 			end = indexRetentions;
 		}
 		if (retentionsText == null || retentionsText.isBlank()) {

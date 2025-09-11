@@ -60,7 +60,7 @@ public class BallotZipper {
 	 */
 	public static void main(String[] args) {
 		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
-		String version = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
 		COUNTY = Utils.getEnvVariable(ENV_BALLOTGEN_COUNTY, true);
 		String message = String.format("Start of BallotZipper app. Version: %s", version);
 		Utils.logAppMessage(logger, message, true);		

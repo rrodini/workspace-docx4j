@@ -59,7 +59,7 @@ public class Initialize {
 	public static WriteinProcessor writeinProcessor;
 	public static boolean writeInDisplay;
 	public static boolean pageBreakDisplay;
-	public static boolean pageBreakHardBreak;
+	public static String pageBreakType;
 	public static String  pageBreakWording; // Typically "Vote Both Sides"
 	public static String columnBreaks = "ZZZZ"; // sentinel value
 	public static BallotGenOutput ballotGenOutput;
@@ -83,7 +83,7 @@ public class Initialize {
 	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
 	public	static       String COUNTY;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
-	public  static       String PAGE_BREAK_HARD = "page.break.hard"; // True => generate a hard page break
+	public  static       String PAGE_BREAK_TYPE = "page.break.type"; // None / PAGE / COLUMN
 	public  static       String PAGE_BREAK_DISPLAY = "page.break.display"; // True => display wording below
 	public  static       String PAGE_BREAK_WORDING = "page.break.wording";
 	public  static final String TICKET_CONTEST_NAMES = "ticket.contest.names";
@@ -304,20 +304,18 @@ public class Initialize {
 	
 	static void validatePageBreak() {
 		boolean display = true;
-		boolean hardBreak = false;
 		String strDisplay = Utils.getPropValue(ballotGenProps,PAGE_BREAK_DISPLAY);
 		if (strDisplay != null) {
 			display = Boolean.valueOf(strDisplay);
 		}
 		pageBreakDisplay = display;
-		String strHardBreak = Utils.getPropValue(ballotGenProps,PAGE_BREAK_HARD);
-		if (strHardBreak != null) {
-			hardBreak = Boolean.valueOf(strHardBreak);
+		pageBreakType = Utils.getPropValue(ballotGenProps,PAGE_BREAK_TYPE);
+		if (pageBreakType == null) {
+			pageBreakType = "NONE";
 		}
 		pageBreakDisplay = display;
-		pageBreakHardBreak = hardBreak;
 		logger.info(String.format("%s: %s", "pageBreakDisplay", pageBreakDisplay));
-		logger.info(String.format("%s: %s", "pageBreakHardBreak", pageBreakHardBreak));
+		logger.info(String.format("%s: %s", "pageBreakType", pageBreakType));
 		String value = Utils.getPropValue(ballotGenProps, PAGE_BREAK_WORDING);
 		if (value == null) {
 			value = "Vote Both Sides";
