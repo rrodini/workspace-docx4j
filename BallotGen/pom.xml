@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
 	<artifactId>ballot-gen</artifactId>
-	<version>1.7.0</version>
+	<version>1.7.1</version>
 	<packaging>jar</packaging>
 	<name>BallotGen</name>
 	<description>Generate precinct-level sample ballots as MS Word documents.</description>
@@ -42,7 +42,7 @@
 			<plugin>
 			    <groupId>org.jacoco</groupId>
 			    <artifactId>jacoco-maven-plugin</artifactId>
-			    <version>0.8.13</version>
+			    <version>0.8.14</version>
 			    <executions>
 			        <execution>
 			            <goals>
@@ -173,18 +173,18 @@
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>votefor-processor</artifactId>
-    	  <version>1.7.0</version>
+    	  <version>1.7.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.rodini</groupId>
 			<artifactId>ballot-utils</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>zone-processor</artifactId>
-    	  <version>1.7.0</version>
+    	  <version>1.7.1</version>
 		  <scope>compile</scope>
 		</dependency>
 	</dependencies>
