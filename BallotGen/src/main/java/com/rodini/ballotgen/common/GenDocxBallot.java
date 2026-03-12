@@ -139,6 +139,10 @@ public class GenDocxBallot {
 	// These are unicode characters (also Segoe UI Symbol font)
 	private static final String whiteEllipse = "⬭";
 	private static final String blackEllipse = "⬬";
+
+	// 9/13/2025 Kludge for force retentions into sixth column.
+	private static boolean pageBreakSeen = false;
+
 	/** 
 	 * GenDocxBallot constructor just saves input references.
 	 * @param dotxPath path to the Word template.
@@ -184,6 +188,7 @@ public class GenDocxBallot {
 	 */
 	/* private */ 
 	void initialize() {
+		pageBreakSeen = false;
 		initDocxFile();
 		initContestsFileText();
 		initReadBallotText();
@@ -433,7 +438,12 @@ public class GenDocxBallot {
 			for (String name: placeholderNames) {
 				if (isPlaceholderNameMatch(ph, name)) {
 					if (name.equals(PLACEHOLDER_CONTESTS)) {
-						phProcessor.replaceContent(ph, genContests());
+						List<P> paragraphs = genContests();
+						// 9/13/2025 retentions kludge
+						if (!pageBreakSeen) {
+							paragraphs.addAll(GenDocx.genPageBreak(docx.getMainDocumentPart()));
+						}
+						phProcessor.replaceContent(ph, paragraphs);
 					} else if (name.equals(PLACEHOLDER_REFERENDUMS)) {
 						// Are there referendums?
 						phProcessor.replaceContent(ph, genReferendums());
@@ -569,9 +579,17 @@ public class GenDocxBallot {
 //			String contestFormat = elements[1];
 			// Is there a "page break" in the ballot?
 			// Test if a pseudo contest box should be generated.
-			contestParagraphs.addAll(contestName.equals(Initialize.PAGE_BREAK)?
-					  GenDocx.genPageBreak(docx.getMainDocumentPart())
-					: genContest(contest));
+			if (contestName.equals(Initialize.PAGE_BREAK)) {
+				contestParagraphs.addAll(GenDocx.genPageBreak(docx.getMainDocumentPart()));
+				pageBreakSeen = true;
+			} else {
+				contestParagraphs.addAll(genContest(contest));
+			}
+			if (Initialize.columnBreaksAfter.indexOf(contestName) >= 0) {
+				MainDocumentPart mdp = docx.getMainDocumentPart();
+				P columnBreakParagraph = GenDocx.genBreakParagraph(mdp, COLUMN);
+				contestParagraphs.add(columnBreakParagraph);
+			}			
 //			// Insert column break after contest?
 //			if (i+1 == Initialize.columnBreaks[j]) {
 //				MainDocumentPart mdp = docx.getMainDocumentPart();
@@ -894,8 +912,9 @@ public class GenDocxBallot {
 				// Each line is a retention question
 				String [] elements = line.split(",");
 				String officeName = elements[0];
+				String judgeName = elements[1];
 				officeName = VoteFor.processName(officeName);
-				Retention ret = findRetentionByName(officeName, rets);
+				Retention ret = findRetentionByName(officeName, judgeName, rets);
 				retentionParagraphs.addAll(genRetention(mdp, ret));
 			}
 		}
@@ -907,9 +926,9 @@ public class GenDocxBallot {
 	 * @param rets Retention objects
 	 * @return Retention object.
 	 */
-	Retention findRetentionByName(String officeName, List<Retention> rets) {
+	Retention findRetentionByName(String officeName, String judgeName, List<Retention> rets) {
 		for (Retention ret: rets) {
-			if (ret.getOfficeName().equals(officeName)) {
+			if (ret.getOfficeName().equals(officeName) && ret.getJudgeName().equals(judgeName)) {
 				return ret;
 			}
 		}
@@ -1012,13 +1031,19 @@ public class GenDocxBallot {
 			noStr  = blackEllipse + noStr;
 			break;
 		}
-		newParagraph = mdp.createStyledParagraphOfText(style, yesStr);
+//      9/12/2025 Voter Services now put Yes / No bubbles on same line.		
+		String yesNoStr = yesStr + "   " + noStr;
+		newParagraph = mdp.createStyledParagraphOfText(style, yesNoStr);
 		yesNoParagraphs.add(newParagraph);
-		newParagraph = mdp.createStyledParagraphOfText(style, noStr);
-		yesNoParagraphs.add(newParagraph);		
+//      Below Yes / No bubbles on separate lines.
+//		newParagraph = mdp.createStyledParagraphOfText(style, yesStr);
+//		yesNoParagraphs.add(newParagraph);
+//		newParagraph = mdp.createStyledParagraphOfText(style, noStr);
+//		yesNoParagraphs.add(newParagraph);		
 		// Draw a border line as a separator
-		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
-		yesNoParagraphs.add(newParagraph);
+// 09/11/2025 no border line to fit on one page.
+//		newParagraph = mdp.createStyledParagraphOfText(STYLEID_BOTTOM_BORDER,null);
+//		yesNoParagraphs.add(newParagraph);
 		return yesNoParagraphs;
 	}
 }

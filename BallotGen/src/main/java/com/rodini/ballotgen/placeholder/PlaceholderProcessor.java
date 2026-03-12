@@ -71,22 +71,22 @@ public class PlaceholderProcessor {
 		headerPlaceholders = new ArrayList<>();
 		bodyPlaceholders = new ArrayList<>();
 		footerPlaceholders = new ArrayList<>();
-		Placeholder ph;
+		List<Placeholder> phList;
 		for (String name: placeholderNames) {
 			//logger.info("Searching HEADER for placeholder: " + name);
-			ph = createPlaceholder(HEADER, headerPart, name);
-			if (ph != null) {
-				headerPlaceholders.add(ph);
+			phList = createPlaceholders(HEADER, headerPart, name);
+			if (phList.size() > 0) {
+				headerPlaceholders.addAll(phList);
 			}
 			//logger.info("Searching BODY for placeholder: " + name);
-			ph = createPlaceholder(BODY, bodyPart, name);
-			if (ph != null) {
-				bodyPlaceholders.add(ph);
+			phList = createPlaceholders(BODY, bodyPart, name);
+			if (phList.size() > 0) {
+				bodyPlaceholders.addAll(phList);
 			}
 			//logger.info("Searching FOOTER for placeholder: " + name);
-			ph = createPlaceholder(FOOTER, footerPart, name);
-			if (ph != null) {
-				footerPlaceholders.add(ph);
+			phList = createPlaceholders(FOOTER, footerPart, name);
+			if (phList.size() > 0) {
+				footerPlaceholders.addAll(phList);
 			}
 		}
 	}
@@ -98,14 +98,17 @@ public class PlaceholderProcessor {
 	 * @param placeholderName symbolic name of placeholder.
 	 * @return new Placeholder object.
 	 */
-	private Placeholder createPlaceholder(PlaceholderLocation loc, JaxbXmlPart part, String placeholderName) {
-		Placeholder ph = null;
+	private List<Placeholder> createPlaceholders(PlaceholderLocation loc, JaxbXmlPart part, String placeholderName) {
+		List<Placeholder> placeholderList = new ArrayList<>();
 		logger.info("Finding placeholder for: " + placeholderName);
-		P paragraph = findParagraphByPlaceholder(part, placeholderName);
-		if (paragraph != null) {
-			ph = new Placeholder(placeholderName, loc, paragraph);
+		List<P> paragraphList = findParagraphByPlaceholder(part, placeholderName);
+		for (P paragraph: paragraphList) {
+			if (paragraph != null) {
+				Placeholder ph = new Placeholder(placeholderName, loc, paragraph);
+				placeholderList.add(ph);
+			}
 		}
-		return ph;
+		return placeholderList;
 	}
 	/**
 	 * validatePlaceholders makes sure that "Contests" doesn't appear in header / footer
@@ -172,7 +175,8 @@ public class PlaceholderProcessor {
 	 * 
 	 * @return null or "found" paragraph.
 	 */
-	private P findParagraphByPlaceholder(JaxbXmlPart<?> part, String placeholderName) {
+	private List<P> findParagraphByPlaceholder(JaxbXmlPart<?> part, String placeholderName) {
+		List<P> paragraphList = new ArrayList<>();
 		Finder pFinder = new Finder(P.class);
 		new TraversalUtil (part, pFinder);
 		List<Object> paragraphs  = pFinder.results;
@@ -188,11 +192,11 @@ public class PlaceholderProcessor {
 				if (s.equals(placeholderName)) {
 					logger.info("Found placeholder: " + placeholderName);
 					paragraph = (P) p;
-					break;
+					paragraphList.add(paragraph);
 				}
 			}
 		}
-		return paragraph;
+		return paragraphList;
 	}
 	/**
 	 * Finder static class as dictated by the DOCX4J API.

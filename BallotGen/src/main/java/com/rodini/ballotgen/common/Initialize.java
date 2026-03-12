@@ -62,6 +62,7 @@ public class Initialize {
 	public static String pageBreakType;
 	public static String  pageBreakWording; // Typically "Vote Both Sides"
 	public static String columnBreaks = "ZZZZ"; // sentinel value
+	public static String columnBreaksAfter = "ZZZZ"; // sentinel value
 	public static BallotGenOutput ballotGenOutput;
 	public static List<String> uniqueFirstBallotFile; // ballot file that triggers unique_ballot_xx.docx
 	public static Map<Integer, List<String>> uniqueBallotFiles; // precinctNoNames that belong to a unique ballot.
@@ -80,6 +81,7 @@ public class Initialize {
 	private static final String ENDORSEMENTS_FILE = ".endorsements.file";
 	private static final String WRITEINS_FILE = ".write.ins.file";
 	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
+	private static final String COlUMN_BREAK_AFTER_CONTEST_NAME = ".column.break.after.contest.name";
 	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
 	public	static       String COUNTY;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
@@ -252,16 +254,22 @@ public class Initialize {
 		precinctWriteins = WriteinFactory.getPrecinctWriteins();
 	}
 	/**
-	 * validateColumnBreakContestNAME reads/displays the COlUMN_BREAK_CONTEST_NAME property value.
+	 * validateColumnBreakContestName reads/displays the COlUMN_BREAK_CONTEST_NAME property value.
 	 */
 	static void validateColumnBreakContestName() {
 		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_NAME);
 		if (value == null) {
 			value = "";
-			return;
 		}
 		columnBreaks = value;
+		
 		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaks));
+		value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_AFTER_CONTEST_NAME);
+		if (value == null) {
+			value = "";
+		}
+		columnBreaksAfter = value;
+		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaksAfter));
 	}
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
