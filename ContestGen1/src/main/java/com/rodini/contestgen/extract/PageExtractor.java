@@ -91,6 +91,10 @@ public class PageExtractor {
 	 */
 	static String extractPage(String precinctNoName, String rawText, Pattern pageRegex, int pageNo) {
 		String pageText = "";
+		logger.debug("---------");
+		Utils.logLines(logger, Level.DEBUG, "rawText:", rawText.split("\n"));
+		logger.debug("---------");
+		
 		Matcher m = pageRegex.matcher(rawText);
 		if (!m.find()) {
 			String msg = String.format("no match for precinctNoName: %s precinct page %d.  regex: %s", precinctNoName, pageNo, pageRegex.pattern());
@@ -99,7 +103,9 @@ public class PageExtractor {
 			try {
 				pageText = m.group("page");
 				logger.info(String.format("page extraction: %s page #: %d", precinctNoName, pageNo));
+				logger.debug("---------");
 				Utils.logLines(logger, Level.DEBUG, "page lines:" , pageText.split("\n"));
+				logger.debug("---------");
 			} catch (Exception e) {
 				String msg = String.format("no match for precinctNoName: %s precinct page %d.  regex: %s reason: %s", precinctNoName, pageNo, pageRegex.pattern(), e.getMessage());
 				logger.error(msg);

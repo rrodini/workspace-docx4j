@@ -21,7 +21,7 @@ import com.rodini.ballotutils.*;
 public class BallotReportParser {
 	
 	private static final Logger logger = LogManager.getLogger(BallotReportParser.class);
-	private static final String uniqueBallotRegex = "Ballot\\s+(?<uniqueNo>\\d+): (?<precinctNoNames>.*)$\\n";
+	private static final String uniqueBallotRegex = "Ballot\\s+(?<uniqueNo>\\d+): (?<precinctNoNames>.*)$";
 	
 	/**
 	 * oarseBallotReport parses the Ballot_Summary.txt file that is produced by ContestGen program.
@@ -32,6 +32,7 @@ public class BallotReportParser {
 	 * @param ballotSummaryPath path to the file BallotReport.txt.
 	 */
 	static void parseBallotReport(String ballotSummaryPath) {
+		logger.info(String.format("Parsing ballot report: %s", ballotSummaryPath));
 		Initialize.uniqueFirstBallotFile = new ArrayList<>();
 		Initialize.uniqueBallotFiles = new HashMap<> ();
 		String ballotReportText = Utils.readTextFile(ballotSummaryPath);
@@ -45,15 +46,15 @@ public class BallotReportParser {
 			// m.group(2) == "precinctNoNames"
 			String ballotPrecinctNoNameText = m.group(2).trim();
 //System.out.printf("Ballot%3d: %s%n", uniqueNo, ballotPrecinctNoNameText);
-			logger.debug(String.format("Ballot%3d: %s", uniqueNo, ballotPrecinctNoNameText));
+			logger.info(String.format("Ballot%3d: %s", uniqueNo, ballotPrecinctNoNameText));
 			String [] precinctNoNames = ballotPrecinctNoNameText.split(",");
 			Initialize.uniqueBallotFiles.put(uniqueNo, Arrays.asList(precinctNoNames));
-			Initialize.uniqueFirstBallotFile.add(precinctNoNames[0]);
+			Initialize.uniqueFirstBallotFile.add(precinctNoNames[0].toUpperCase());
 //System.out.printf("uniqueFirstPrecinctNoName: %s%n", precinctNoNames[0]);
-			logger.debug(String.format("uniqueFirstPrecinctNoName: %s", precinctNoNames[0]));
+			logger.info(String.format("uniqueFirstPrecinctNoName: %s", precinctNoNames[0]));
 			uniqueCount++;
 		}
-		logger.debug("Unique ballot count: " + uniqueCount);
+		logger.info("Unique ballot count: " + uniqueCount);
 	}
 
 }

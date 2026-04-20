@@ -571,7 +571,7 @@ public class GenDocxBallot {
 			}
 			List<P> contestParagraphs = new ArrayList<>();
 			// Insert column break before contest?
-			if (Initialize.columnBreaks.indexOf(contestName) >= 0) {
+			if (Initialize.columnBreaksBefore.indexOf(contestName) >= 0) {
 				MainDocumentPart mdp = docx.getMainDocumentPart();
 				P columnBreakParagraph = GenDocx.genBreakParagraph(mdp, COLUMN);
 				contestParagraphs.add(columnBreakParagraph);
@@ -583,6 +583,7 @@ public class GenDocxBallot {
 				contestParagraphs.addAll(GenDocx.genPageBreak(docx.getMainDocumentPart()));
 				pageBreakSeen = true;
 			} else {
+				// Generate contest here.
 				contestParagraphs.addAll(genContest(contest));
 			}
 			if (Initialize.columnBreaksAfter.indexOf(contestName) >= 0) {
@@ -591,7 +592,7 @@ public class GenDocxBallot {
 				contestParagraphs.add(columnBreakParagraph);
 			}			
 //			// Insert column break after contest?
-//			if (i+1 == Initialize.columnBreaks[j]) {
+//			if (i+1 == Initialize.columnBreaksBefore[j]) {
 //				MainDocumentPart mdp = docx.getMainDocumentPart();
 //				P columnBreakParagraph = GenDocx.genColumnBreakParagraph(mdp);
 //				contestParagraphs.add(columnBreakParagraph);

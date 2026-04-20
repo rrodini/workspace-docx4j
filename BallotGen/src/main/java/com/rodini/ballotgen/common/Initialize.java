@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -61,8 +62,8 @@ public class Initialize {
 	public static boolean pageBreakDisplay;
 	public static String pageBreakType;
 	public static String  pageBreakWording; // Typically "Vote Both Sides"
-	public static String columnBreaks = "ZZZZ"; // sentinel value
-	public static String columnBreaksAfter = "ZZZZ"; // sentinel value
+	public static List<String> columnBreaksBefore;       // Generate column breaks BEFORE these contest names
+	public static List<String> columnBreaksAfter;  // Generate column breaks AFTER these contest names
 	public static BallotGenOutput ballotGenOutput;
 	public static List<String> uniqueFirstBallotFile; // ballot file that triggers unique_ballot_xx.docx
 	public static Map<Integer, List<String>> uniqueBallotFiles; // precinctNoNames that belong to a unique ballot.
@@ -80,7 +81,7 @@ public class Initialize {
 	private static final String PRECINCT_TO_ZONE_FILE = ".precinct.to.zone.file";
 	private static final String ENDORSEMENTS_FILE = ".endorsements.file";
 	private static final String WRITEINS_FILE = ".write.ins.file";
-	private static final String COlUMN_BREAK_CONTEST_COUNT = ".column.break.contest.count";
+	private static final String COlUMN_BREAK_BEFORE_CONTEST_COUNT = ".column.break.before.contest.count";
 	private static final String COlUMN_BREAK_AFTER_CONTEST_NAME = ".column.break.after.contest.name";
 	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
 	public	static       String COUNTY;
@@ -258,18 +259,18 @@ public class Initialize {
 	 */
 	static void validateColumnBreakContestName() {
 		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_NAME);
-		if (value == null) {
-			value = "";
+		columnBreaksBefore = new ArrayList<String>();
+		if (value != null) {
+			columnBreaksBefore = Arrays.asList(value.split(","));
 		}
-		columnBreaks = value;
+		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaksBefore));
 		
-		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaks));
+		columnBreaksAfter = new ArrayList<String>();
 		value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_AFTER_CONTEST_NAME);
-		if (value == null) {
-			value = "";
+		if (value != null) {
+			columnBreaksAfter = Arrays.asList(value.split(","));
 		}
-		columnBreaksAfter = value;
-		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaksAfter));
+		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_AFTER_CONTEST_NAME, columnBreaksAfter));
 	}
 	/**
 	 * validateColumnBreakContestCount reads/displays the COlUMN_BREAK_CONTEST_COUNT property value.
@@ -277,18 +278,18 @@ public class Initialize {
 	 * - OBSOLETE: Superseded by COlUMN_BREAK_CONTEST_COUNT property value.
 	 */
 	static void validateColumnBreakContestCount() {
-		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_COUNT);
+		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_BEFORE_CONTEST_COUNT);
 		if (value == null) {
 			// default is contest # 999, so no harm done.
 			return;
 		}
-		columnBreaks = value;
+//		columnBreaksBefore = value;
 //		String [] counts = value.split(",");
 //		// Each value should be an integer
 //		int i = 0;
 //		int preVal = -1;
 //		// Resize as per the property length + one for sentinel.
-//		columnBreaks = new int[counts.length+1];
+//		columnBreaksBefore = new int[counts.length+1];
 //		for (int j = 0; j < counts.length; j++) {
 //			String strVal = counts[j].trim();
 //			int val;
@@ -302,11 +303,11 @@ public class Initialize {
 //				logger.error(String.format("bad %s property: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 //				return;
 //			}
-//			columnBreaks[i++] = val;
+//			columnBreaksBefore[i++] = val;
 //			preVal = val;
 //		}
 //		// sentinel value
-//		columnBreaks[i] = 999;
+//		columnBreaksBefore[i] = 999;
 //		logger.info(String.format("%s: %s", COUNTY + COlUMN_BREAK_CONTEST_COUNT, value));
 	}
 	
@@ -339,6 +340,7 @@ public class Initialize {
 		if (ballotGenOutput == null) {
 			ballotGenOutput = PRECINCT;
 		}
+		logger.info(String.format("%s: %s", BALLOTGEN_OUTPUT, ballotGenOutput));
 	}
 	/**
 	 * validateBallotReport ensures that the Ballot_Report.txt file exists.

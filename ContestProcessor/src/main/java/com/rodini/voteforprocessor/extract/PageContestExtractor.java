@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rodini.ballotutils.Utils;
 import com.rodini.voteforprocessor.extract.Initialize;
 import com.rodini.voteforprocessor.model.Contest;
 /**
@@ -37,8 +39,12 @@ public class PageContestExtractor {
 		List<Contest> contests = new ArrayList<>();
 		int start = 0;
 		int end = 0;
-		if (ballotText.isEmpty() || ballotText.lastIndexOf(Initialize.WRITE_IN) == -1) {
-			// some defensive programming here.
+		if (ballotText.isEmpty()) {
+			logger.error("Ballot text is empty.");
+			return contests;
+		} else if (ballotText.lastIndexOf(Initialize.WRITE_IN) == -1) {
+			logger.error("lastIndexOf(" + Initialize.WRITE_IN + ") is -1");
+			Utils.logLines(logger, Level.ERROR, "ballot text:" , ballotText.split("\n"));
 			return contests;
 		}
 		int lastWriteIn = ballotText.lastIndexOf(Initialize.WRITE_IN) + Initialize.WRITE_IN.length();

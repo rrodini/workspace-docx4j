@@ -81,9 +81,6 @@ public class BallotGen {
 					msWordTemplate, 
 					ballotFile,  // ./chester-output/NNN_municipal_XYZ_VS.txt
 					precinctBallotFile, // NNN_municipal_XYZ
-// TBD - TO BE DELETED.
-//					Initialize.contestLevel,
-//					Initialize.formatsText,
 					Initialize.endorsementProcessor,
 					Initialize.writeinProcessor);								
 			gdb.generate();
@@ -92,19 +89,23 @@ public class BallotGen {
 	}
 	
 	/** 
-	 * genUniqueBallotFiles generates either UNIQUE ballots (see ../chester-contests/BallotSummary.txt).
+	 * genUniqueBallotFiles generates UNIQUE ballots (see ../chester-contests/Ballot_Summary.txt).
 	 * After this report is parsed, the data structure Initialize.uniqueFirstBallotFile triggers
 	 * the generation of the sample ballot that is shared between precincts.
 	 * Initialize.ballotFiles list.
 	 */
 	private static void genUniqueBallotFiles(String msWordTemplate) {
+		logger.info("Generating Unique ballot files.");
 		// The logic works because ballotFile names are unique across the county.
 		for (String ballotFile: Initialize.ballotFiles) {
-//System.out.printf("genUniqueBallotFiles: candidate: %s%n", ballotFile);
-			String precinctBallotFile = Utils.getPrecinctNoName(ballotFile);
+System.out.printf("genUniqueBallotFiles: %s%n", ballotFile);
+			logger.info(String.format("genUniqueBallotFiles: %s%n", ballotFile));
+			String precinctBallotFile = Utils.getPrecinctNoName(ballotFile);		
+System.out.printf("precinctBallotFile: %s%n", precinctBallotFile);
 			if (Initialize.uniqueFirstBallotFile.contains(precinctBallotFile)) {
 				// TBD - set values for uniquePrecinctNos, uniquePrecinctNames, uniquePrecinctNoNames
-//System.out.printf("genUniqueBallotFiles: first match: %s%n", ballotFile);
+System.out.printf("genUniqueBallotFiles: first match: %s%n", ballotFile);
+				logger.info(String.format("genUniqueBallotFiles: first match: %s%n", ballotFile));
 				int uniqueNo = Initialize.uniqueFirstBallotFile.indexOf(precinctBallotFile);
 				String uniqueBallotFile = UNIQUE_TITLE + 
 						com.rodini.ballotutils.Utils.normalizeNo(uniqueNo, 2) +
@@ -113,9 +114,6 @@ public class BallotGen {
 						msWordTemplate,
 						ballotFile,  // same as chester-contests/NNN_municipal_XYZ_contests.txt and chester-output/NNN_municipal_XYZ_VS.txt
 						uniqueBallotFile, // unique_NN
-	// TBD - TO BE DELETED.
-	//					Initialize.contestLevel,
-	//					Initialize.formatsText,
 						Initialize.endorsementProcessor,
 						Initialize.writeinProcessor);								
 				gdb.generate();
