@@ -20,7 +20,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>11</release>
+					<release>21</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -38,10 +38,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<!-- no unit test call System.exit() and following line
-					causes problems, so comment it. -->
-					<!--
-					<argLine>-javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>-->
+					<!-- syntax below loads jococo and ginsberg agents -->
+					<argLine>@{argLine} -javaagent:${com.ginsberg:junit5-system-exit:jar}</argLine>
 					<includes>
 						<include>**/Test*.java</include>
 					</includes>
@@ -127,6 +125,13 @@
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.10.2</version>
 			<scope>test</scope>
+		</dependency>
+		<!-- Annotation so that System.exit() can be called -->
+		<dependency>
+   		  <groupId>com.ginsberg</groupId>
+    	  <artifactId>junit5-system-exit</artifactId>
+    	  <version>2.0.2</version>
+     	  <scope>test</scope>
 		</dependency>
 		<!-- BallotGen utilities -->
 		<dependency>
