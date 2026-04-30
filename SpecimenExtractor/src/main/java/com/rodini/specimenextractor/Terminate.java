@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 public class Terminate {
 	private static final Logger logger = LogManager.getLogger(Terminate.class);
 	private static String specimenAbsFilePath;
-
+	private static final String EXTRACTION_REPORT = "Extraction_Summary.txt";
 	private Terminate() {}
 	
 	public static void start() {
@@ -34,7 +34,7 @@ public class Terminate {
 	
 	static void generateExtractionReport() {
 		String reportPath = Path.of(specimenAbsFilePath).getParent().toString();
-		reportPath += File.separator + "ExtractionSummary.txt";
+		reportPath += File.separator + EXTRACTION_REPORT;
 		try (PrintWriter pw = new PrintWriter(new File(reportPath))) {
 			String electionInfo = SpecimenExtractor.page1Row2Line;
 			pw.write(String.format("specimen file:  %s%n", specimenAbsFilePath));
