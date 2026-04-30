@@ -14,7 +14,7 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,30 +55,36 @@ public class Initialize {
 	public  static Rectangle page2Col3Rect;
 	
 	// Order is important here. Text extraction follows this order.
-	public static List<String> specimenLayoutProps = List.of(
+	public static List<String> specimenLayoutPage1Props = List.of(
 			PROP_PAGE1_ROW1_RECT,
 			PROP_PAGE1_ROW2_RECT,
 			PROP_PAGE1_ROW3_RECT,
 			PROP_PAGE1_COL1_RECT,
 			PROP_PAGE1_COL2_RECT,
-			PROP_PAGE1_COL3_RECT,
+			PROP_PAGE1_COL3_RECT
+			);
+	public static List<String> specimenLayoutPage2Props = List.of(
 			PROP_PAGE2_COL1_RECT,
 			PROP_PAGE2_COL2_RECT,
 			PROP_PAGE2_COL3_RECT
 			);
-	
-	public static Map<String, Rectangle> specimenLayoutRects = new HashMap<>();
+	//
+	//                pdfbox region  region 
+	//                  name         rectangle
+	//                   |            |
+	public static Map<String,       Rectangle> specimenLayoutPage1Rects = new HashMap<>();
+	public static Map<String,       Rectangle> specimenLayoutPage2Rects = new HashMap<>();
 	// Had to use static initializer since Map.of creates immutable map.
 	static {
-		specimenLayoutRects.put(PROP_PAGE1_ROW1_RECT, page1Row1Rect);
-		specimenLayoutRects.put(PROP_PAGE1_ROW2_RECT, page1Row2Rect);
-		specimenLayoutRects.put(PROP_PAGE1_ROW3_RECT, page1Row3Rect);
-		specimenLayoutRects.put(PROP_PAGE1_COL1_RECT, page1Col1Rect);
-		specimenLayoutRects.put(PROP_PAGE1_COL2_RECT, page1Col2Rect);
-		specimenLayoutRects.put(PROP_PAGE1_COL3_RECT, page1Col3Rect);
-		specimenLayoutRects.put(PROP_PAGE2_COL1_RECT, page2Col1Rect);
-		specimenLayoutRects.put(PROP_PAGE2_COL2_RECT, page2Col2Rect);
-		specimenLayoutRects.put(PROP_PAGE2_COL3_RECT, page2Col3Rect);
+		specimenLayoutPage1Rects.put(PROP_PAGE1_ROW1_RECT, page1Row1Rect);
+		specimenLayoutPage1Rects.put(PROP_PAGE1_ROW2_RECT, page1Row2Rect);
+		specimenLayoutPage1Rects.put(PROP_PAGE1_ROW3_RECT, page1Row3Rect);
+		specimenLayoutPage1Rects.put(PROP_PAGE1_COL1_RECT, page1Col1Rect);
+		specimenLayoutPage1Rects.put(PROP_PAGE1_COL2_RECT, page1Col2Rect);
+		specimenLayoutPage1Rects.put(PROP_PAGE1_COL3_RECT, page1Col3Rect);
+		specimenLayoutPage2Rects.put(PROP_PAGE2_COL1_RECT, page2Col1Rect);
+		specimenLayoutPage2Rects.put(PROP_PAGE2_COL2_RECT, page2Col2Rect);
+		specimenLayoutPage2Rects.put(PROP_PAGE2_COL3_RECT, page2Col3Rect);
 	}
 	
 	public  static String specimenFilePath;
@@ -211,7 +217,16 @@ public class Initialize {
 	public static void start(String [] args) {
 		specimenExtractorProps = Utils.loadProperties(PROP_RESOURCE_PATH + PROP_PROPS_FILE);
 		validateCommandLineArgs(args);
-		specimenLayoutRects = validateLayoutProperties(specimenExtractorProps, specimenLayoutProps);
+		specimenLayoutPage1Rects = validateLayoutProperties(specimenExtractorProps, specimenLayoutPage1Props);
+		specimenLayoutPage2Rects = validateLayoutProperties(specimenExtractorProps, specimenLayoutPage2Props);
+		if (logger.getLevel() == Level.INFO) {
+			for (String page1Prop: specimenLayoutPage1Props) {
+				logger.info(String.format("%s: %s",page1Prop, specimenLayoutPage1Rects.get(page1Prop)));
+			}
+			for (String page2Prop: specimenLayoutPage2Props) {
+				logger.info(String.format("%s: %s",page2Prop, specimenLayoutPage2Rects.get(page2Prop)));
+			}
+		}
 		validatePDFSize(specimenFilePath);
 	}
 }

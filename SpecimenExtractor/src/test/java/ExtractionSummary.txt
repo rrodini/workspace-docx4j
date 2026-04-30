@@ -1,0 +1,9 @@
+specimen file:  /Users/robert/git/workspace-docx4j/SpecimenExtractor/./src/test/java/ATGLEN.pdf
+specimen pages: 2
+election info:  OFFICIAL CHESTER COUNTY\nGENERAL PRIMARY ELECTION DEMOCRATIC BALLOT\nCOUNTY OF CHESTER, COMMONWEALTH OF PENNSYLVANIA\nMay 19, 2026\n
+page1 col1 first line: Governor
+page1 col2 first line: Member of Democratic
+page1 col3 first line: Democratic County
+page2 col1 first line: 
+page2 col2 first line: 
+page2 col3 first line: <various>
