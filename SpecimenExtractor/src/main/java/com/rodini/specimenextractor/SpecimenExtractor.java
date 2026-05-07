@@ -3,8 +3,10 @@ package com.rodini.specimenextractor;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +23,8 @@ public class SpecimenExtractor {
 	private static final Logger logger = LogManager.getRootLogger();
 
 	private SpecimenExtractor() {}
+	static final String ENV_BALLOTGEN_VERSION = "BALLOTGEN_VERSION";
+	// specimenPageCount is the # pages in the VS specimen.
 	public static int specimenPageCount;
 	// specimenText is the extracted text from VS specimen.
 	public static String specimenText;
@@ -39,16 +43,12 @@ public class SpecimenExtractor {
 	public static void main(String[] args){
 		// Get the logging level from JVM parameter on command line.
 		Utils.setLoggingLevel(LogManager.getRootLogger().getName());
-		String msg = String.format("Start of SpecimenExtractor app. Version: %s", "0.1.0");
+		String version = Utils.getEnvVariable(ENV_BALLOTGEN_VERSION, true);
+		String msg = String.format("Start of SpecimenExtractor app. Version: %s", version);
 		Utils.logAppMessage(logger, msg, true);
-		Initialize.start(args);
-		
-		specimenText = extractSpecimenText(Initialize.specimenFilePath);
-		
+		Initialize.start(args);	
+		specimenText = extractSpecimenText(Initialize.specimenFilePath);		
 		Terminate.start();
-		
-		
-		Utils.logAppMessage(logger, msg, false);
 		Utils.logAppErrorCount(logger);
 		msg = "End of SpecimenExtractor app.";
 		Utils.logAppMessage(logger, msg, true);
@@ -98,6 +98,7 @@ public class SpecimenExtractor {
 	        	stripper.addRegion(layoutProp, layoutRect);
 	        	stripper.extractRegions(page);
 	        	String regionText = stripper.getTextForRegion(layoutProp);
+	        	regionText = stripTrailingText(regionText);      	
 	        	logger.debug(String.format("Region text: %s", regionText));
 	        	if (pageNo == 0 && layoutProp.equals(Initialize.PROP_PAGE1_ROW2_RECT)) {
 	        		// reformat so as to print on one line
@@ -120,6 +121,11 @@ public class SpecimenExtractor {
 		return pageText;
 	}
 	
+	static String stripTrailingText(String text) {
+		String [] lines =  text.split("\n");
+		String strippedText = Arrays.stream(lines).map(line -> line.stripTrailing()).collect(Collectors.joining("\n")) + "\n";
+		return strippedText;
+	}
 	
 	static String extractFirstLine(String regionText) {
 		String [] lines = regionText.split("\n");

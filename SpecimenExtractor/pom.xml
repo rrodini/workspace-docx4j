@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rodini</groupId>
-	<artifactId>specimenextractor</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>specimen-extractor</artifactId>
+	<version>1.8.0</version>
 	<name>Specimen Extractor</name>
 	<properties>
 		<java.version>11</java.version>
@@ -81,7 +81,7 @@
 							<archive>
 								<manifest>
 									<mainClass>
-										com.rodini.ballotgen.BallotGen
+										com.rodini.specimenextractor.SpecimenExtractor
 									</mainClass>
 								</manifest>
 							</archive>
@@ -137,7 +137,7 @@
 		<dependency>
 			<groupId>com.rodini</groupId>
 			<artifactId>ballot-utils</artifactId>
-			<version>1.7.1</version>
+			<version>1.8.0</version>
 			<scope>compile</scope>
 		</dependency>
 

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.core.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.rodini.ballotutils.Utils;
@@ -89,15 +90,16 @@ class TestSpecimenExtractor {
 			fail("Extracted text doesn't match. See line that differs.");
 		}		
 	}
-
+	//@Disabled
 	@Test
 	void testExtractSpecimenText_2026_Primary_Dems() throws IOException {
 		// Must set layout properties BEFORE extraction.
 		Properties props = Utils.loadProperties("./src/test/java/test-props-00.properties");
 		Initialize.specimenLayoutPage1Rects = Initialize.validateLayoutProperties(props, Initialize.specimenLayoutPage1Props);
 		Initialize.specimenLayoutPage2Rects = Initialize.validateLayoutProperties(props, Initialize.specimenLayoutPage2Props);
-		String expectedText = Files.readString(Path.of("./src/test/java/2026_Primary_Dems.txt"));
 		String extractedText = SpecimenExtractor.extractSpecimenText("./src/test/java/2026_Primary_Dems.pdf");
+				
+		String expectedText = Files.readString(Path.of("./src/test/java/2026_Primary_Dems.txt"));
 		
 //		System.out.println();
 //		System.out.print(extractedText);		
