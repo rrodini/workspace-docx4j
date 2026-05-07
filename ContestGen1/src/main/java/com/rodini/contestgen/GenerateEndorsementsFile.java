@@ -236,8 +236,10 @@ public class GenerateEndorsementsFile {
 		logger.info("writing common candidates endorsements.");
 		pw.write("# Common contest candidates\n");
 		for (Contest contest: commonContests) {
+			// Eliminate eol within contest name.
+			String contestName = contest.getName().replace("\n", " ");
 			for (Candidate candidate: contest.getCandidates()) {
-				pw.write(String.format("%s,endorsed,county%n", candidate.getName()));
+				pw.write(String.format("%s,%s,endorsed,county%n", candidate.getName(), contestName));
 			}
 		}
 	}
@@ -280,17 +282,19 @@ public class GenerateEndorsementsFile {
 		String lastContestName = "";
 		List<Candidate> lastContestCandidates = null;
 		for (Contest contest: zoneContests) {
-			String contestName = contest.getName();
+			// Eliminate eol within contest name.
+			String contestName = contest.getName().replace("\n", " ");
+
 			if (!contestName.equals(lastContestName)) {
 				if (lastContestCandidates != null) {
-					generateZoneCandidatesEndorsement(pw, lastContestCandidates, zone);
+					generateZoneCandidatesEndorsement(pw, lastContestCandidates, lastContestName, zone);
 				}
 				lastContestName = contestName;
 				lastContestCandidates = contest.getCandidates();
 			}
 		}
 		if (lastContestCandidates != null) {
-			generateZoneCandidatesEndorsement(pw, lastContestCandidates, zone);
+			generateZoneCandidatesEndorsement(pw, lastContestCandidates, lastContestName, zone);
 		}		
 	}
 	/**
@@ -302,13 +306,14 @@ public class GenerateEndorsementsFile {
 	 * @throws IOException
 	 */
 	static void generateZoneCandidatesEndorsement(Writer pw, List<Candidate> candidates,
+			String contestName,
 			Zone zone) throws IOException {
 		logger.info("writing zone candidates endorsements.");
 		String zoneNo = zone.getZoneNo();
-		// line below is not needed, but it ever is needed, it's here.
+		// line below is not needed, but if it is ever is needed, it's here as a comment.
 		//  String precinctNosString = precinctNos.stream().collect(Collectors.joining(","));
 		for (Candidate cand: candidates) {
-			pw.write(String.format("%s,endorsed,zone,%s%n",cand.getName(), zoneNo));
+			pw.write(String.format("%s,%s,endorsed,zone,%s%n",cand.getName(), contestName, zoneNo));
 		}
 	}
 }

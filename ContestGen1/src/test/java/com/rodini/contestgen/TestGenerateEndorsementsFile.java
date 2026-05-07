@@ -62,14 +62,14 @@ class TestGenerateEndorsementsFile {
 		String expected = 
 """
 # Common contest candidates
-Brandon Neuman,endorsed,county
-Stella Tsai,endorsed,county
-Mackenzie Smith,endorsed,county
-Clay Cauley Sr.,endorsed,county
-Caroline Bradley,endorsed,county
-Nick Cherubino,endorsed,county
-Sophia Garcia-Jackson,endorsed,county
-Patricia A. Maisano,endorsed,county
+Brandon Neuman,Judge of the Superior Court,endorsed,county
+Stella Tsai,Judge of the Commonwealth Court,endorsed,county
+Mackenzie Smith,Judge of the Court of Common Pleas 15th Judicial District,endorsed,county
+Clay Cauley Sr.,Judge of the Court of Common Pleas 15th Judicial District,endorsed,county
+Caroline Bradley,Clerk of Courts,endorsed,county
+Nick Cherubino,Controller,endorsed,county
+Sophia Garcia-Jackson,Coroner,endorsed,county
+Patricia A. Maisano,Treasurer,endorsed,county
 """;
 		String generatedCandidatesString = null;
 		try (StringWriter sw = new StringWriter(); ) 
@@ -79,6 +79,12 @@ Patricia A. Maisano,endorsed,county
 		} catch (IOException e) {
 			fail("Unexpected IOException: " + e.getMessage());
 		}
+		
+		System.out.println("**generateCommonEndorsements**");
+		System.out.println(generatedCandidatesString);
+		System.out.println();
+		
+		
 		assertEquals(expected, generatedCandidatesString);
 	}
 	@Test
@@ -97,22 +103,22 @@ Patricia A. Maisano,endorsed,county
 		String expected =
 """
 # Zone 13 Great Valley Democrats
-Deborah Kuhn,endorsed,zone,13
-Vicki Sharpless,endorsed,zone,13
-Hugo Schmitt,endorsed,zone,13
-James C. Kovaleski,endorsed,zone,13
-Zeyn B. Uzman,endorsed,zone,13
-Pete Papadopoulos,endorsed,zone,13
-Angela Riccetti,endorsed,zone,13
-Zoe Warner,endorsed,zone,13
-Dan Kunze,endorsed,zone,13
-Andrea Rizzo,endorsed,zone,13
-Stacey Kahan,endorsed,zone,13
-Lorie Sollenberger,endorsed,zone,13
-Hugh D. Willig,endorsed,zone,13
-Jill Green,endorsed,zone,13
-Louis Rubinfield,endorsed,zone,13
-Madeleine Carlson,endorsed,zone,13
+Deborah Kuhn,Inspector of Elections 065 Charlestown,endorsed,zone,13
+Vicki Sharpless,Inspector of Elections 350 Malvern,endorsed,zone,13
+Hugo Schmitt,Judge of Elections 350 Malvern,endorsed,zone,13
+James C. Kovaleski,Magisterial District Judge District 15-2-01,endorsed,zone,13
+Zeyn B. Uzman,Mayor Malvern Borough,endorsed,zone,13
+Pete Papadopoulos,Mayor Malvern Borough,endorsed,zone,13
+Angela Riccetti,Member of Council Malvern Borough,endorsed,zone,13
+Zoe Warner,Member of Council Malvern Borough,endorsed,zone,13
+Dan Kunze,Member of Council Malvern Borough,endorsed,zone,13
+Andrea Rizzo,School Director Great Valley Region 1,endorsed,zone,13
+Stacey Kahan,School Director Great Valley Region 1,endorsed,zone,13
+Lorie Sollenberger,School Director Great Valley Region 2,endorsed,zone,13
+Hugh D. Willig,Township Supervisor Charlestown Township,endorsed,zone,13
+Jill Green,Township Supervisor Unexpired 2 Year Term Charlestown Township,endorsed,zone,13
+Louis Rubinfield,Township Supervisor Unexpired 2 Year Term Charlestown Township,endorsed,zone,13
+Madeleine Carlson,Township Supervisor Unexpired 4 Year Term Charlestown Township,endorsed,zone,13
 """;
 		String generatedCandidatesString = null;
 		Map<String, List<Contest>> zoneContestsMap =
@@ -129,6 +135,12 @@ Madeleine Carlson,endorsed,zone,13
 		} catch (IOException e) {
 			fail("Unexpected IOException: " + e.getMessage());
 		}
+		
+		System.out.println("**generateZoneEndorsements**");
+		System.out.println(generatedCandidatesString);
+		System.out.println();
+
+		
 //		System.out.printf("%s%n", generatedCandidatesString);
 		assertEquals(expected, generatedCandidatesString);
 	}
