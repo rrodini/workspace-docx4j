@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rodini</groupId>
   <artifactId>zone-processor</artifactId>
-  <version>1.7.1</version>
+  <version>1.8.0</version>
   <packaging>jar</packaging>
   <name>Zone Processor</name>
   <description>Provide and API for mapping precinct# to zone, and zone's list of precincts.</description>
@@ -75,7 +75,7 @@
 		<dependency>
    		  <groupId>com.rodini</groupId>
     	  <artifactId>ballot-utils</artifactId>
-    	  <version>1.7.1</version>
+    	  <version>1.8.0</version>
 		</dependency>
 	</dependencies>
   
