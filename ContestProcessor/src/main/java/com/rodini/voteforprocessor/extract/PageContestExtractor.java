@@ -40,7 +40,7 @@ public class PageContestExtractor {
 		int start = 0;
 		int end = 0;
 		if (ballotText.isEmpty()) {
-			logger.error("Ballot text is empty.");
+//			logger.error("Ballot text is empty.");
 			return contests;
 		} else if (ballotText.lastIndexOf(Initialize.WRITE_IN) == -1) {
 			logger.error("lastIndexOf(" + Initialize.WRITE_IN + ") is -1");
