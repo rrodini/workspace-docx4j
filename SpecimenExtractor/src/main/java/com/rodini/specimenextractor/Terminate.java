@@ -8,19 +8,28 @@ import java.nio.file.Path;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * Terminate class writes all outputs to the file system.
+ * @author Bob Rodini
+ *
+ */
 public class Terminate {
 	private static final Logger logger = LogManager.getLogger(Terminate.class);
 	private static String specimenAbsFilePath;
 	private static final String EXTRACTION_REPORT = "Extraction_Summary.txt";
 	private Terminate() {}
-	
+	/** 
+	 * start the termination process.
+	 */
 	public static void start() {
 		specimenAbsFilePath = new File(Initialize.specimenFilePath).getAbsolutePath();
 		generateSpecimenText();		
 		generateExtractionReport();		
 	}
-
+	/**
+	 * generateSpecimenText writes the extracted text to the same folder where
+	 * the specimen file is found. Of course, it has the extension "txt".
+	 */
 	static void generateSpecimenText() {
 		int index = specimenAbsFilePath.lastIndexOf(".");
 		// Chop off .pdf and replace with .txt
@@ -31,7 +40,9 @@ public class Terminate {
 			logger.error(String.format("genSpecimenText IOException error: %s"), e.getMessage());
 		}
 	}
-	
+	/**
+	 * generateExtractionReport writes a short report that summarizes the extraction process.
+	 */
 	static void generateExtractionReport() {
 		String reportPath = Path.of(specimenAbsFilePath).getParent().toString();
 		reportPath += File.separator + EXTRACTION_REPORT;
