@@ -158,18 +158,21 @@ public class EndorsementProcessor {
 		List<Endorsement> endorsements = candidateEndorsements.get(candidateName1);
 		if (endorsements != null) {
 			for (Endorsement end: endorsements) {
-				EndorsementScope scope = end.getScope();
-				if (scope == STATE || scope == COUNTY) {
-					mode = end.getMode();
-					break;
-				} else { // type == ZONE
-					int zoneNo = end.getZoneNo();
-					// Get the Zone that owns the precinct
-					Zone zone = precinctToZone.get(muniNoStr);
-					// Did the zone endorse this candidate?
-					if (zoneNo == Integer.parseInt(zone.getZoneNo())) {
+				// v1.8.0 endorsements now qualified by contest name. 
+				if (contestName.equals(end.getContestName())) {
+					EndorsementScope scope = end.getScope();
+					if (scope == STATE || scope == COUNTY) {
 						mode = end.getMode();
 						break;
+					} else { // type == ZONE
+						int zoneNo = end.getZoneNo();
+						// Get the Zone that owns the precinct
+						Zone zone = precinctToZone.get(muniNoStr);
+						// Did the zone endorse this candidate?
+						if (zoneNo == Integer.parseInt(zone.getZoneNo())) {
+							mode = end.getMode();
+							break;
+						}
 					}
 				}
 			}

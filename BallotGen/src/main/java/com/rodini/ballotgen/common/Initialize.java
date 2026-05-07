@@ -83,7 +83,7 @@ public class Initialize {
 	private static final String WRITEINS_FILE = ".write.ins.file";
 	private static final String COlUMN_BREAK_BEFORE_CONTEST_COUNT = ".column.break.before.contest.count";
 	private static final String COlUMN_BREAK_AFTER_CONTEST_NAME = ".column.break.after.contest.name";
-	private static final String COlUMN_BREAK_CONTEST_NAME = ".column.break.contest.name";
+	private static final String COlUMN_BREAK_BEFORE_CONTEST_NAME = ".column.break.before.contest.name";
 	public	static       String COUNTY;
 	public  static final String PAGE_BREAK = "PAGE_BREAK"; // pseudo contest name
 	public  static       String PAGE_BREAK_TYPE = "page.break.type"; // None / PAGE / COLUMN
@@ -258,12 +258,12 @@ public class Initialize {
 	 * validateColumnBreakContestName reads/displays the COlUMN_BREAK_CONTEST_NAME property value.
 	 */
 	static void validateColumnBreakContestName() {
-		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_CONTEST_NAME);
+		String value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_BEFORE_CONTEST_NAME);
 		columnBreaksBefore = new ArrayList<String>();
 		if (value != null) {
 			columnBreaksBefore = Arrays.asList(value.split(","));
 		}
-		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_CONTEST_NAME, columnBreaksBefore));
+		logger.info(String.format("%s: %s",  COUNTY + COlUMN_BREAK_BEFORE_CONTEST_NAME, columnBreaksBefore));
 		
 		columnBreaksAfter = new ArrayList<String>();
 		value = Utils.getPropValue(ballotGenProps, COUNTY + COlUMN_BREAK_AFTER_CONTEST_NAME);

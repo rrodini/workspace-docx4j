@@ -717,7 +717,9 @@ public class GenDocxBallot {
 		P newParagraph = null;
 		String oval = "";
 		String candName = cand.getName();
-		EndorsementMode mode = endorsementProcessor.getEndorsementMode(candName, contestName, cand.getParty(), precinctNo);
+		// v1.8.0 - Must remove eol chars for endorsments.
+		String contestName1 = contestName.replaceAll("\n", " ");
+		EndorsementMode mode = endorsementProcessor.getEndorsementMode(candName, contestName1, cand.getParty(), precinctNo);
 		if (mode == ENDORSED || mode == UNENDORSED ) {
 			endorsedCandidates.merge(candName.toUpperCase(), 1, (prev, inc) -> prev + inc);
 		}

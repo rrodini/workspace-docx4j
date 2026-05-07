@@ -67,7 +67,7 @@ class TestEndorsementFactory {
 		EndorsementFactory.processCSVText(endorsementsCSVText);
 		Map<String, List<Endorsement>> candidateEnds = EndorsementFactory.getCandidateEndorsements();
 		assertEquals(3, mockedAppender.messages.size());
-		String expected1 = "CSV line #2 has fewer than 3 fields";
+		String expected1 = "CSV line #2 has fewer than 4 fields";
 		assertTrue(mockedAppender.messages.get(0).startsWith(expected1));
 		String expected2 = "CSV line #3 endorsement scope ZOOM has error";
 		assertTrue(mockedAppender.messages.get(1).startsWith(expected2));
@@ -77,15 +77,16 @@ class TestEndorsementFactory {
 	}
 	@Test
 	void testEndorsement03() {
-		String endorsementsCSVText = "Tricia Bliven-Chasinoff,endorsed,zone,13";
+		String endorsementsCSVText = "Tricia Bliven-Chasinoff,School Director Great Valley Region 1,endorsed,zone,13";
 		String [] element = endorsementsCSVText.split(",");
 		EndorsementFactory.processCSVText(endorsementsCSVText);
 		Map<String, List<Endorsement>> candidateEnds = EndorsementFactory.getCandidateEndorsements();
 		assertEquals(1, candidateEnds.size());
 		Endorsement end = candidateEnds.get(element[0].toUpperCase()).get(0);
 		assertEquals(element[0],end.getName());
+		assertEquals(element[1], end.getContestName());
 		assertEquals(EndorsementScope.ZONE, end.getScope());
-		assertEquals(Integer.parseInt(element[3]),end.getZoneNo());
+		assertEquals(Integer.parseInt(element[4]),end.getZoneNo());
 	}
 	@Test
 	void testEdorsements04() {

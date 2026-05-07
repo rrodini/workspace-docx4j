@@ -15,7 +15,9 @@ class TestEndorsement {
 	Endorsement end;
 	@BeforeEach
 	void setUp() throws Exception {
-		end = new Endorsement("Robert A Rodini",
+		end = new Endorsement(
+				"Robert A Rodini",
+				"E Whiteland Township Supervisor",
 				EndorsementMode.ENDORSED,
 				EndorsementScope.ZONE, 13);
 	}
@@ -34,6 +36,11 @@ class TestEndorsement {
 		
 	}
 	@Test
+	void testGetContestName() {
+		assertTrue("E Whiteland Township Supervisor".equals(end.getContestName()));
+		
+	}
+	@Test
 	void testGetMode() {
 		assertTrue(EndorsementMode.ENDORSED == end.getMode());
 	}
@@ -47,7 +54,7 @@ class TestEndorsement {
 	}
 	@Test 
 	void testToString() {
-		String expected = "Endorsement: Robert A Rodini, ENDORSED, ZONE, 13";
+		String expected = "Endorsement: Robert A Rodini, E Whiteland Township Supervisor, ENDORSED, ZONE, 13";
 		assertEquals(expected, end.toString());
 	}
 	

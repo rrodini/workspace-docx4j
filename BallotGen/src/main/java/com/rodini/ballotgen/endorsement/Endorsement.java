@@ -17,14 +17,19 @@ public class Endorsement {
 	private static final Logger logger = LogManager.getLogger(Endorsement.class);
 
 	private final String name;	// Endorsed candidate name
+	private final String contestName;	// Endorsed contest name
 	private final EndorsementMode mode;	// Mode of endorsement
 	private final EndorsementScope scope;	// Scope of endorsement
 	private final int zoneNo; 	// for scope == ZONE, otherwise 0
 	
-	public Endorsement (String name, EndorsementMode mode, EndorsementScope scope, int zoneNo) {
+	public Endorsement (String name, String contestName, EndorsementMode mode, EndorsementScope scope, int zoneNo) {
 		if (name == null) {
 			logger.error("Candidate name cannot be null");
 			name = "Donald Duck";
+		}
+		if (contestName == null) {
+			logger.error("Contest name cannot be null");
+			name = "Dog Catcher";
 		}
 		if (mode == null) {
 			logger.error("Endorsement mode cannot be null");
@@ -40,14 +45,20 @@ public class Endorsement {
 			zoneNo = 0;
 		}
 		this.name = name;
+		// Remove all eol chars from contest name.
+		this.contestName = contestName.replaceAll("\n", " ");
 		this.mode = mode;
 		this.scope = scope;
 		this.zoneNo = zoneNo;
-		logger.debug(String.format("Creating Endorsement %s, %s, %s, %d", name, mode.toString(), scope.toString(), zoneNo));
+		logger.debug(String.format("Creating Endorsement %s, %s, %s, %s, %d", name, contestName, mode.toString(), scope.toString(), zoneNo));
 	}
 	// getter
 	public String getName() {
 		return name;
+	}
+	// getter
+	public String getContestName() {
+		return contestName;
 	}
 	// getter
 	public EndorsementMode getMode() {
@@ -66,6 +77,7 @@ public class Endorsement {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Endorsement: ");
 		sb.append(name + ", ");
+		sb.append(contestName + ", ");
 		sb.append(mode.toString() + ", ");
 		if (scope == ZONE) {
 			sb.append(scope.toString() + ", " + Integer.toString(zoneNo));
